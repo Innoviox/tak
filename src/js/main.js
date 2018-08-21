@@ -55,7 +55,6 @@ function initGraphics() {
 		texture.repeat.set( terrainWidth - 1, terrainDepth - 1 );
 		groundMaterial.map = texture;
 		groundMaterial.needsUpdate = true;
-
 	});
 	*/
 	var light = new THREE.DirectionalLight( 0xffffff, 1 );
