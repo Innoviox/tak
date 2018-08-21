@@ -2,7 +2,6 @@
  * @author alteredq / http://alteredqualia.com/
  * @author mr.doob / http://mrdoob.com/
  */
- var THREE = require('three');
 
 var Detector = {
 

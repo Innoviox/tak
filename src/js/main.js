@@ -1,11 +1,17 @@
-var THREE = require('three');
-var ammo = require("ammo");
+/*
+var Detector = require(['addons/Detector.js']);
+var OrbitControls = require(['addons/OrbitControls.js']);
+var stats = require(['addons/stats.min.js'])
+*/
+/*
+requirejs.config({
+    //By default load any module IDs from js/lib
+    baseUrl: 'js/addons',
+});
+*/
+// var OrbitControls = require(['js/lib/OrbitControls.js']);
+// var Detector = require(['js/lib/Detector.js']);
 
-// Detects webgl
-if ( ! Detector.webgl ) {
-	Detector.addGetWebGLMessage();
-	document.getElementById( 'container' ).innerHTML = "";
-}
 
 // - Global variables -
 

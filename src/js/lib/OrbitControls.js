@@ -6,8 +6,6 @@
  * @author erich666 / http://erichaines.com
  */
 
-var THREE = require('three');
-
 // This set of controls performs orbiting, dollying (zooming), and panning.
 // Unlike TrackballControls, it maintains the "up" direction object.up (+Y by default).
 //

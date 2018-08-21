@@ -4,9 +4,7 @@
   "description": "Sole goal is to be better than https://github.com/tybug/tak",
   "main": "src/js/main.js",
   "scripts": {
-    "build": "cd src/js/addons && for f in *.js; do browserify $f -o bundles/$f.bundle.js; done && cd ../../../ && browserify src/js/main.js -o src/js/bundle.js",
-    "open": "open src/index.html -a Safari",
-    "start": "npm run build && npm run open"
+    "start": "open src/index.html -a Safari"
   },
   "repository": {
     "type": "git",
@@ -24,6 +22,7 @@
   "homepage": "https://github.com/Innoviox/tak#readme",
   "dependencies": {
     "ammo": "^3.0.1",
-    "browserify": "^16.2.2"
+    "browserify": "^16.2.2",
+    "requirejs": "^2.3.5"
   }
 }
