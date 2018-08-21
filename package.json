@@ -2,9 +2,9 @@
   "name": "tak",
   "version": "1.0.0",
   "description": "Sole goal is to be better than https://github.com/tybug/tak",
-  "main": "main.js",
+  "main": "src/js/main.js",
   "scripts": {
-    "start": "browserify main.js -o bundle.js && open ../main.html -a Safari"
+    "start": "browserify src/js/main.js -o src/js/bundle.js && open src/main.html -a Safari"
   },
   "repository": {
     "type": "git",
