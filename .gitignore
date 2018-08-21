@@ -1,2 +1,3 @@
 .DS_Store
 src/js/node_modules
+src/js/bundle.js

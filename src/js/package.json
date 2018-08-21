@@ -4,7 +4,7 @@
   "description": "Sole goal is to be better than https://github.com/tybug/tak",
   "main": "main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "browserify main.js -o bundle.js && open ../main.html -a Safari"
   },
   "repository": {
     "type": "git",
