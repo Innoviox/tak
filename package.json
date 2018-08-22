@@ -4,9 +4,9 @@
   "description": "Sole goal is to be better than https://github.com/tybug/tak",
   "main": "src/js/main.js",
   "scripts": {
-    "optimize": "r.js -o src/js/build.config.js",
-    "tsc-build": "cd src/js/model && for f in *.ts; do tsc $f; done && cd ../../../",
-    "start": "open src/index.html -a Safari"
+    "build": "cd app/src/js/ && babel model -d babel",
+    "tsc-build": "cd app/src/js/model && for f in *.ts; do tsc $f; done && cd ../../../../",
+    "start": "open app/index.html -a Safari"
   },
   "repository": {
     "type": "git",
@@ -29,5 +29,9 @@
     "requirejs-babel": "0.0.9",
     "typescript": "^3.0.1",
     "typescript-collections": "^1.3.2"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.7.0"
   }
 }

@@ -1,29 +1,56 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const typescript_collections_1 = require("typescript-collections");
-;
-;
+import {LinkedList} from 'typescript-collections';
+
+const enum Color {White = 1, Black = 2};
+const enum Stone {Flat = 'F', Stand = 'S', Cap = 'C'};
+
+class Position {
+  x: number;
+  y: number;
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+  }
+}
+
+class Tile {
+  color: Color;
+  stone: Stone;
+  pos: Position
+  constructor(color, stone, pos) {
+    this.color = color;
+    this.stone = stone;
+    this.pos = pos;
+  }
+}
+
 class Square {
-    constructor(pos, tiles) {
-        this.pos = pos;
-        this.tiles = tiles && new typescript_collections_1.LinkedList();
+  pos: Position
+  tiles: LinkedList<Tile>;
+
+  constructor(pos: Position, tiles?: LinkedList<Tile>) {
+    this.pos = pos
+    this.tiles = tiles && new LinkedList<Tile>();
+  }
+
+  add(tile: Tile) {
+    if (this.tiles && this.tiles.last().stone == Stone.Flat) {
+      this.tiles.add(tile);
+    } else {
+      //TODO: tile is not flat
     }
-    add(tile) {
-        if (this.tiles && this.tiles.last().stone == "F") {
-            this.tiles.add(tile);
-        }
-        else {
-        }
-    }
+  }
 }
+
 class Board {
-    constructor(s) {
-        this.s = s;
-        this.size = s;
-        this.board = Square[s][s];
-    }
-    addTile(pos, tile) {
-        this.board[pos.x][pos.y].add(tile);
-    }
+  size: number;
+  board: Square[][];
+
+  constructor(public s: number) {
+    this.size = s;
+    this.board = Square[s][s];
+  }
+
+  addTile(pos: Position, tile: Tile): void {
+    this.board[pos.x][pos.y].add(tile);
+  }
 }
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiYm9hcmQuanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyJib2FyZC50cyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiOztBQUFBLG1FQUFrRDtBQUVYLENBQUM7QUFDYSxDQUFDO0FBYXRELE1BQU0sTUFBTTtJQUlWLFlBQVksR0FBYSxFQUFFLEtBQXdCO1FBQ2pELElBQUksQ0FBQyxHQUFHLEdBQUcsR0FBRyxDQUFBO1FBQ2QsSUFBSSxDQUFDLEtBQUssR0FBRyxLQUFLLElBQUksSUFBSSxtQ0FBVSxFQUFRLENBQUM7SUFDL0MsQ0FBQztJQUVELEdBQUcsQ0FBQyxJQUFVO1FBQ1osSUFBSSxJQUFJLENBQUMsS0FBSyxJQUFJLElBQUksQ0FBQyxLQUFLLENBQUMsSUFBSSxFQUFFLENBQUMsS0FBSyxPQUFjLEVBQUU7WUFDdkQsSUFBSSxDQUFDLEtBQUssQ0FBQyxHQUFHLENBQUMsSUFBSSxDQUFDLENBQUM7U0FDdEI7YUFBTTtTQUVOO0lBQ0gsQ0FBQztDQUNGO0FBRUQsTUFBTSxLQUFLO0lBSVQsWUFBbUIsQ0FBUztRQUFULE1BQUMsR0FBRCxDQUFDLENBQVE7UUFDMUIsSUFBSSxDQUFDLElBQUksR0FBRyxDQUFDLENBQUM7UUFDZCxJQUFJLENBQUMsS0FBSyxHQUFHLE1BQU0sQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQztJQUM1QixDQUFDO0lBRUQsT0FBTyxDQUFDLEdBQWEsRUFBRSxJQUFVO1FBQy9CLElBQUksQ0FBQyxLQUFLLENBQUMsR0FBRyxDQUFDLENBQUMsQ0FBQyxDQUFDLEdBQUcsQ0FBQyxDQUFDLENBQUMsQ0FBQyxHQUFHLENBQUMsSUFBSSxDQUFDLENBQUM7SUFDckMsQ0FBQztDQUNGIn0=
