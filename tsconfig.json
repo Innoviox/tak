@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "module": "commonjs",
+    "noEmitOnError": false,
+    "noImplicitAny": false,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "allowJs": true,
+    "removeComments": true,
+    "inlineSourceMap": true
+  },
+  "version": "2.4.1",
+  "include": [
+    "src/js/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ],
+  "env": { "type": "node" }
+}
