@@ -1,4 +1,8 @@
-boardSize = 5;
+import {Square, Board} from './model/board.js';
+
+console.log(Square);
+
+var boardSize = 5;
 
 // Graphics variables
 var container, stats;
@@ -23,11 +27,12 @@ function initGraphics() {
 
 	container.appendChild( renderer.domElement );
 
+	/*
 	stats = new Stats();
 	stats.domElement.style.position = 'absolute';
 	stats.domElement.style.top = '0px';
 	container.appendChild( stats.domElement );
-
+	*/
 
 	camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 0.2, 2000 );
 
@@ -94,7 +99,7 @@ function animate() {
 	requestAnimationFrame(animate);
 
 	render();
-	stats.update();
+	// stats.update();
 
 }
 

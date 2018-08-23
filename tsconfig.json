@@ -6,9 +6,8 @@
     "noImplicitAny": false,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "allowJs": true,
-    "removeComments": true,
-    "inlineSourceMap": true
+    "removeComments": false,
+    "inlineSourceMap": false
   },
   "version": "2.4.1",
   "include": [
@@ -16,6 +15,5 @@
   ],
   "exclude": [
     "node_modules"
-  ],
-  "env": { "type": "node" }
+  ]
 }

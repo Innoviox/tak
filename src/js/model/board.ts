@@ -1,38 +1,36 @@
-import {LinkedList} from 'typescript-collections';
+export const enum Color {White = 1, Black = 2};
+export const enum Stone {Flat = 'F', Stand = 'S', Cap = 'C'};
 
-const enum Color {White = 1, Black = 2};
-const enum Stone {Flat = 'F', Stand = 'S', Cap = 'C'};
-
-interface Position {
+export interface Position {
   x: number;
   y: number;
 }
 
-interface Tile {
+export interface Tile {
   color: Color;
   stone: Stone;
   pos: Position
 }
 
-class Square {
+export class Square {
   pos: Position
-  tiles: LinkedList<Tile>;
+  tiles: Array<Tile>;
 
-  constructor(pos: Position, tiles?: LinkedList<Tile>) {
+  constructor(pos: Position, tiles?: Array<Tile>) {
     this.pos = pos
-    this.tiles = tiles && new LinkedList<Tile>();
+    this.tiles = tiles && new Array<Tile>();
   }
 
   add(tile: Tile) {
-    if (this.tiles && this.tiles.last().stone == Stone.Flat) {
-      this.tiles.add(tile);
+    if (this.tiles && this.tiles[-1].stone == Stone.Flat) {
+      this.tiles.push(tile);
     } else {
       //TODO: tile is not flat
     }
   }
 }
 
-class Board {
+export class Board {
   size: number;
   board: Square[][];
 
@@ -42,6 +40,6 @@ class Board {
   }
 
   addTile(pos: Position, tile: Tile): void {
-    this.board[pos.x][pos.y].add(tile);
+    this.board[pos.x][pos.y].tiles.push(tile);
   }
 }
