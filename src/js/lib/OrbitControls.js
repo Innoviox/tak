@@ -13,7 +13,6 @@
 //    Zoom - middle mouse, or mousewheel / touch: two-finger spread or squish
 //    Pan - right mouse, or left mouse + ctrl/metaKey, or arrow keys / touch: two-finger move
 
-const THREE = require(['./js/lib/three.min.js']);
 
 THREE.OrbitControls = function ( object, domElement ) {
 

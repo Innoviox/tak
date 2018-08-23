@@ -1,32 +1,25 @@
-define(["require", "exports"], function (require, exports) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    ;
-    ;
-    class Square {
-        constructor(pos, tiles) {
-            this.pos = pos;
-            this.tiles = tiles && new Array();
+export class Square {
+    constructor(pos, tiles) {
+        this.pos = pos;
+        this.tiles = tiles && new Array();
+    }
+    add(tile) {
+        if (this.tiles && this.tiles[-1].stone == "F" /* Flat */) {
+            this.tiles.push(tile);
         }
-        add(tile) {
-            if (this.tiles && this.tiles[-1].stone == "F" /* Flat */) {
-                this.tiles.push(tile);
-            }
-            else {
-                //TODO: tile is not flat
-            }
+        else {
+            //TODO: tile is not flat
         }
     }
-    exports.Square = Square;
-    class Board {
-        constructor(s) {
-            this.s = s;
-            this.size = s;
-            this.board = Square[s][s];
-        }
-        addTile(pos, tile) {
-            this.board[pos.x][pos.y].tiles.push(tile);
-        }
+}
+
+export class Board {
+    constructor(s) {
+        this.s = s;
+        this.size = s;
+        this.board = Square[s][s];
     }
-    exports.Board = Board;
-});
+    addTile(pos, tile) {
+        this.board[pos.x][pos.y].tiles.push(tile);
+    }
+}
