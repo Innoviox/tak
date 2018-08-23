@@ -1,4 +1,4 @@
-import {LinkedList} from 'typescript-collections';
+import List = require('typescript.list');
 
 const enum Color {White = 1, Black = 2};
 const enum Stone {Flat = 'F', Stand = 'S', Cap = 'C'};
@@ -16,16 +16,16 @@ interface Tile {
 
 class Square {
   pos: Position
-  tiles: LinkedList<Tile>;
+  tiles: List<Tile>;
 
-  constructor(pos: Position, tiles?: LinkedList<Tile>) {
+  constructor(pos: Position, tiles?: List<Tile>) {
     this.pos = pos
-    this.tiles = tiles && new LinkedList<Tile>();
+    this.tiles = tiles && new List<Tile>();
   }
 
   add(tile: Tile) {
-    if (this.tiles && this.tiles.last().stone == Stone.Flat) {
-      this.tiles.add(tile);
+    if (this.tiles && this.tiles[-1].stone == Stone.Flat) {
+      this.tiles.push(tile);
     } else {
       //TODO: tile is not flat
     }
@@ -42,6 +42,6 @@ class Board {
   }
 
   addTile(pos: Position, tile: Tile): void {
-    this.board[pos.x][pos.y].add(tile);
+    this.board[pos.x][pos.y].tiles.push(tile);
   }
 }

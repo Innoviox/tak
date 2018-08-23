@@ -1,15 +1,16 @@
 "use strict";
-const typescript_collections_1 = require("typescript-collections");
+// Object.defineProperty(exports, "__esModule", { value: true });
+const List = require("typescript.list");
 ;
 ;
 class Square {
     constructor(pos, tiles) {
         this.pos = pos;
-        this.tiles = tiles && new typescript_collections_1.LinkedList();
+        this.tiles = tiles && new List();
     }
     add(tile) {
-        if (this.tiles && this.tiles.last().stone == "F" /* Flat */) {
-            this.tiles.add(tile);
+        if (this.tiles && this.tiles[-1].stone == "F" /* Flat */) {
+            this.tiles.push(tile);
         }
         else {
             //TODO: tile is not flat
@@ -23,6 +24,6 @@ class Board {
         this.board = Square[s][s];
     }
     addTile(pos, tile) {
-        this.board[pos.x][pos.y].add(tile);
+        this.board[pos.x][pos.y].tiles.push(tile);
     }
 }
