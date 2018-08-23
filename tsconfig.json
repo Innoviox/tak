@@ -11,7 +11,7 @@
   },
   "version": "2.4.1",
   "include": [
-    "src/js/**/*.ts"
+    "app/src/js/**/*.ts"
   ],
   "exclude": [
     "node_modules"
