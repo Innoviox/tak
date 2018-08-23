@@ -1,26 +1,24 @@
-import List = require('typescript.list');
+export const enum Color {White = 1, Black = 2};
+export const enum Stone {Flat = 'F', Stand = 'S', Cap = 'C'};
 
-const enum Color {White = 1, Black = 2};
-const enum Stone {Flat = 'F', Stand = 'S', Cap = 'C'};
-
-interface Position {
+export interface Position {
   x: number;
   y: number;
 }
 
-interface Tile {
+export interface Tile {
   color: Color;
   stone: Stone;
   pos: Position
 }
 
-class Square {
+export class Square {
   pos: Position
-  tiles: List<Tile>;
+  tiles: Array<Tile>;
 
-  constructor(pos: Position, tiles?: List<Tile>) {
+  constructor(pos: Position, tiles?: Array<Tile>) {
     this.pos = pos
-    this.tiles = tiles && new List<Tile>();
+    this.tiles = tiles && new Array<Tile>();
   }
 
   add(tile: Tile) {
@@ -32,7 +30,7 @@ class Square {
   }
 }
 
-class Board {
+export class Board {
   size: number;
   board: Square[][];
 
