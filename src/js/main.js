@@ -1,3 +1,12 @@
+require(['./js/lib/three.min.js']);
+
+require(['./js/lib/ammo.js']);
+require(['./js/lib/OrbitControls.js']);
+require(['./js/lib/Detector.js']);
+require(['./js/lib/stats.min.js']);
+
+require(['./js/model/board.js']);
+
 boardSize = 5;
 
 // Graphics variables
