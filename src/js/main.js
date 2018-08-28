@@ -1,7 +1,6 @@
 require(['./js/lib/three.min.js']);
 
 require(['./js/lib/OBJLoader.js']);
-require(['./js/lib/OrbitControls.js']);
 require(['./js/lib/Detector.js']);
 
 require(['./js/model/board.js']);
