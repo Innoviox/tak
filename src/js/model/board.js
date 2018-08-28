@@ -1,4 +1,4 @@
-define(["require", "exports", "typescript-collections"], function (require, exports, typescript_collections_1) {
+define(["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     ;
@@ -6,17 +6,18 @@ define(["require", "exports", "typescript-collections"], function (require, expo
     class Square {
         constructor(pos, tiles) {
             this.pos = pos;
-            this.tiles = tiles && new typescript_collections_1.LinkedList();
+            this.tiles = tiles && new Array();
         }
         add(tile) {
-            if (this.tiles && this.tiles.last().stone == "F" /* Flat */) {
-                this.tiles.add(tile);
+            if (this.tiles && this.tiles[-1].stone == "F" /* Flat */) {
+                this.tiles.push(tile);
             }
             else {
                 //TODO: tile is not flat
             }
         }
     }
+    exports.Square = Square;
     class Board {
         constructor(s) {
             this.s = s;
@@ -24,7 +25,8 @@ define(["require", "exports", "typescript-collections"], function (require, expo
             this.board = Square[s][s];
         }
         addTile(pos, tile) {
-            this.board[pos.x][pos.y].add(tile);
+            this.board[pos.x][pos.y].tiles.push(tile);
         }
     }
+    exports.Board = Board;
 });
