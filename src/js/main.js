@@ -49,8 +49,10 @@ function initGraphics() {
 	controls = new THREE.OrbitControls( camera );
 
 	Board.create(5, "white");
-	vizboard = make_board_frame();
-	scene.add( vizboard );
+	ViewBoard.create();
+	for (obj in ViewBoard.objects) {
+		scene.add( obj );
+	}
 
 	/*
 	var textureLoader = new THREE.TextureLoader();
