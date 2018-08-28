@@ -51,7 +51,7 @@ function initGraphics() {
 	Board.create(5, "white");
 	ViewBoard.create();
 	for (obj in ViewBoard.objects) {
-		scene.add( obj );
+		scene.add( ViewBoard.objects[obj] );
 	}
 
 	/*

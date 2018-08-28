@@ -18,8 +18,7 @@ var ViewBoard = {
 
   create: function() {
     this.make_board_frame();
-    this.objects.push(this.inner);
-    this.objects.push(this.outer);
+
   },
 
   make_board_frame: function () {
@@ -32,6 +31,9 @@ var ViewBoard = {
     this.outer = new THREE.Mesh( outerGeom, colors.outer );
     this.outer.receiveShadow = true;
     this.outer.castShadow = true;
+
+    this.objects.push(this.inner);
+    this.objects.push(this.outer);
   },
 
   create_highlights: function() {
