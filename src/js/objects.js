@@ -12,51 +12,104 @@ var colors = {
 }
 
 var ViewBoard = {
-  inner: "",
-  outer: "",
-  objects: [],
+    inner: "",
+    outer: "",
+    objects: [],
+    font: "",
 
-  create: function() {
-    this.make_board_frame();
+    create: function() {
+        this.make_board_frame();
 
-  },
+    },
 
-  make_board_frame: function () {
-    var innerGeom = new THREE.BoxBufferGeometry( Board.size, Board.size, .5 );
+    make_board_frame: function() {
+        /*
+    var innerGeom = new THREE.BoxBufferGeometry( Board.size + .6, Board.size + .6, .5 );
     this.inner = new THREE.Mesh( innerGeom, colors.inner );
+    */
 
-    //top
-    var tg = new THREE.Mesh(new THREE.BoxBufferGeometry(Board.size + 2, 1, .5), colors.outer);
-    tg.position.set(0, (Board.size + 1) / 2, 0);
+        var loader = new THREE.FontLoader();
+        loader.load('fonts/helvetiker_regular.typeface.json', function(response) {
+            this.font = response;
+        });
 
-    //bottom
-    var bg = new THREE.Mesh(new THREE.BoxBufferGeometry(Board.size + 2, 1, .5), colors.outer);
-    bg.position.set(0, -(Board.size + 1) / 2, 0);
+        //top
+        var tg = new THREE.Mesh(new THREE.BoxGeometry(Board.size + 2.6, 1, .5), colors.outer);
+        tg.position.set(0, (Board.size + 1) / 2 + .3, 0);
+        tg.updateMatrix();
+        //toptext
+        var textMaterial = new THREE.MeshPhongMaterial( { color: 0xff0000 } );
+        var tt = new THREE.Mesh(new THREE.TextGeometry("A B C D E", {
+            font: this.font,
+            bevelEnabled: true
+        }), textMaterial);
+        tt.position.set((0, (Board.size + 1) / 2 + .3, 0));
+        tt.updateMatrix();
 
-    //right
-    var rg = new THREE.Mesh(new THREE.BoxBufferGeometry(1, Board.size, .5), colors.outer);
-    rg.position.set((Board.size + 1) / 2, 0, 0);
+        //bottom
+        var bg = new THREE.Mesh(new THREE.BoxGeometry(Board.size + 2.6, 1, .5), colors.outer);
+        bg.position.set(0, -(Board.size + 1) / 2 - .3, 0);
+        bg.updateMatrix();
 
-    //left
-    var lg = new THREE.Mesh(new THREE.BoxBufferGeometry(1, Board.size, .5), colors.outer);
-    lg.position.set(-(Board.size + 1) / 2, 0, 0);
+        //right
+        var rg = new THREE.Mesh(new THREE.BoxGeometry(1, Board.size + .6, .5), colors.outer);
+        rg.position.set((Board.size + 1) / 2 + .3, 0, 0);
+        rg.updateMatrix();
 
-    this.objects.push(this.inner);
-    this.objects.push(tg);
-    this.objects.push(bg);
-    this.objects.push(rg);
-    this.objects.push(lg);
+        //left
+        var lg = new THREE.Mesh(new THREE.BoxGeometry(1, Board.size + .6, .5), colors.outer);
+        lg.position.set(-(Board.size + 1) / 2 - .3, 0, 0);
+        lg.updateMatrix();
 
-    var loader = new THREE.TextureLoader();
-    var white_sqr = new THREE.MeshBasicMaterial(
-        {map: loader.load("images/tiles/white_simple.png", () => {})});
-    for (i = 0; i < Board.size; i++) {
-      for (j = 0; j < Board.size; j++) {
-        var obj = new THREE.BoxBufferGeometry(1, 1, .5);
+        var borderGeom = new THREE.Geometry();
+        borderGeom.merge(tg.geometry, tg.matrix);
+        borderGeom.merge(tt.geometry, tt.matrix);
 
+        borderGeom.merge(bg.geometry, bg.matrix);
+        borderGeom.merge(lg.geometry, lg.matrix);
+        borderGeom.merge(rg.geometry, rg.matrix);
 
-      }
+        var borderMesh = new THREE.Mesh(borderGeom, colors.outer);
+
+        this.objects.push(borderMesh);
+
+        var geom,
+            obj;
+        var squareGeom = new THREE.Geometry();
+        var loader = new THREE.TextureLoader();
+        var white_sqr = new THREE.MeshBasicMaterial({
+            map: loader.load("images/tiles/white_simple.png", () => {})
+        });
+        for (i = -Board.size / 2 + .6; i < Board.size / 2 + .6; i += 1.1) {
+            for (j = -Board.size / 2 + .6; j < Board.size / 2 + .6; j += 1.1) {
+                geom = new THREE.BoxGeometry(1, 1, .5);
+                obj = new THREE.Mesh(geom, white_sqr);
+                obj.position.set(i - .3, j - .3, 0);
+                obj.updateMatrix();
+
+                squareGeom.merge(obj.geometry, obj.matrix);
+            }
+        }
+        var squareMesh = new THREE.Mesh(squareGeom, white_sqr);
+        this.objects.push(squareMesh);
+
+        var innerGeom = new THREE.Geometry();
+        for (i = 0; i < 6; i++) {
+            geom = new THREE.BoxGeometry(Board.size + .6, .1, .5);
+            obj = new THREE.Mesh(geom, colors.inner);
+            obj.position.set(0, Board.size / 2 - 5.25 + 1.1 * i, 0);
+            obj.updateMatrix();
+
+            innerGeom.merge(obj.geometry, obj.matrix);
+
+            geom = new THREE.BoxGeometry(.1, Board.size + .6, .5);
+            obj = new THREE.Mesh(geom, colors.inner);
+            obj.position.set(Board.size / 2 - 5.25 + 1.1 * i, 0, 0);
+            obj.updateMatrix();
+
+            innerGeom.merge(obj.geometry, obj.matrix);
+        }
+        var innerMesh = new THREE.Mesh(innerGeom, colors.inner);
+        this.objects.push(innerMesh);
     }
-  },
-
 }
