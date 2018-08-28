@@ -1,0 +1,22 @@
+# Made using Asset Forge (www.assetforge.io) version 1.3 
+
+newmtl stone (Instance)
+Ka 0.000000 0.000000 0.000000 
+Kd 0.667 0.663 0.737 
+Ks 0.330000 0.330000 0.330000 
+
+newmtl stone (Instance) (Instance)
+Ka 0.000000 0.000000 0.000000 
+Kd 0.667 0.663 0.737 
+Ks 0.330000 0.330000 0.330000 
+
+newmtl lightStone (Instance)
+Ka 0.000000 0.000000 0.000000 
+Kd 0.812 0.808 0.855 
+Ks 0.330000 0.330000 0.330000 
+
+newmtl stone (Instance) (Instance) (Instance)
+Ka 0.000000 0.000000 0.000000 
+Kd 0.667 0.663 0.737 
+Ks 0.330000 0.330000 0.330000 
+

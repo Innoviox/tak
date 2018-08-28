@@ -1,6 +1,5 @@
 require(['./js/lib/three.min.js']);
 
-require(['./js/lib/ammo.js']);
 require(['./js/lib/OrbitControls.js']);
 require(['./js/lib/Detector.js']);
 require(['./js/lib/stats.min.js']);
@@ -15,9 +14,14 @@ var camera, controls, scene, renderer;
 var boardGeometry, boardMaterial, board;
 var clock = new THREE.Clock();
 var time = 0;
+var objloader = new THREE.OBJLoader();
 
 initGraphics();
 animate();
+
+function loadBoard() {
+	//TODO
+}
 
 function initGraphics() {
 
@@ -50,12 +54,17 @@ function initGraphics() {
 
 	controls = new THREE.OrbitControls( camera );
 
-	var boardGeometry = new THREE.BoxBufferGeometry( boardSize, boardSize, 1, boardSize, boardSize );
-	var boardMaterial = new THREE.MeshBasicMaterial( {color: 0xffffff} );
+	var boardGeometry = new THREE.BoxBufferGeometry( boardSize + 1, boardSize + 1, .5, boardSize + 1, boardSize + 1 );
+	// var boardMaterial = new THREE.MeshBasicMaterial( {color: 0xffffff} );
+	var boardMaterial = new THREE.MeshBasicMaterial(
+            {map: loader.load('images/board/3ed/capstone.obj', loadBoard)});
+
+
   var board = new THREE.Mesh( boardGeometry, boardMaterial );
 	board.receiveShadow = true;
 	board.castShadow = true;
 	scene.add( board );
+
 	/*
 	var textureLoader = new THREE.TextureLoader();
 	textureLoader.load("textures/grid.png", function ( texture ) {
@@ -66,6 +75,7 @@ function initGraphics() {
 		groundMaterial.needsUpdate = true;
 	});
 	*/
+
 	var light = new THREE.DirectionalLight( 0xffffff, 1 );
 	light.position.set( 100, 100, 50 );
 	light.castShadow = true;
