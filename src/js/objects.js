@@ -22,26 +22,30 @@ var ViewBoard = {
   },
 
   make_board_frame: function () {
-    var innerGeom = new THREE.BoxBufferGeometry( Board.size, Board.size, .5, Board.size, Board.size );
+    var innerGeom = new THREE.BoxBufferGeometry( Board.size, Board.size, .5 );
     this.inner = new THREE.Mesh( innerGeom, colors.inner );
-  	this.inner.receiveShadow = true;
-  	this.inner.castShadow = true;
 
-    var outerGeom = new THREE.BoxBufferGeometry( Board.size + 1, Board.size + 1, .5, Board.size + 1, Board.size + 1 );
-    this.outer = new THREE.Mesh( outerGeom, colors.outer );
-    this.outer.receiveShadow = true;
-    this.outer.castShadow = true;
+    //top
+    var tg = new THREE.Mesh(new THREE.BoxBufferGeometry(Board.size + 2, 1, .5), colors.outer);
+    tg.position.set(0, (Board.size + 1) / 2, 0);
+
+    //bottom
+    var bg = new THREE.Mesh(new THREE.BoxBufferGeometry(Board.size + 2, 1, .5), colors.outer);
+    bg.position.set(0, -(Board.size + 1) / 2, 0);
+
+    //right
+    var rg = new THREE.Mesh(new THREE.BoxBufferGeometry(1, Board.size, .5), colors.outer);
+    rg.position.set((Board.size + 1) / 2, 0, 0);
+
+    //left
+    var lg = new THREE.Mesh(new THREE.BoxBufferGeometry(1, Board.size, .5), colors.outer);
+    lg.position.set(-(Board.size + 1) / 2, 0, 0);
 
     this.objects.push(this.inner);
-    this.objects.push(this.outer);
+    this.objects.push(tg);
+    this.objects.push(bg);
+    this.objects.push(rg);
+    this.objects.push(lg);
   },
-
-  create_highlights: function() {
-
-  },
-
-  create_borders: function() {
-
-  }
 
 }
