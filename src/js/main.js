@@ -1,8 +1,13 @@
-import {Square, Board} from './model/board.js';
+require(['./js/lib/three.min.js']);
 
-console.log(Square);
+require(['./js/lib/ammo.js']);
+require(['./js/lib/OrbitControls.js']);
+require(['./js/lib/Detector.js']);
+require(['./js/lib/stats.min.js']);
 
-var boardSize = 5;
+require(['./js/model/board.js']);
+
+boardSize = 5;
 
 // Graphics variables
 var container, stats;
@@ -27,12 +32,11 @@ function initGraphics() {
 
 	container.appendChild( renderer.domElement );
 
-	/*
 	stats = new Stats();
 	stats.domElement.style.position = 'absolute';
 	stats.domElement.style.top = '0px';
 	container.appendChild( stats.domElement );
-	*/
+
 
 	camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 0.2, 2000 );
 
@@ -99,7 +103,7 @@ function animate() {
 	requestAnimationFrame(animate);
 
 	render();
-	// stats.update();
+	stats.update();
 
 }
 

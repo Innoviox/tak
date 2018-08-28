@@ -1,19 +1,21 @@
 {
   "compilerOptions": {
     "target": "es6",
-    "module": "commonjs",
+    "module": "amd",
     "noEmitOnError": false,
     "noImplicitAny": false,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
+    "allowJs": true,
     "removeComments": false,
     "inlineSourceMap": false
   },
   "version": "2.4.1",
   "include": [
-    "app/src/js/**/*.ts"
+    "src/js/**/*.ts"
   ],
   "exclude": [
     "node_modules"
-  ]
+  ],
+  "env": { "type": "node" }
 }
