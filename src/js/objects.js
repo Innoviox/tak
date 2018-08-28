@@ -46,6 +46,17 @@ var ViewBoard = {
     this.objects.push(bg);
     this.objects.push(rg);
     this.objects.push(lg);
+
+    var loader = new THREE.TextureLoader();
+    var white_sqr = new THREE.MeshBasicMaterial(
+        {map: loader.load("images/tiles/white_simple.png", () => {})});
+    for (i = 0; i < Board.size; i++) {
+      for (j = 0; j < Board.size; j++) {
+        var obj = new THREE.BoxBufferGeometry(1, 1, .5);
+
+
+      }
+    }
   },
 
 }

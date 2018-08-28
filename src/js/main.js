@@ -51,7 +51,7 @@ function initGraphics() {
 	Board.create(5, "white");
 	ViewBoard.create();
 	for (idx in ViewBoard.objects) {
-		var obj = ViewBoard.objects(idx);
+		var obj = ViewBoard.objects[idx];
 		obj.receiveShadow = true;
   	obj.castShadow = true;
 		scene.add( obj );
