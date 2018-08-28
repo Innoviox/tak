@@ -29,18 +29,32 @@ var ViewBoard = {
     */
 
         var loader = new THREE.FontLoader();
-        loader.load('fonts/helvetiker_regular.typeface.json', function(response) {
+        /*
+        loader.load('fonts/helvetiker_regular.typeface.json', (response) => {
             this.font = response;
         });
+        */
+        loader.load('fonts/helvetiker_regular.typeface.json', function(font) {
+            ViewBoard.font = font;
+        },
 
+        // onProgress callback
+        function(xhr) {
+            console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+        },
+
+        // onError callback
+        function(err) {
+            console.log('An error happened');
+        });
         //top
         var tg = new THREE.Mesh(new THREE.BoxGeometry(Board.size + 2.6, 1, .5), colors.outer);
         tg.position.set(0, (Board.size + 1) / 2 + .3, 0);
         tg.updateMatrix();
         //toptext
-        var textMaterial = new THREE.MeshPhongMaterial( { color: 0xff0000 } );
+        var textMaterial = new THREE.MeshPhongMaterial({color: 0xff0000});
         var tt = new THREE.Mesh(new THREE.TextGeometry("A B C D E", {
-            font: this.font,
+            font: ViewBoard.font,
             bevelEnabled: true
         }), textMaterial);
         tt.position.set((0, (Board.size + 1) / 2 + .3, 0));
