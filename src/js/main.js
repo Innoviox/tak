@@ -1,6 +1,5 @@
 require(['./js/lib/three.min.js']);
 
-require(['./js/lib/OBJLoader.js']);
 require(['./js/lib/Detector.js']);
 
 require(['./js/model/board.js']);
@@ -55,7 +54,7 @@ function initGraphics() {
 	var boardGeometry = new THREE.BoxBufferGeometry( boardSize + 1, boardSize + 1, .5, boardSize + 1, boardSize + 1 );
 	// var boardMaterial = new THREE.MeshBasicMaterial( {color: 0xffffff} );
 	var boardMaterial = new THREE.MeshBasicMaterial(
-            {map: THREE.OBJLoader.load('images/board/3ed/capstone.obj', loadBoard)});
+            {map: THREE.OBJLoader('images/board/3d/capstone.obj', loadBoard)});
 
 
   var board = new THREE.Mesh( boardGeometry, boardMaterial );
