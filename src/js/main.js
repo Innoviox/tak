@@ -1,15 +1,11 @@
-require(['./js/lib/three.min.js']);
-
-require(['./js/lib/Detector.js']);
-
-require(['./js/model/board.js']);
-
+// require(['js/model/board.js'])
 boardSize = 5;
+
 
 // Graphics variables
 var container, stats;
 var camera, controls, scene, renderer;
-var boardGeometry, boardMaterial, board;
+var vizboard;
 var clock = new THREE.Clock();
 var time = 0;
 
@@ -21,6 +17,7 @@ function loadBoard() {
 }
 
 function initGraphics() {
+
 
 	container = document.getElementById( 'container' );
 
@@ -51,16 +48,9 @@ function initGraphics() {
 
 	controls = new THREE.OrbitControls( camera );
 
-	var boardGeometry = new THREE.BoxBufferGeometry( boardSize + 1, boardSize + 1, .5, boardSize + 1, boardSize + 1 );
-	// var boardMaterial = new THREE.MeshBasicMaterial( {color: 0xffffff} );
-	var boardMaterial = new THREE.MeshBasicMaterial(
-            {map: THREE.OBJLoader('images/board/3d/capstone.obj', loadBoard)});
-
-
-  var board = new THREE.Mesh( boardGeometry, boardMaterial );
-	board.receiveShadow = true;
-	board.castShadow = true;
-	scene.add( board );
+	Board.create(5, "white");
+	vizboard = make_board_frame();
+	scene.add( vizboard );
 
 	/*
 	var textureLoader = new THREE.TextureLoader();
