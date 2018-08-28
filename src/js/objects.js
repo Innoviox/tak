@@ -19,46 +19,18 @@ var ViewBoard = {
 
     create: function() {
         this.make_board_frame();
-
     },
 
     make_board_frame: function() {
-        /*
-    var innerGeom = new THREE.BoxBufferGeometry( Board.size + .6, Board.size + .6, .5 );
-    this.inner = new THREE.Mesh( innerGeom, colors.inner );
-    */
-
         var loader = new THREE.FontLoader();
-        /*
-        loader.load('fonts/helvetiker_regular.typeface.json', (response) => {
-            this.font = response;
+        this.font = loader.load('fonts/helvetiker_regular.typeface.json', function(font) {
+            ViewBoard.create_texts(font);
         });
-        */
-        loader.load('fonts/helvetiker_regular.typeface.json', function(font) {
-            ViewBoard.font = font;
-        },
 
-        // onProgress callback
-        function(xhr) {
-            console.log((xhr.loaded / xhr.total * 100) + '% loaded');
-        },
-
-        // onError callback
-        function(err) {
-            console.log('An error happened');
-        });
         //top
         var tg = new THREE.Mesh(new THREE.BoxGeometry(Board.size + 2.6, 1, .5), colors.outer);
         tg.position.set(0, (Board.size + 1) / 2 + .3, 0);
         tg.updateMatrix();
-        //toptext
-        var textMaterial = new THREE.MeshPhongMaterial({color: 0xff0000});
-        var tt = new THREE.Mesh(new THREE.TextGeometry("A B C D E", {
-            font: ViewBoard.font,
-            bevelEnabled: true
-        }), textMaterial);
-        tt.position.set((0, (Board.size + 1) / 2 + .3, 0));
-        tt.updateMatrix();
 
         //bottom
         var bg = new THREE.Mesh(new THREE.BoxGeometry(Board.size + 2.6, 1, .5), colors.outer);
@@ -77,8 +49,6 @@ var ViewBoard = {
 
         var borderGeom = new THREE.Geometry();
         borderGeom.merge(tg.geometry, tg.matrix);
-        borderGeom.merge(tt.geometry, tt.matrix);
-
         borderGeom.merge(bg.geometry, bg.matrix);
         borderGeom.merge(lg.geometry, lg.matrix);
         borderGeom.merge(rg.geometry, rg.matrix);
@@ -125,5 +95,16 @@ var ViewBoard = {
         }
         var innerMesh = new THREE.Mesh(innerGeom, colors.inner);
         this.objects.push(innerMesh);
+    },
+
+    create_texts: function(font) {
+        var textMaterial = new THREE.MeshPhongMaterial({color: 0xff0000});
+        var tt = new THREE.Mesh(new THREE.TextGeometry("A B C D E", {
+            font: font,
+            bevelEnabled: true
+        }), textMaterial);
+        tt.position.set(0, (Board.size + 1) / 2 + .3, 1);
+        tt.updateMatrix();
+        this.objects.push(tt);
     }
 }
