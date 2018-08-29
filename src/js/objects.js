@@ -28,8 +28,6 @@ var ViewBoard = {
         tg.position.set(0, (Board.size + 1) / 2 + .3, 0);
         tg.updateMatrix();
 
-
-
         //bottom
         var bg = new THREE.Mesh(new THREE.BoxGeometry(Board.size + 2.6, 1, .5), colors.outer);
         bg.position.set(0, -(Board.size + 1) / 2 - .3, 0);
@@ -96,22 +94,65 @@ var ViewBoard = {
     },
 
     create_texts() {
-      var loader = new THREE.FontLoader();
-      loader.load('fonts/helvetiker_regular.typeface.json', this._create_texts);
+        var loader = new THREE.FontLoader();
+        loader.load('fonts/helvetiker_regular.typeface.json', this._create_texts);
     },
 
     _create_texts(font) {
-      var textMaterial = new THREE.MeshPhongMaterial({color: 0xff0000});
-      var tt = new THREE.Mesh(new THREE.TextGeometry("A B C D E", {
-          font: font,
-          bevelEnabled: false,
-          size: 1,
-          height: 1,
-      }), textMaterial);
-      tt.position.set(2, (Board.size + 1) / 2 + .3, 2);
-      tt.updateMatrix();
-      tt.name = "tt";
+        var rot90 = 23.57, rot = 0;
 
-      scene.add(tt);
+        for (x = 0, c = ''; c = "ABCDE".charAt(x); x++) {
+            var tt = new THREE.Mesh(new THREE.TextGeometry(c, {
+                font: font,
+                size: .6,
+                height: .2
+            }), colors.letter);
+            tt.rotation.z = rot * rot90;
+            tt.position.set(-(Board.size) / 2 + 1.1 * x, (Board.size + 1) / 2, 0.1);
+            tt.updateMatrix();
+
+            scene.add(tt);
+        }
+        rot++;
+
+        for (x = 0, c = ''; c = "12345".charAt(x); x++) {
+            var tt = new THREE.Mesh(new THREE.TextGeometry(c, {
+                font: font,
+                size: .6,
+                height: .2
+            }), colors.letter);
+            tt.rotation.z = rot * rot90;
+            tt.position.set((Board.size) / 2 + .5, (Board.size + 1) / 2 + .6 - 1.1 * (x + 1), 0.1);
+            tt.updateMatrix();
+            scene.add(tt);
+        }
+        rot++;
+
+        for (x = 0, c = ''; c = "ABCDE".charAt(x); x++) {
+            var tt = new THREE.Mesh(new THREE.TextGeometry(c, {
+                font: font,
+                size: .6,
+                height: .2
+            }), colors.letter);
+            tt.rotation.z = rot * rot90;
+            tt.position.set(-(Board.size) / 2 + 1.1 * x + .5, -(Board.size + 1) / 2, 0.1);
+            tt.updateMatrix();
+
+            scene.add(tt);
+        }
+        rot++;
+
+        for (x = 0, c = ''; c = "12345".charAt(x); x++) {
+            var tt = new THREE.Mesh(new THREE.TextGeometry(c, {
+                font: font,
+                size: .6,
+                height: .2
+            }), colors.letter);
+            tt.rotation.z = rot * rot90;
+            tt.position.set(-(Board.size) / 2 - .5, (Board.size + 1) / 2 - 1.1 * (x + 1), 0.1);
+            tt.updateMatrix();
+            scene.add(tt);
+        }
+        rot++;
     }
 }
