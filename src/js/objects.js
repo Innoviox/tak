@@ -15,22 +15,20 @@ var ViewBoard = {
     inner: "",
     outer: "",
     objects: [],
-    font: "",
+    fonts: [],
 
     create: function() {
         this.make_board_frame();
+        this.create_texts();
     },
 
     make_board_frame: function() {
-        var loader = new THREE.FontLoader();
-        this.font = loader.load('fonts/helvetiker_regular.typeface.json', function(font) {
-            ViewBoard.create_texts(font);
-        });
-
         //top
         var tg = new THREE.Mesh(new THREE.BoxGeometry(Board.size + 2.6, 1, .5), colors.outer);
         tg.position.set(0, (Board.size + 1) / 2 + .3, 0);
         tg.updateMatrix();
+
+
 
         //bottom
         var bg = new THREE.Mesh(new THREE.BoxGeometry(Board.size + 2.6, 1, .5), colors.outer);
@@ -97,14 +95,23 @@ var ViewBoard = {
         this.objects.push(innerMesh);
     },
 
-    create_texts: function(font) {
-        var textMaterial = new THREE.MeshPhongMaterial({color: 0xff0000});
-        var tt = new THREE.Mesh(new THREE.TextGeometry("A B C D E", {
-            font: font,
-            bevelEnabled: true
-        }), textMaterial);
-        tt.position.set(0, (Board.size + 1) / 2 + .3, 1);
-        tt.updateMatrix();
-        this.objects.push(tt);
+    create_texts() {
+      var loader = new THREE.FontLoader();
+      loader.load('fonts/helvetiker_regular.typeface.json', this._create_texts);
+    },
+
+    _create_texts(font) {
+      var textMaterial = new THREE.MeshPhongMaterial({color: 0xff0000});
+      var tt = new THREE.Mesh(new THREE.TextGeometry("A B C D E", {
+          font: font,
+          bevelEnabled: false,
+          size: 1,
+          height: 1,
+      }), textMaterial);
+      tt.position.set(2, (Board.size + 1) / 2 + .3, 2);
+      tt.updateMatrix();
+      tt.name = "tt";
+
+      scene.add(tt);
     }
 }
