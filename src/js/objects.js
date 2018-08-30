@@ -99,7 +99,8 @@ var ViewBoard = {
     },
 
     _create_texts(font) {
-        var rot90 = 23.57, rot = 0;
+        var rot90 = 23.57,
+            rot = 0;
 
         for (x = 0, c = ''; c = "ABCDE".charAt(x); x++) {
             var tt = new THREE.Mesh(new THREE.TextGeometry(c, {
