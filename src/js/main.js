@@ -8,9 +8,13 @@ var STAND = "S";
 var CAP = "C";
 
 // Graphics variables
-var container, stats;
-var camera, controls, scene, renderer;
-var light;
+var container,
+    stats;
+var camera,
+    controls,
+    scene,
+    renderer;
+var lights = new Array();
 var vizboard;
 var clock = new THREE.Clock();
 var time = 0;
@@ -19,7 +23,7 @@ initGraphics();
 animate();
 
 function loadSampleBoard() {
-	/*
+    /*
 	for (i = 0; i < 5; i++) {
 		for (j = 0; j < 5; j++) {
 			Board.add_tile(i, j, new Tile(WHITE, STAND));
@@ -27,97 +31,96 @@ function loadSampleBoard() {
 	}
 	*/
 
-	Board.add_tile(1, 2, new Tile(BLACK, FLAT));
-	Board.add_tile(1, 3, new Tile(WHITE, STAND));
-	Board.add_tile(4, 2, new Tile(BLACK, CAP));
+    Board.add_tile(1, 2, new Tile(BLACK, FLAT));
+    Board.add_tile(1, 3, new Tile(WHITE, STAND));
+    Board.add_tile(4, 2, new Tile(BLACK, CAP));
 
 }
 
 function initGraphics() {
 
+    container = document.getElementById('container');
 
-	container = document.getElementById( 'container' );
+    renderer = new THREE.WebGLRenderer();
+    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.shadowMap.enabled = true;
 
-	renderer = new THREE.WebGLRenderer();
-	renderer.setPixelRatio( window.devicePixelRatio );
-	renderer.setSize( window.innerWidth, window.innerHeight );
-	renderer.shadowMap.enabled = true;
+    container.innerHTML = "";
 
-	container.innerHTML = "";
+    container.appendChild(renderer.domElement);
 
-	container.appendChild( renderer.domElement );
+    stats = new Stats();
+    stats.domElement.style.position = 'absolute';
+    stats.domElement.style.top = '0px';
+    container.appendChild(stats.domElement);
 
-	stats = new Stats();
-	stats.domElement.style.position = 'absolute';
-	stats.domElement.style.top = '0px';
-	container.appendChild( stats.domElement );
+    camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.2, 2000);
 
+    scene = new THREE.Scene();
+    scene.background = new THREE.Color(0xbfd1e5);
 
-	camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 0.2, 2000 );
+    camera.position.x = 0;
+    camera.position.y = 0;
+    camera.position.z = 10
+    camera.lookAt(new THREE.Vector3(0, 0, 0));
 
-	scene = new THREE.Scene();
-	scene.background = new THREE.Color( 0xbfd1e5 );
+    controls = new THREE.OrbitControls(camera);
 
-	camera.position.x = 0;
-	camera.position.y = 0;
-	camera.position.z = 10
-	camera.lookAt( new THREE.Vector3( 0, 0, 0 ) );
+    Board.create(5, "white");
+    loadSampleBoard();
+    ViewBoard.create();
+    for (idx in ViewBoard.objects) {
+        var obj = ViewBoard.objects[idx];
+        obj.receiveShadow = true;
+        obj.castShadow = true;
+        scene.add(obj);
+    }
 
-	controls = new THREE.OrbitControls( camera );
+    for (i = -10; i += 20; i < 30) {
+        light = new THREE.DirectionalLight(0xffffff, 1);
+        light.position.set(i, i, 5);
+        light.castShadow = true;
+        var dLight = 200;
+        var sLight = dLight * 0.25;
+        light.shadow.camera.left = -sLight;
+        light.shadow.camera.right = sLight;
+        light.shadow.camera.top = sLight;
+        light.shadow.camera.bottom = -sLight;
 
-	Board.create(5, "white");
-	loadSampleBoard();
-	ViewBoard.create();
-	for (idx in ViewBoard.objects) {
-		var obj = ViewBoard.objects[idx];
-		obj.receiveShadow = true;
-  	obj.castShadow = true;
-		scene.add( obj );
-	}
+        light.shadow.camera.near = dLight / 30;
+        light.shadow.camera.far = dLight;
 
-	light = new THREE.DirectionalLight( 0xffffff, 1 );
-	light.position.set( 10, 10, 50 );
-	light.castShadow = true;
-	var dLight = 200;
-	var sLight = dLight * 0.25;
-	light.shadow.camera.left = -sLight;
-	light.shadow.camera.right = sLight;
-	light.shadow.camera.top = sLight;
-	light.shadow.camera.bottom = -sLight;
+        light.shadow.mapSize.x = 1024 * 2;
+        light.shadow.mapSize.y = 1024 * 2;
+        lights.push(light);
+        scene.add(light);
+    }
 
-	light.shadow.camera.near = dLight / 30;
-	light.shadow.camera.far = dLight;
-
-	light.shadow.mapSize.x = 1024 * 2;
-	light.shadow.mapSize.y = 1024 * 2;
-
-	scene.add(light);
-
-
-	window.addEventListener( 'resize', onWindowResize, false );
+    window.addEventListener('resize', onWindowResize, false);
 
 }
 
 function onWindowResize() {
 
-	camera.aspect = window.innerWidth / window.innerHeight;
-	camera.updateProjectionMatrix();
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
 
-	renderer.setSize( window.innerWidth, window.innerHeight );
+    renderer.setSize(window.innerWidth, window.innerHeight);
 
 }
 
 function animate() {
 
-	requestAnimationFrame(animate);
+    requestAnimationFrame(animate);
 
-	render();
-	stats.update();
+    render();
+    stats.update();
 
 }
 
 function render() {
-	var deltaTime = clock.getDelta();
-	renderer.render( scene, camera );
-	time += deltaTime;
+    var deltaTime = clock.getDelta();
+    renderer.render(scene, camera);
+    time += deltaTime;
 }

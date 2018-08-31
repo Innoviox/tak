@@ -205,6 +205,12 @@ var ViewBoard = {
                         new THREE.MTLLoader().setPath('images/tiles/3d/').load('capstone-white.mtl', function(materials) {
                             materials.preload();
                             new THREE.OBJLoader().setMaterials(materials).setPath('images/tiles/3d/').load('capstone-white.obj', function(model) {
+/*
+                                model.traverse(function(node) {
+                                    if (node.isMesh)
+                                        node.material = materials;
+                                    }
+                                );*/
                                 model.rotation.x = 39.25;
                                 model.name = "capstone";
                                 scene.add(model);
