@@ -166,13 +166,10 @@ var ViewBoard = {
         // texture.repeat.set(terrainWidth - 1, terrainDepth - 1);
         for (row = 0; row < boardSize; row++) {
             for (col = 0; col < boardSize; col++) {
-                console.log(row, col);
                 sq = Board.board[row][col];
                 for (idx in sq.tiles) {
-                    console.log(row, col);
                     tile = sq.tiles[idx];
                     var tile_mesh;
-                    console.log(row, col);
                     if (tile.stone == FLAT) {
                         var tile_geom = new THREE.BoxGeometry(1, 1, .2);
                         var tile_mesh = new THREE.Mesh(tile_geom, colors.white_piece);
