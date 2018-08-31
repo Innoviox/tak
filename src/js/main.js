@@ -10,6 +10,7 @@ var CAP = "C";
 // Graphics variables
 var container, stats;
 var camera, controls, scene, renderer;
+var light;
 var vizboard;
 var clock = new THREE.Clock();
 var time = 0;
@@ -18,16 +19,18 @@ initGraphics();
 animate();
 
 function loadSampleBoard() {
+	/*
 	for (i = 0; i < 5; i++) {
 		for (j = 0; j < 5; j++) {
 			Board.add_tile(i, j, new Tile(WHITE, STAND));
 		}
 	}
-	/*
+	*/
+
 	Board.add_tile(1, 2, new Tile(BLACK, FLAT));
 	Board.add_tile(1, 3, new Tile(WHITE, STAND));
 	Board.add_tile(4, 2, new Tile(BLACK, CAP));
-	*/
+
 }
 
 function initGraphics() {
@@ -72,8 +75,8 @@ function initGraphics() {
 		scene.add( obj );
 	}
 
-	var light = new THREE.DirectionalLight( 0xffffff, 1 );
-	light.position.set( 100, 100, 50 );
+	light = new THREE.DirectionalLight( 0xffffff, 1 );
+	light.position.set( 0, 0, 50 );
 	light.castShadow = true;
 	var dLight = 200;
 	var sLight = dLight * 0.25;
@@ -88,7 +91,7 @@ function initGraphics() {
 	light.shadow.mapSize.x = 1024 * 2;
 	light.shadow.mapSize.y = 1024 * 2;
 
-	scene.add(light);
+	// scene.add(light);
 
 
 	window.addEventListener( 'resize', onWindowResize, false );

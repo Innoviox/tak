@@ -169,22 +169,33 @@ var ViewBoard = {
                 sq = Board.board[row][col];
                 for (idx in sq.tiles) {
                     tile = sq.tiles[idx];
-                    console.log(tile.stone);
+                    var tile_mesh;
                     if (tile.stone == FLAT) {
                         var tile_geom = new THREE.BoxGeometry(1, 1, .2);
                         var tile_mesh = new THREE.Mesh(tile_geom, colors.white_piece);
                         tile_mesh.position.set(-(boardSize / 2) + 1.1 * row + .3, -(boardSize / 2) + 1.1 * col + .3, .4);
                         tile_mesh.name = "flat";
-                        scene.add(tile_mesh);
+                        // scene.add(tile_mesh);
                     } else if (tile.stone == STAND) {
-                      console.log(col);
                         var tile_geom = new THREE.BoxGeometry(1, .2, 1);
                         var tile_mesh = new THREE.Mesh(tile_geom, colors.white_piece);
                         tile_mesh.position.set(-(boardSize / 2) + 1.1 * row + .3, -(boardSize / 2) + 1.1 * col + .3,  .8);
                         tile_mesh.rotation.z = 12;
                         tile_mesh.name = "stand";
-                        scene.add(tile_mesh);
+                        // scene.add(tile_mesh);
+                    } else {
+                      var objloader = new THREE.OBJLoader();
+                      objloader.load("images/tiles/3d/capstone-nonuse.obj", function(model) {
+                        model.rotation.x = 39.25;
+                        model.name = "capstone";
+                        var mmesh = new THREE.Mesh(model, colors.white_piece);
+                        scene.add(model);
+                      });
                     }
+
+                    tile_mesh.receiveShadow = true;
+                  	tile_mesh.castShadow = true;
+                    scene.add(tile_mesh);
                 }
             }
         }
