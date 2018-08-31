@@ -15,7 +15,7 @@ class Square {
     }
 
     add(tile) {
-        if (this.tiles.length == 0 || (this.tiles.length > 0 && this.tiles[-1].stone == FLAT)) {
+        if (this.tiles.length == 0 || (this.tiles.length > 0 && this.tiles[this.tiles.length - 1].stone == FLAT)) {
             this.tiles.push(tile);
             tile.x = this.x;
             tile.y = this.y;
