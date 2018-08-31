@@ -1,20 +1,24 @@
 class Tile {
-    constructor(pos, stone) {
-        this.pos = pos;
+    constructor(color, stone) {
+        this.color = color;
         this.stone = stone;
+        this.x = 0;
+        this.y = 0;
     }
 }
 
 class Square {
 
-    constructor(pos, tiles) {
+    constructor(pos) {
         this.pos = pos;
-        this.tiles = tiles && new Array();
+        this.tiles = new Array();
     }
 
     add(tile) {
-        if (this.tiles && this.tiles[-1].stone == "F"/* Flat */) {
+        if (this.tiles.length == 0 || (this.tiles.length > 0 && this.tiles[-1].stone == FLAT)) {
             this.tiles.push(tile);
+            tile.x = this.x;
+            tile.y = this.y;
         } else {
             //TODO: tile is not flat
         }
@@ -74,6 +78,7 @@ var Board = {
 
         this._init_backend();
     },
+
     _init_backend: function() {
         this.board = new Array();
         for (i = 0; i < this.size; i++) {
@@ -87,4 +92,8 @@ var Board = {
             this.board.push(arr)
         }
     },
+
+    add_tile: function(x, y, tile) {
+        this.board[x][y].add(tile);
+    }
 }

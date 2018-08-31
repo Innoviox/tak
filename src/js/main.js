@@ -1,6 +1,11 @@
-// require(['js/model/board.js'])
-boardSize = 5;
+var boardSize = 5;
 
+// Constants
+var BLACK = "black";
+var WHITE = "white";
+var FLAT = "F";
+var STAND = "S";
+var CAP = "C";
 
 // Graphics variables
 var container, stats;
@@ -12,8 +17,17 @@ var time = 0;
 initGraphics();
 animate();
 
-function loadBoard() {
-	//TODO
+function loadSampleBoard() {
+	for (i = 0; i < 5; i++) {
+		for (j = 0; j < 5; j++) {
+			Board.add_tile(i, j, new Tile(WHITE, STAND));
+		}
+	}
+	/*
+	Board.add_tile(1, 2, new Tile(BLACK, FLAT));
+	Board.add_tile(1, 3, new Tile(WHITE, STAND));
+	Board.add_tile(4, 2, new Tile(BLACK, CAP));
+	*/
 }
 
 function initGraphics() {
@@ -49,6 +63,7 @@ function initGraphics() {
 	controls = new THREE.OrbitControls( camera );
 
 	Board.create(5, "white");
+	loadSampleBoard();
 	ViewBoard.create();
 	for (idx in ViewBoard.objects) {
 		var obj = ViewBoard.objects[idx];
@@ -56,17 +71,6 @@ function initGraphics() {
   	obj.castShadow = true;
 		scene.add( obj );
 	}
-
-	/*
-	var textureLoader = new THREE.TextureLoader();
-	textureLoader.load("textures/grid.png", function ( texture ) {
-		texture.wrapS = THREE.RepeatWrapping;
-		texture.wrapT = THREE.RepeatWrapping;
-		texture.repeat.set( terrainWidth - 1, terrainDepth - 1 );
-		groundMaterial.map = texture;
-		groundMaterial.needsUpdate = true;
-	});
-	*/
 
 	var light = new THREE.DirectionalLight( 0xffffff, 1 );
 	light.position.set( 100, 100, 50 );
