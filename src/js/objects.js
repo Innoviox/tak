@@ -159,6 +159,24 @@ var ViewBoard = {
     },
 
     draw_tiles: function() {
+        function loadTexture(path) {
+            var mat = new THREE.MeshBasicMaterial({
+                map: new THREE.ImageUtils.loadTexture(path, null, function() {
+                    mat.opacity = 1;
+                }),
+                opacity: 0
+            });
+            return mat;
+        }
+        function onProgress(xhr) {
+            if (xhr.lengthComputable) {
+                var percentComplete = xhr.loaded / xhr.total * 100;
+                console.log(Math.round(percentComplete, 2) + '% downloaded');
+            }
+        };
+
+        function onError(xhr) {};
+
         var textureLoader = new THREE.TextureLoader();
         var whitePieceTexture = textureLoader.load("images/tiles/white_simple_pieces.png");
         whitePieceTexture.wrapS = THREE.RepeatWrapping;
@@ -179,22 +197,31 @@ var ViewBoard = {
                     } else if (tile.stone == STAND) {
                         var tile_geom = new THREE.BoxGeometry(1, .2, 1);
                         var tile_mesh = new THREE.Mesh(tile_geom, colors.white_piece);
-                        tile_mesh.position.set(-(boardSize / 2) + 1.1 * row + .3, -(boardSize / 2) + 1.1 * col + .3,  .8);
+                        tile_mesh.position.set(-(boardSize / 2) + 1.1 * row + .3, -(boardSize / 2) + 1.1 * col + .3, .8);
                         tile_mesh.rotation.z = 12;
                         tile_mesh.name = "stand";
                         // scene.add(tile_mesh);
                     } else {
-                      var objloader = new THREE.OBJLoader();
-                      objloader.load("images/tiles/3d/capstone-nonuse.obj", function(model) {
-                        model.rotation.x = 39.25;
-                        model.name = "capstone";
-                        var mmesh = new THREE.Mesh(model, colors.white_piece);
-                        scene.add(model);
-                      });
+                        new THREE.MTLLoader().setPath('images/tiles/3d/').load('capstone-white.mtl', function(materials) {
+                            materials.preload();
+                            new THREE.OBJLoader().setMaterials(materials).setPath('images/tiles/3d/').load('capstone-white.obj', function(model) {
+                                model.rotation.x = 39.25;
+                                model.name = "capstone";
+                                scene.add(model);
+                            }, onProgress, onError);
+                        });
+                        /*
+                        var objloader = new THREE.OBJLoader();
+                        objloader.load("images/tiles/3d/capstone-white.obj", function(model) {
+                            model.rotation.x = 39.25;
+                            model.name = "capstone";
+                            scene.add(model);
+                        });
                     }
-
+                    */
+                    }
                     tile_mesh.receiveShadow = true;
-                  	tile_mesh.castShadow = true;
+                    tile_mesh.castShadow = true;
                     scene.add(tile_mesh);
                 }
             }

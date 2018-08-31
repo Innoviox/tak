@@ -76,7 +76,7 @@ function initGraphics() {
 	}
 
 	light = new THREE.DirectionalLight( 0xffffff, 1 );
-	light.position.set( 0, 0, 50 );
+	light.position.set( 10, 10, 50 );
 	light.castShadow = true;
 	var dLight = 200;
 	var sLight = dLight * 0.25;
@@ -91,7 +91,7 @@ function initGraphics() {
 	light.shadow.mapSize.x = 1024 * 2;
 	light.shadow.mapSize.y = 1024 * 2;
 
-	// scene.add(light);
+	scene.add(light);
 
 
 	window.addEventListener( 'resize', onWindowResize, false );
