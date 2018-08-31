@@ -159,24 +159,6 @@ var ViewBoard = {
     },
 
     draw_tiles: function() {
-        function loadTexture(path) {
-            var mat = new THREE.MeshBasicMaterial({
-                map: new THREE.ImageUtils.loadTexture(path, null, function() {
-                    mat.opacity = 1;
-                }),
-                opacity: 0
-            });
-            return mat;
-        }
-        function onProgress(xhr) {
-            if (xhr.lengthComputable) {
-                var percentComplete = xhr.loaded / xhr.total * 100;
-                console.log(Math.round(percentComplete, 2) + '% downloaded');
-            }
-        };
-
-        function onError(xhr) {};
-
         var textureLoader = new THREE.TextureLoader();
         var whitePieceTexture = textureLoader.load("images/tiles/white_simple_pieces.png");
         whitePieceTexture.wrapS = THREE.RepeatWrapping;
@@ -184,53 +166,43 @@ var ViewBoard = {
         // texture.repeat.set(terrainWidth - 1, terrainDepth - 1);
         for (row = 0; row < boardSize; row++) {
             for (col = 0; col < boardSize; col++) {
+                console.log(row, col);
                 sq = Board.board[row][col];
                 for (idx in sq.tiles) {
+                    console.log(row, col);
                     tile = sq.tiles[idx];
                     var tile_mesh;
+                    console.log(row, col);
                     if (tile.stone == FLAT) {
                         var tile_geom = new THREE.BoxGeometry(1, 1, .2);
                         var tile_mesh = new THREE.Mesh(tile_geom, colors.white_piece);
-                        tile_mesh.position.set(-(boardSize / 2) + 1.1 * row + .3, -(boardSize / 2) + 1.1 * col + .3, .4);
+                        tile_mesh.position.set(-(boardSize / 2) + 1.1 * row + .3, -(boardSize / 2) + 1.1 * col + .3, .3);
                         tile_mesh.name = "flat";
-                        // scene.add(tile_mesh);
+                        scene.add(tile_mesh);
                     } else if (tile.stone == STAND) {
                         var tile_geom = new THREE.BoxGeometry(1, .2, 1);
                         var tile_mesh = new THREE.Mesh(tile_geom, colors.white_piece);
-                        tile_mesh.position.set(-(boardSize / 2) + 1.1 * row + .3, -(boardSize / 2) + 1.1 * col + .3, .8);
+                        tile_mesh.position.set(-(boardSize / 2) + 1.1 * row + .3, -(boardSize / 2) + 1.1 * col + .3, .7);
                         tile_mesh.rotation.z = 12;
                         tile_mesh.name = "stand";
-                        // scene.add(tile_mesh);
+                        scene.add(tile_mesh);
                     } else {
-                        new THREE.MTLLoader().setPath('images/tiles/3d/').load('capstone-white.mtl', function(materials) {
-                            materials.preload();
-                            new THREE.OBJLoader().setMaterials(materials).setPath('images/tiles/3d/').load('capstone-white.obj', function(model) {
-/*
-                                model.traverse(function(node) {
-                                    if (node.isMesh)
-                                        node.material = materials;
-                                    }
-                                );*/
-                                model.rotation.x = 39.25;
-                                model.name = "capstone";
-                                scene.add(model);
-                            }, onProgress, onError);
-                        });
-                        /*
-                        var objloader = new THREE.OBJLoader();
-                        objloader.load("images/tiles/3d/capstone-white.obj", function(model) {
-                            model.rotation.x = 39.25;
-                            model.name = "capstone";
-                            scene.add(model);
-                        });
+                        this._draw_cap(row, col, tile.color);
                     }
-                    */
-                    }
-                    tile_mesh.receiveShadow = true;
-                    tile_mesh.castShadow = true;
-                    scene.add(tile_mesh);
                 }
             }
         }
+    },
+
+    _draw_cap: function(row, col, color) {
+        new THREE.MTLLoader().setPath('images/tiles/3d/').load('capstone-white.mtl', function(materials) {
+            materials.preload();
+            new THREE.OBJLoader().setMaterials(materials).setPath('images/tiles/3d/').load('capstone-white.obj', function(model) {
+                model.position.set(-(boardSize / 2) + 1.1 * row + .3, -(boardSize / 2) + 1.1 * col + .3, .2);
+                model.rotation.x = 39.25;
+                model.name = "capstone";
+                scene.add(model);
+            });
+        });
     }
 }

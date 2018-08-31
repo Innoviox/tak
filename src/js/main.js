@@ -77,7 +77,7 @@ function initGraphics() {
         scene.add(obj);
     }
 
-    for (i = -10; i += 20; i < 30) {
+    for (i = -10; i < 30; i += 20) {
         light = new THREE.DirectionalLight(0xffffff, 1);
         light.position.set(i, i, 5);
         light.castShadow = true;
