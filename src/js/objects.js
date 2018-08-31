@@ -173,13 +173,13 @@ var ViewBoard = {
                     if (tile.stone == FLAT) {
                         var tile_geom = new THREE.BoxGeometry(1, 1, .2);
                         var tile_mesh = new THREE.Mesh(tile_geom, colors.white_piece);
-                        tile_mesh.position.set(-(boardSize / 2) + 1.1 * row + .3, -(boardSize / 2) + 1.1 * col + .3, .3);
+                        tile_mesh.position.set(-(boardSize / 2) + 1.1 * row + .3, -(boardSize / 2) + 1.1 * col + .3, .2 * idx + .3);
                         tile_mesh.name = "flat";
                         scene.add(tile_mesh);
                     } else if (tile.stone == STAND) {
                         var tile_geom = new THREE.BoxGeometry(1, .2, 1);
                         var tile_mesh = new THREE.Mesh(tile_geom, colors.white_piece);
-                        tile_mesh.position.set(-(boardSize / 2) + 1.1 * row + .3, -(boardSize / 2) + 1.1 * col + .3, .7);
+                        tile_mesh.position.set(-(boardSize / 2) + 1.1 * row + .3, -(boardSize / 2) + 1.1 * col + .3, .2 * idx + .7);
                         tile_mesh.rotation.z = 12;
                         tile_mesh.name = "stand";
                         scene.add(tile_mesh);
@@ -195,7 +195,7 @@ var ViewBoard = {
         new THREE.MTLLoader().setPath('images/tiles/3d/').load('capstone-white.mtl', function(materials) {
             materials.preload();
             new THREE.OBJLoader().setMaterials(materials).setPath('images/tiles/3d/').load('capstone-white.obj', function(model) {
-                model.position.set(-(boardSize / 2) + 1.1 * row + .3, -(boardSize / 2) + 1.1 * col + .3, .2);
+                model.position.set(-(boardSize / 2) + 1.1 * row + .3, -(boardSize / 2) + 1.1 * col + .3, .2 * idx + .0);
                 model.rotation.x = 39.25;
                 model.name = "capstone";
                 scene.add(model);
