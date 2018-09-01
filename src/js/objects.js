@@ -166,6 +166,7 @@ var ViewBoard = {
         // texture.repeat.set(terrainWidth - 1, terrainDepth - 1);
         for (row = 0; row < boardSize; row++) {
             for (col = 0; col < boardSize; col++) {
+              var x = -(boardSize / 2) + 1.1 * row + .3, y = -(boardSize / 2) + 1.1 * (boardSize - 1 - col) + .3;
                 sq = Board.board[row][col];
                 for (idx in sq.tiles) {
                     tile = sq.tiles[idx];
@@ -173,29 +174,29 @@ var ViewBoard = {
                     if (tile.stone == FLAT) {
                         var tile_geom = new THREE.BoxGeometry(1, 1, .2);
                         var tile_mesh = new THREE.Mesh(tile_geom, colors.white_piece);
-                        tile_mesh.position.set(-(boardSize / 2) + 1.1 * row + .3, -(boardSize / 2) + 1.1 * col + .3, .2 * idx + .3);
+                        tile_mesh.position.set(x, y, .2 * idx + .3);
                         tile_mesh.name = "flat";
                         scene.add(tile_mesh);
                     } else if (tile.stone == STAND) {
                         var tile_geom = new THREE.BoxGeometry(1, .2, 1);
                         var tile_mesh = new THREE.Mesh(tile_geom, colors.white_piece);
-                        tile_mesh.position.set(-(boardSize / 2) + 1.1 * row + .3, -(boardSize / 2) + 1.1 * col + .3, .2 * idx + .7);
+                        tile_mesh.position.set(x, y, .2 * idx + .7);
                         tile_mesh.rotation.z = 12;
                         tile_mesh.name = "stand";
                         scene.add(tile_mesh);
                     } else {
-                        this._draw_cap(row, col, tile.color);
+                        this._draw_cap(x, y, tile.color);
                     }
                 }
             }
         }
     },
 
-    _draw_cap: function(row, col, color) {
+    _draw_cap: function(x, y, color) {
         new THREE.MTLLoader().setPath('images/tiles/3d/').load('rook-small-door-matte.mtl', function(materials) {
             materials.preload();
             new THREE.OBJLoader().setMaterials(materials).setPath('images/tiles/3d/').load('rook-small-door-matte.obj', function(model) {
-                model.position.set(-(boardSize / 2) + 1.1 * row + .3, -(boardSize / 2) + 1.1 * col + .3, .2 * idx + .0);
+                model.position.set(x, y, .2 * idx + .0);
                 model.rotation.x = 39.25;
                 model.name = "capstone";
                 scene.add(model);

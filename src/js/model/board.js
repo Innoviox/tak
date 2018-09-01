@@ -12,7 +12,7 @@ function ctr(c) {
 class Position {
     constructor(x, y) {
         this.x = ctr(x);
-        this.y = parseInt(y);
+        this.y = parseInt(y) - 1;
     }
 
     next(dir) {
