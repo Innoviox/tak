@@ -30,7 +30,7 @@ function loadSampleBoard() {
 		}
 	}
 	*/
-console.log("A");
+    console.log("A");
     Board.add_tile(1, 2, new Tile(BLACK, FLAT));
     console.log("B");
     Board.add_tile(1, 3, new Tile(WHITE, STAND));

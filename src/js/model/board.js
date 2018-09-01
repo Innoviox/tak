@@ -1,3 +1,19 @@
+var LEFT = "<",
+    RIGHT = ">",
+    UP = "+",
+    DOWN = "-";
+
+class Move {
+    constructor(total, stone, col, row, moves, dir) {
+        this.total = total;
+        this.stone = stone;
+        this.col = col;
+        this.row = row;
+        this.moves = moves;
+        this.dir = dir;
+    }
+}
+
 class Tile {
     constructor(color, stone) {
         this.color = color;
@@ -95,5 +111,19 @@ var Board = {
 
     add_tile: function(x, y, tile) {
         this.board[x][y].add(tile);
+    }.
+
+    /*
+    Execute a full move
+    */
+    move: function(move) {
+
+    },
+
+    /*
+    One step of a move
+    */
+    _move: function(old, new, n, first) {
+
     }
 }
