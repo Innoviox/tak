@@ -17,7 +17,7 @@ var ViewBoard = {
     objects: [],
     fonts: [],
 
-    create: function() {
+    draw: function() {
         this.make_board_frame();
         this.create_texts();
         this.draw_tiles();

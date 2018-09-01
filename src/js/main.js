@@ -72,7 +72,7 @@ function initGraphics() {
 
     Board.create(5, "white");
     loadSampleBoard();
-    ViewBoard.create();
+    ViewBoard.draw();
     for (idx in ViewBoard.objects) {
         var obj = ViewBoard.objects[idx];
         obj.receiveShadow = true;
@@ -124,6 +124,7 @@ function animate() {
 
 function render() {
     var deltaTime = clock.getDelta();
+    // ViewBoard.draw();
     renderer.render(scene, camera);
     time += deltaTime;
 }

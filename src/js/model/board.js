@@ -5,9 +5,13 @@ var LEFT = "<",
     NONE = "0",
     DIRS = "<>+-";
 
+function ctr(c) {
+  return 'abcde'.indexOf(c);
+}
+
 class Position {
     constructor(x, y) {
-        this.x = parseInt(x);
+        this.x = ctr(x);
         this.y = parseInt(y);
     }
 
@@ -44,8 +48,9 @@ class Move {
         }
 
         if (dir == NONE) {
-            s = str.padStart(3, "F");
-            return Move(1, s.charAt(0), new Position(s.charAt(1), s.charAt(2)), [], NONE);
+            var s = str.padStart(3, "F");
+            console.log(s);
+            return new Move(1, s.charAt(0), new Position(s.charAt(1), s.charAt(2)), [], NONE);
         }
 
         var moves = str[1].map((i) => parseInt(i));
@@ -57,7 +62,7 @@ class Move {
             total = 1;
         }
         var pos = new Position(m_str.charAt(0), m_str.charAt(1));
-        return Move(toatl, NONE, pos, moves, dir);
+        return new Move(toatl, NONE, pos, moves, dir);
     }
 }
 
@@ -97,7 +102,7 @@ var Board = {
     // backend objects representing squares
     board: [],
 
-    move: {
+    last_move: {
         start: null,
         end: null,
         dir: '',
@@ -130,12 +135,6 @@ var Board = {
         this.blackpiecesleft = this.tiles + this.caps;
 
         this.mycolor = color;
-        this.move = {
-            start: null,
-            end: null,
-            dir: '',
-            squares: []
-        };
 
         this._init_backend();
     },
@@ -170,6 +169,13 @@ var Board = {
                 this._move(old_pos, new_pos, move.moves[idx], first);
                 first = false;
             }
+        } else {
+          var sq = this.board[old_pos.x][old_pos.y];
+          if (sq.tiles.length == 0) {
+            this.add_tile(old_pos.x, old_pos.y, new Tile(this.mycolor, move.stone));
+          } else {
+            //TODO: Throw error?
+          }
         }
     },
 
@@ -187,7 +193,7 @@ var Board = {
             for (idx in tiles) {
                 new_sq.add(tiles[idx]);
             }
-        } else if (tiles.slice(-1)[0].stone == CAP && n_stone == STAND) {
+        } else if (n == 1 && tiles.slice(-1)[0].stone == CAP && n_stone == STAND) {
             old_sq.tiles = old_sq.tiles(0, old_sq.tiles.length - n);
             new_sq.tiles.slice(-1)[0].stone = FLAT;
             for (idx in tiles) {
