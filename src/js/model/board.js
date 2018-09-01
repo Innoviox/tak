@@ -1,23 +1,25 @@
 var LEFT = "<",
     RIGHT = ">",
     UP = "+",
-    DOWN = "-";
+    DOWN = "-",
+    NONE = "0",
+    DIRS = "<>+-";
 
 class Position {
     constructor(x, y) {
-        this.x = x;
-        this.y = y;
-    },
+        this.x = parseInt(x);
+        this.y = parseInt(y);
+    }
 
     next(dir) {
         if (dir == LEFT) {
-            return Position(this.x - 1, this.y);
+            return new Position(this.x - 1, this.y);
         } else if (dir == RIGHT) {
-            return Position(this.x + 1, this.y);
+            return new Position(this.x + 1, this.y);
         } else if (dir == UP) {
-            return Position(this.x, this.y - 1);
+            return new Position(this.x, this.y - 1);
         } else {
-            return Position(this.x, this.y + 1);
+            return new Position(this.x, this.y + 1);
         }
     }
 }
@@ -31,13 +33,39 @@ class Move {
         this.dir = dir;
     }
 
+    static create(str) {
+        dir = NONE;
+        for (i = 0, c = ''; c = DIRS.charAt(i); i++) {
+            if (str.includes(c)) {
+                dir = c;
+                str = str.split(c);
+                break;
+            }
+        }
+
+        if (dir == NONE) {
+            s = str.padStart(3, "F");
+            return Move(1, s.charAt(0), new Position(s.charAt(1), s.charAt(2)), [], NONE);
+        }
+
+        var moves = str[1].map((i) => parseInt(i));
+        var m_str = str[0];
+        if (m_str.charAt(0).match(/[0-9]/i)) {
+            total = parseInt(m_str.charAt(0));
+            m_str = m_str.slice(1);
+        } else {
+            total = 1;
+        }
+        var pos = new Position(m_str.charAt(0), m_str.charAt(1));
+        return Move(toatl, NONE, pos, moves, dir);
+    }
 }
 
 class Tile {
     constructor(color, stone) {
         this.color = color;
         this.stone = stone;
-        this.pos = Position(0, 0);
+        this.pos = new Position(0, 0);
     }
 }
 
@@ -128,7 +156,7 @@ var Board = {
 
     add_tile: function(x, y, tile) {
         this.board[x][y].add(tile);
-    }.
+    },
 
     /*
     Execute a full move
@@ -157,16 +185,16 @@ var Board = {
         if (new_pos.tiles.length == 0 || (n_stone == FLAT)) {
             old_sq.tiles = old_sq.tiles(0, old_sq.tiles.length - n);
             for (idx in tiles) {
-              new_sq.add(tiles[idx]);
+                new_sq.add(tiles[idx]);
             }
         } else if (tiles.slice(-1)[0].stone == CAP && n_stone == STAND) {
             old_sq.tiles = old_sq.tiles(0, old_sq.tiles.length - n);
             new_sq.tiles.slice(-1)[0].stone = FLAT;
             for (idx in tiles) {
-              new_sq.add(tiles[idx]);
+                new_sq.add(tiles[idx]);
             }
         } else {
-          //TODO Throw error?
+            //TODO Throw error?
         }
     }
 }
