@@ -3,12 +3,18 @@ var LEFT = "<",
     UP = "+",
     DOWN = "-";
 
+class Position {
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+  }
+}
+
 class Move {
-    constructor(total, stone, col, row, moves, dir) {
+    constructor(total, stone, pos, moves, dir) {
         this.total = total;
         this.stone = stone;
-        this.col = col;
-        this.row = row;
+        this.pos = pos;
         this.moves = moves;
         this.dir = dir;
     }
@@ -18,8 +24,7 @@ class Tile {
     constructor(color, stone) {
         this.color = color;
         this.stone = stone;
-        this.x = 0;
-        this.y = 0;
+        this.pos = Position(0, 0);
     }
 }
 
@@ -33,8 +38,7 @@ class Square {
     add(tile) {
         if (this.tiles.length == 0 || (this.tiles.length > 0 && this.tiles[this.tiles.length - 1].stone == FLAT)) {
             this.tiles.push(tile);
-            tile.x = this.x;
-            tile.y = this.y;
+            tile.pos = this.pos;
         } else {
             //TODO: tile is not flat
         }
@@ -117,13 +121,21 @@ var Board = {
     Execute a full move
     */
     move: function(move) {
-
+      var old_pos = move.pos;
+      var new_pos = move.pos.next(move.dir);
+      if (move.moves.length > 0) {
+        var first = true;
+        for (idx in move.moves) {
+          this._move(old_pos, new_pos, move.moves[idx], first);
+          first = false;
+        }
+      }
     },
 
     /*
     One step of a move
     */
-    _move: function(old, new, n, first) {
+    _move: function(old_pos, new_pos, n, first) {
 
     }
 }
