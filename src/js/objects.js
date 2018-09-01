@@ -192,9 +192,9 @@ var ViewBoard = {
     },
 
     _draw_cap: function(row, col, color) {
-        new THREE.MTLLoader().setPath('images/tiles/3d/').load('capstone-white.mtl', function(materials) {
+        new THREE.MTLLoader().setPath('images/tiles/3d/').load('rook-small-door-matte.mtl', function(materials) {
             materials.preload();
-            new THREE.OBJLoader().setMaterials(materials).setPath('images/tiles/3d/').load('capstone-white.obj', function(model) {
+            new THREE.OBJLoader().setMaterials(materials).setPath('images/tiles/3d/').load('rook-small-door-matte.obj', function(model) {
                 model.position.set(-(boardSize / 2) + 1.1 * row + .3, -(boardSize / 2) + 1.1 * col + .3, .2 * idx + .0);
                 model.rotation.x = 39.25;
                 model.name = "capstone";
