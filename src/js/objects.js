@@ -185,18 +185,18 @@ var ViewBoard = {
                         tile_mesh.name = "stand";
                         scene.add(tile_mesh);
                     } else {
-                        this._draw_cap(x, y, tile.color);
+                        this._draw_cap(x, y, tile.color, idx);
                     }
                 }
             }
         }
     },
 
-    _draw_cap: function(x, y, color) {
+    _draw_cap: function(x, y, color, idx) {
         new THREE.MTLLoader().setPath('images/tiles/3d/').load('rook-small-door-matte.mtl', function(materials) {
             materials.preload();
             new THREE.OBJLoader().setMaterials(materials).setPath('images/tiles/3d/').load('rook-small-door-matte.obj', function(model) {
-                model.position.set(x, y, .2 * idx + .0);
+                model.position.set(x, y, .2 * idx + .2);
                 model.rotation.x = 39.25;
                 model.name = "capstone";
                 scene.add(model);
