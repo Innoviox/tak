@@ -403,14 +403,9 @@ var Board = {
     },
 
     _draw_tiles: function(push) {
-      console.log("updating", push);
-        /*
-        for (idx: this.tiles) {
-          scene.remove(this.tiles[idx]);
-        }
-        */
-
-        if (push) this.tiles = [];
+        console.log("updating", push);
+        if (push)
+            this.tiles = [];
 
         /*
         var textureLoader = new THREE.TextureLoader();
@@ -434,31 +429,28 @@ var Board = {
                         tile_mesh.rotation.z = 12;
                     } else {
                         // TODO: CAP
-                        // this._draw_cap(x, y, tile.color, idx);
+                        tile.mesh.position.set(x, y, .2 * idx + .2);
+                        tile.rotation.x = 39.25;
                     }
                     if (push || !scene.children.includes(tile_mesh)) {
-                      this.tiles.push(tile_mesh);
-                      scene.add(tile_mesh);
+                        this.tiles.push(tile_mesh);
+                        scene.add(tile_mesh);
                     }
                 }
             }
         }
     },
 
-    _draw_cap: function(x, y, color, idx) {
+    load_cap: function() {
         new THREE.MTLLoader().setPath('images/tiles/3d/').load('rook-small-door-matte.mtl', function(materials) {
             materials.preload();
             new THREE.OBJLoader().setMaterials(materials).setPath('images/tiles/3d/').load('rook-small-door-matte.obj', function(model) {
                 capModel = model;
-                model.position.set(x, y, .2 * idx + .2);
-                model.rotation.x = 39.25;
-                model.name = "capstone";
-                scene.add(model);
             });
         });
     },
 
     update_tiles: function() {
-      this._draw_tiles(false);
+        this._draw_tiles(false);
     }
 }
