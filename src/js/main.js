@@ -59,11 +59,11 @@ function initGraphics() {
 
     controls = new THREE.OrbitControls(camera);
 
-    Board.create(5, "white");
+    Board.init(5, "white");
     loadSampleBoard();
-    ViewBoard.create();
-    for (idx in ViewBoard.objects) {
-        var obj = ViewBoard.objects[idx];
+    Board.create();
+    for (idx in Board.objects) {
+        var obj = Board.objects[idx];
         obj.receiveShadow = true;
         obj.castShadow = true;
         scene.add(obj);
@@ -115,7 +115,7 @@ function render() {
     var deltaTime = clock.getDelta();
     // ViewBoard.draw();
     if (frame++ % 30 == 0) {
-      ViewBoard.draw();
+      Board.draw();
     }
     renderer.render(scene, camera);
     time += deltaTime;
