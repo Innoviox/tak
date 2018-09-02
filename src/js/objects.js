@@ -86,6 +86,41 @@ class Tile {
         this.color = color;
         this.stone = stone;
         this.pos = new Position(0, 0);
+        this.setMesh();
+    }
+
+    setStone(stone) {
+        this.stone = stone;
+        this.setMesh();
+    }
+
+    setColor(color) {
+        this.color = color;
+        this.setMesh();
+    }
+
+    getGeom() {
+        if (this.stone == FLAT) 
+            return new THREE.BoxGeometry(1, 1, .2);
+        else if (this.stone == STAND) 
+            return new THREE.BoxGeometry(1, .2, 1);
+            // TODO: return CAP;
+        }
+    
+    getMat() {
+        if (this.color == WHITE) 
+            return colors.white_piece;
+        return colors.black_piece;
+    }
+
+    setMesh() {
+        this.geom = this.getGeom();
+        this.mat = this.getMat();
+        if (this.stone == CAP) {
+            this.mesh = this.geom;
+        } else {
+            this.mesh = new THREE.Mesh(this.geom, this.mat);
+        }
     }
 }
 
@@ -127,33 +162,33 @@ var Board = {
     },
 
     init: function(sz, color) {
-      boardSize = sz;
+        boardSize = sz;
 
-      if (sz === 3) {
-          this.totcaps = 0;
-          this.tottiles = 10;
-      } else if (sz === 4) {
-          this.totcaps = 0;
-          this.tottiles = 15;
-      } else if (sz === 5) {
-          this.totcaps = 1;
-          this.tottiles = 21;
-      } else if (sz === 6) {
-          this.totcaps = 1;
-          this.tottiles = 30;
-      } else if (sz === 7) {
-          this.totcaps = 2;
-          this.tottiles = 40;
-      } else {
-          this.totcaps = 2;
-          this.tottiles = 50;
-      }
-      this.whitepiecesleft = this.tottiles + this.totcaps;
-      this.blackpiecesleft = this.tottiles + this.totcaps;
+        if (sz === 3) {
+            this.totcaps = 0;
+            this.tottiles = 10;
+        } else if (sz === 4) {
+            this.totcaps = 0;
+            this.tottiles = 15;
+        } else if (sz === 5) {
+            this.totcaps = 1;
+            this.tottiles = 21;
+        } else if (sz === 6) {
+            this.totcaps = 1;
+            this.tottiles = 30;
+        } else if (sz === 7) {
+            this.totcaps = 2;
+            this.tottiles = 40;
+        } else {
+            this.totcaps = 2;
+            this.tottiles = 50;
+        }
+        this.whitepiecesleft = this.tottiles + this.totcaps;
+        this.blackpiecesleft = this.tottiles + this.totcaps;
 
-      this.mycolor = color;
+        this.mycolor = color;
 
-      this._init_backend();
+        this._init_backend();
     },
 
     _init_backend: function() {
@@ -228,7 +263,7 @@ var Board = {
     },
 
     draw: function() {
-      this.update_tiles();
+        this.update_tiles();
     },
 
     make_board_frame: function() {
@@ -378,26 +413,19 @@ var Board = {
                     y = -(boardSize / 2) + 1.1 * (boardSize - 1 - col) + .3;
                 sq = this.board[row][col];
                 for (idx in sq.tiles) {
-                    tile = sq.tiles[idx];
-                    var tile_mesh;
+                    var tile = sq.tiles[idx];
+                    var tile_mesh = tile.mesh;
                     if (tile.stone == FLAT) {
-                        var tile_geom = new THREE.BoxGeometry(1, 1, .2);
-                        var tile_mesh = new THREE.Mesh(tile_geom, colors.white_piece);
                         tile_mesh.position.set(x, y, .2 * idx + .3);
-                        tile_mesh.name = "flat";
-                        this.tiles.push(tile_mesh);
-                        scene.add(tile_mesh);
                     } else if (tile.stone == STAND) {
-                        var tile_geom = new THREE.BoxGeometry(1, .2, 1);
-                        var tile_mesh = new THREE.Mesh(tile_geom, colors.white_piece);
                         tile_mesh.position.set(x, y, .2 * idx + .7);
                         tile_mesh.rotation.z = 12;
-                        tile_mesh.name = "stand";
-                        this.tiles.push(tile_mesh);
-                        scene.add(tile_mesh);
                     } else {
-                        this._draw_cap(x, y, tile.color, idx);
+                        // TODO: CAP
+                        // this._draw_cap(x, y, tile.color, idx);
                     }
+                    this.tiles.push(tile_mesh);
+                    scene.add(tile_mesh);
                 }
             }
         }
@@ -416,7 +444,5 @@ var Board = {
         });
     },
 
-    update_tiles: function() {
-
-    }
+    update_tiles: function() {}
 }
