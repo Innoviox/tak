@@ -26,7 +26,7 @@ animate();
 function loadSampleBoard() {
     Board.add_tile(1, 2, new Tile(BLACK, FLAT)); // B3
     Board.add_tile(1, 3, new Tile(WHITE, STAND)); // B4
-    // Board.add_tile(1, 2, new Tile(BLACK, CAP)); //  B3
+    Board.add_tile(1, 2, new Tile(BLACK, CAP)); //  B3
 }
 
 function initGraphics() {
@@ -60,8 +60,9 @@ function initGraphics() {
     controls = new THREE.OrbitControls(camera);
 
     Board.init(5, "white");
-    loadSampleBoard();
     Board.create();
+
+    loadSampleBoard();
     for (idx in Board.objects) {
         var obj = Board.objects[idx];
         obj.receiveShadow = true;

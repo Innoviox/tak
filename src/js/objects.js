@@ -18,7 +18,7 @@ var colors = {
     highlighter: new THREE.LineBasicMaterial({color: 0x0000f0})
 }
 
-var capModel;
+var capModel, modelsLoaded = false;;
 
 function ctr(c) {
     return 'abcde'.indexOf(c);
@@ -100,12 +100,13 @@ class Tile {
     }
 
     getGeom() {
+      console.log("loaded?", modelsLoaded);
         if (this.stone == FLAT)
             return new THREE.BoxGeometry(1, 1, .2);
         else if (this.stone == STAND)
             return new THREE.BoxGeometry(1, .2, 1);
-            // TODO: return CAP;
-        }
+        if (modelsLoaded) return capModel.clone();
+    }
 
     getMat() {
         if (this.color == WHITE)
@@ -258,6 +259,8 @@ var Board = {
     },
 
     create: function() {
+        this.load_models();
+
         this.make_board_frame();
         this.create_texts();
         this._draw_tiles(true);
@@ -441,13 +444,16 @@ var Board = {
         }
     },
 
-    load_cap: function() {
+    load_models: function() {
+        // White capstone model
         new THREE.MTLLoader().setPath('images/tiles/3d/').load('rook-small-door-matte.mtl', function(materials) {
             materials.preload();
             new THREE.OBJLoader().setMaterials(materials).setPath('images/tiles/3d/').load('rook-small-door-matte.obj', function(model) {
                 capModel = model;
             });
         });
+
+        modelsLoaded = true;
     },
 
     update_tiles: function() {
