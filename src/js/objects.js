@@ -100,15 +100,15 @@ class Tile {
     }
 
     getGeom() {
-        if (this.stone == FLAT) 
+        if (this.stone == FLAT)
             return new THREE.BoxGeometry(1, 1, .2);
-        else if (this.stone == STAND) 
+        else if (this.stone == STAND)
             return new THREE.BoxGeometry(1, .2, 1);
             // TODO: return CAP;
         }
-    
+
     getMat() {
-        if (this.color == WHITE) 
+        if (this.color == WHITE)
             return colors.white_piece;
         return colors.black_piece;
     }
@@ -116,6 +116,7 @@ class Tile {
     setMesh() {
         this.geom = this.getGeom();
         this.mat = this.getMat();
+
         if (this.stone == CAP) {
             this.mesh = this.geom;
         } else {
@@ -259,7 +260,7 @@ var Board = {
     create: function() {
         this.make_board_frame();
         this.create_texts();
-        this.draw_tiles();
+        this._draw_tiles(true);
     },
 
     draw: function() {
@@ -401,11 +402,22 @@ var Board = {
         rot++;
     },
 
-    draw_tiles: function() {
+    _draw_tiles: function(push) {
+      console.log("updating", push);
+        /*
+        for (idx: this.tiles) {
+          scene.remove(this.tiles[idx]);
+        }
+        */
+
+        if (push) this.tiles = [];
+
+        /*
         var textureLoader = new THREE.TextureLoader();
         var whitePieceTexture = textureLoader.load("images/tiles/white_simple_pieces.png");
         whitePieceTexture.wrapS = THREE.RepeatWrapping;
         whitePieceTexture.wrapT = THREE.RepeatWrapping;
+        */
 
         for (row = 0; row < boardSize; row++) {
             for (col = 0; col < boardSize; col++) {
@@ -424,8 +436,10 @@ var Board = {
                         // TODO: CAP
                         // this._draw_cap(x, y, tile.color, idx);
                     }
-                    this.tiles.push(tile_mesh);
-                    scene.add(tile_mesh);
+                    if (push) {
+                      this.tiles.push(tile_mesh);
+                      scene.add(tile_mesh);
+                    }
                 }
             }
         }
@@ -444,5 +458,7 @@ var Board = {
         });
     },
 
-    update_tiles: function() {}
+    update_tiles: function() {
+      this._draw_tiles(false);
+    }
 }

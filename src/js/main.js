@@ -26,7 +26,7 @@ animate();
 function loadSampleBoard() {
     Board.add_tile(1, 2, new Tile(BLACK, FLAT)); // B3
     Board.add_tile(1, 3, new Tile(WHITE, STAND)); // B4
-    // Board.add_tile(1, 2, new Tile(BLACK, CAP));  B3
+    // Board.add_tile(1, 2, new Tile(BLACK, CAP)); //  B3
 }
 
 function initGraphics() {
