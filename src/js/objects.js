@@ -18,8 +18,6 @@ var colors = {
     highlighter: new THREE.LineBasicMaterial({color: 0x0000f0})
 }
 
-var capModel, modelsLoaded = false;;
-
 function ctr(c) {
     return 'abcde'.indexOf(c);
 }
@@ -100,16 +98,18 @@ class Tile {
     }
 
     getGeom() {
-      console.log("loaded?", modelsLoaded);
-        if (this.stone == FLAT)
-            return new THREE.BoxGeometry(1, 1, .2);
-        else if (this.stone == STAND)
-            return new THREE.BoxGeometry(1, .2, 1);
-        if (modelsLoaded) return capModel.clone();
-    }
+        console.log(models.capModel);
 
+        if (this.stone == FLAT) 
+            return new THREE.BoxGeometry(1, 1, .2);
+        else if (this.stone == STAND) 
+            return new THREE.BoxGeometry(1, .2, 1);
+        if (modelsLoaded) 
+            return models.capModel.clone();
+        }
+    
     getMat() {
-        if (this.color == WHITE)
+        if (this.color == WHITE) 
             return colors.white_piece;
         return colors.black_piece;
     }
@@ -259,8 +259,6 @@ var Board = {
     },
 
     create: function() {
-        this.load_models();
-
         this.make_board_frame();
         this.create_texts();
         this._draw_tiles(true);
@@ -407,9 +405,9 @@ var Board = {
 
     _draw_tiles: function(push) {
         console.log("updating", push);
-        if (push)
+        if (push) 
             this.tiles = [];
-
+        
         /*
         var textureLoader = new THREE.TextureLoader();
         var whitePieceTexture = textureLoader.load("images/tiles/white_simple_pieces.png");
@@ -425,15 +423,18 @@ var Board = {
                 for (idx in sq.tiles) {
                     var tile = sq.tiles[idx];
                     var tile_mesh = tile.mesh;
+                    if (tile_mesh === undefined) {
+                        tile.setMesh();
+                        tile_mesh = tile.mesh;
+                    }
                     if (tile.stone == FLAT) {
                         tile_mesh.position.set(x, y, .2 * idx + .3);
                     } else if (tile.stone == STAND) {
                         tile_mesh.position.set(x, y, .2 * idx + .7);
                         tile_mesh.rotation.z = 12;
                     } else {
-                        // TODO: CAP
-                        tile.mesh.position.set(x, y, .2 * idx + .2);
-                        tile.rotation.x = 39.25;
+                        tile_mesh.position.set(x, y, .2 * idx + .2);
+                        tile_mesh.rotation.x = 39.25;
                     }
                     if (push || !scene.children.includes(tile_mesh)) {
                         this.tiles.push(tile_mesh);
@@ -442,18 +443,6 @@ var Board = {
                 }
             }
         }
-    },
-
-    load_models: function() {
-        // White capstone model
-        new THREE.MTLLoader().setPath('images/tiles/3d/').load('rook-small-door-matte.mtl', function(materials) {
-            materials.preload();
-            new THREE.OBJLoader().setMaterials(materials).setPath('images/tiles/3d/').load('rook-small-door-matte.obj', function(model) {
-                capModel = model;
-            });
-        });
-
-        modelsLoaded = true;
     },
 
     update_tiles: function() {

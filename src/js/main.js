@@ -19,6 +19,11 @@ var vizboard;
 var clock = new THREE.Clock();
 var time = 0;
 var frame = 0;
+var modelsLoaded = false;
+
+var models = {
+    capModel: NONE
+}
 
 initGraphics();
 animate();
@@ -27,6 +32,17 @@ function loadSampleBoard() {
     Board.add_tile(1, 2, new Tile(BLACK, FLAT)); // B3
     Board.add_tile(1, 3, new Tile(WHITE, STAND)); // B4
     Board.add_tile(1, 2, new Tile(BLACK, CAP)); //  B3
+}
+
+function load_models() {
+    // White capstone model
+    new THREE.MTLLoader().setPath('images/tiles/3d/').load('rook-small-door-matte.mtl', function(materials) {
+        materials.preload();
+        new THREE.OBJLoader().setMaterials(materials).setPath('images/tiles/3d/').load('rook-small-door-matte.obj', function(model) {
+            models.capModel = model;
+            modelsLoaded = true;
+        });
+    });
 }
 
 function initGraphics() {
@@ -58,7 +74,7 @@ function initGraphics() {
     camera.lookAt(new THREE.Vector3(0, 0, 0));
 
     controls = new THREE.OrbitControls(camera);
-
+    load_models();
     Board.init(5, "white");
     Board.create();
 
@@ -113,11 +129,13 @@ function animate() {
 }
 
 function render() {
-    var deltaTime = clock.getDelta();
-    // ViewBoard.draw();
-    if (frame++ % 30 == 0) {
-        Board.draw();
+    if (modelsLoaded) {
+        var deltaTime = clock.getDelta();
+        // ViewBoard.draw();
+        if (frame++ % 30 == 0) {
+            Board.draw();
+        }
+        renderer.render(scene, camera);
+        time += deltaTime;
     }
-    renderer.render(scene, camera);
-    time += deltaTime;
 }
