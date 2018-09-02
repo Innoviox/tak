@@ -35,10 +35,12 @@ function loadSampleBoard() {
 }
 
 function load_models() {
+    var mtl = new THREE.MTLLoader().setPath('images/tiles/3d/');
+    var obj = new THREE.OBJLoader().setPath('images/tiles/3d/');
     // White capstone model
-    new THREE.MTLLoader().setPath('images/tiles/3d/').load('rook-small-door-matte.mtl', function(materials) {
+    mtl.load('rook-small-door-matte.mtl', function(materials) {
         materials.preload();
-        new THREE.OBJLoader().setMaterials(materials).setPath('images/tiles/3d/').load('rook-small-door-matte.obj', function(model) {
+        obj.setMaterials(materials).load('rook-small-door-matte.obj', function(model) {
             models.capModel = model;
             modelsLoaded = true;
         });
