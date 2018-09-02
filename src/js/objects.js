@@ -436,7 +436,7 @@ var Board = {
                         // TODO: CAP
                         // this._draw_cap(x, y, tile.color, idx);
                     }
-                    if (push) {
+                    if (push || !scene.children.includes(tile_mesh)) {
                       this.tiles.push(tile_mesh);
                       scene.add(tile_mesh);
                     }
