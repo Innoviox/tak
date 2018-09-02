@@ -11,16 +11,23 @@ var colors = {
     highlighter: new THREE.LineBasicMaterial({color: 0x0000f0})
 }
 
+var capModel =
+
 var ViewBoard = {
     inner: "",
     outer: "",
     objects: [],
     fonts: [],
+    tiles: [],
 
-    draw: function() {
+    create: function() {
         this.make_board_frame();
         this.create_texts();
         this.draw_tiles();
+    },
+
+    draw: function() {
+      this.update_tiles();
     },
 
     make_board_frame: function() {
@@ -166,7 +173,8 @@ var ViewBoard = {
         // texture.repeat.set(terrainWidth - 1, terrainDepth - 1);
         for (row = 0; row < boardSize; row++) {
             for (col = 0; col < boardSize; col++) {
-              var x = -(boardSize / 2) + 1.1 * row + .3, y = -(boardSize / 2) + 1.1 * (boardSize - 1 - col) + .3;
+                var x = -(boardSize / 2) + 1.1 * row + .3,
+                    y = -(boardSize / 2) + 1.1 * (boardSize - 1 - col) + .3;
                 sq = Board.board[row][col];
                 for (idx in sq.tiles) {
                     tile = sq.tiles[idx];
@@ -176,6 +184,7 @@ var ViewBoard = {
                         var tile_mesh = new THREE.Mesh(tile_geom, colors.white_piece);
                         tile_mesh.position.set(x, y, .2 * idx + .3);
                         tile_mesh.name = "flat";
+                        this.tiles.push(tile_mesh);
                         scene.add(tile_mesh);
                     } else if (tile.stone == STAND) {
                         var tile_geom = new THREE.BoxGeometry(1, .2, 1);
@@ -183,6 +192,7 @@ var ViewBoard = {
                         tile_mesh.position.set(x, y, .2 * idx + .7);
                         tile_mesh.rotation.z = 12;
                         tile_mesh.name = "stand";
+                        this.tiles.push(tile_mesh);
                         scene.add(tile_mesh);
                     } else {
                         this._draw_cap(x, y, tile.color, idx);
@@ -202,5 +212,9 @@ var ViewBoard = {
                 scene.add(model);
             });
         });
+    },
+
+    update_tiles: function() {
+
     }
 }

@@ -6,7 +6,7 @@ var LEFT = "<",
     DIRS = "<>+-";
 
 function ctr(c) {
-  return 'abcde'.indexOf(c);
+    return 'abcde'.indexOf(c);
 }
 
 class Position {
@@ -170,12 +170,12 @@ var Board = {
                 first = false;
             }
         } else {
-          var sq = this.board[old_pos.x][old_pos.y];
-          if (sq.tiles.length == 0) {
-            this.add_tile(old_pos.x, old_pos.y, new Tile(this.mycolor, move.stone));
-          } else {
-            //TODO: Throw error?
-          }
+            var sq = this.board[old_pos.x][old_pos.y];
+            if (sq.tiles.length == 0) {
+                this.add_tile(old_pos.x, old_pos.y, new Tile(this.mycolor, move.stone));
+            } else {
+                //TODO: Throw error?
+            }
         }
     },
 

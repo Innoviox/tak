@@ -1,51 +1,50 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset=utf-8>
-		<title>My first three.js app</title>
-		<style>
-					body {
-							color: #61443e;
-							font-family:Monospace;
-							font-size:13px;
-							text-align:center;
-							background-color: #bfd1e5;
-							margin: 0px;
-							overflow: hidden;
-					}
-					#info {
-							position: absolute;
-							top: 0px; width: 100%;
-							padding: 5px;
-					}
-					a {
-							color: #a06851;
-					}
-		</style>
-	</head>
-	<body>
-		<div id="container"><br /><br /><br /><br /><br />Loading...</div>
 
-		<script src="js/lib/three.min.js"></script>
-		<script src="js/lib/stats.min.js"></script>
-		<script src="js/lib/MTLLoader.js"></script>
-		<script src="js/lib/OBJLoader.js"></script>
-		<script src="js/lib/OrbitControls.js"></script>
+<head>
+    <meta charset=utf-8>
+    <title>My first three.js app</title>
+    <style>
+    body {
+        color: #61443e;
+        font-family: Monospace;
+        font-size: 13px;
+        text-align: center;
+        background-color: #bfd1e5;
+        margin: 0px;
+        overflow: hidden;
+    }
 
+    #info {
+        position: absolute;
+        top: 0px;
+        width: 100%;
+        padding: 5px;
+    }
 
+    a {
+        color: #a06851;
+    }
+    </style>
+</head>
 
-		<!--
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.5/require.js"></script>
-		<script src="js/lib/ammo.js"></script>
+<body>
+    <div id="container">
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />Loading...</div>
+
+    <script src="js/lib/three.min.js"></script>
+    <script src="js/lib/stats.min.js"></script>
+    <script src="js/lib/MTLLoader.js"></script>
+    <script src="js/lib/OBJLoader.js"></script>
     <script src="js/lib/OrbitControls.js"></script>
-    <script src="js/lib/Detector.js"></script>
 
+    <script src="js/model/board.js"></script>
+    <script src="js/objects.js"></script>
+    <script src="js/main.js"></script>
+</body>
 
-		<script src="js/model/board.js"></script>
-		-->
-
-		<script src="js/model/board.js"></script>
-		<script src="js/objects.js"></script>
-		<script src="js/main.js"></script>
-	</body>
 </html>

@@ -18,26 +18,15 @@ var lights = new Array();
 var vizboard;
 var clock = new THREE.Clock();
 var time = 0;
+var frame = 0;
 
 initGraphics();
 animate();
 
 function loadSampleBoard() {
-    /*
-	for (i = 0; i < 5; i++) {
-		for (j = 0; j < 5; j++) {
-			Board.add_tile(i, j, new Tile(WHITE, STAND));
-		}
-	}
-	*/
-    console.log("A");
     Board.add_tile(1, 2, new Tile(BLACK, FLAT)); // B3
-    console.log("B");
     Board.add_tile(1, 3, new Tile(WHITE, STAND)); // B4
-    console.log("C");
     Board.add_tile(1, 2, new Tile(BLACK, CAP)); // B3
-    console.log("D");
-
 }
 
 function initGraphics() {
@@ -72,7 +61,7 @@ function initGraphics() {
 
     Board.create(5, "white");
     loadSampleBoard();
-    ViewBoard.draw();
+    ViewBoard.create();
     for (idx in ViewBoard.objects) {
         var obj = ViewBoard.objects[idx];
         obj.receiveShadow = true;
@@ -125,6 +114,9 @@ function animate() {
 function render() {
     var deltaTime = clock.getDelta();
     // ViewBoard.draw();
+    if (frame++ % 30 == 0) {
+      ViewBoard.draw();
+    }
     renderer.render(scene, camera);
     time += deltaTime;
 }
