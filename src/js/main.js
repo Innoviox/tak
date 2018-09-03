@@ -39,8 +39,8 @@ function load_models() {
     var obj = new THREE.OBJLoader().setPath('images/tiles/3d/');
     // White capstone model
     mtl.load('rook-small-door-matte.mtl', function(materials) {
-        materials.preload();
         obj.setMaterials(materials).load('rook-small-door-matte.obj', function(model) {
+          materials.preload();
             models.capModel = model;
             modelsLoaded = true;
         });
