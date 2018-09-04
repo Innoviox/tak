@@ -5,7 +5,7 @@ var LEFT = "<",
     NONE = "0",
     DIRS = "<>+-";
 
-var ANIM_STEPS = 10;
+var ANIM_STEPS = 5;
 
 var colors = {
     white_piece: new THREE.MeshBasicMaterial({color: 0xd4b375}),
@@ -145,7 +145,7 @@ class Animator {
     }
 
     done() {
-        return this.steps == ANIM_STEPS;
+        return this.steps >=  1.1 * ANIM_STEPS;
     }
 }
 
@@ -571,11 +571,11 @@ var Board = {
         this.animate_tiles();
         if (this.moving.length == 0) {
             this.execute_move();
+            this._draw_tiles(false);
         }
     },
 
     animate_tiles: function() {
-
         remove = [];
         for (tile of this.animating) {
             var helper = tile.animator;
@@ -595,17 +595,22 @@ var Board = {
         if (this.animating.length > 0) {
             for (tile of this.animating) {
                 tile.animator = NONE;
-                scene.remove(tile);
+                scene.remove(tile.mesh);
+            }
+
+            for (tile of this.tiles) {
+              scene.remove(tile.mesh);
             }
 
 
             this.tiles = [];
-
+            /*
             for (tile of this.animating) {
                 this.tiles.push(tile.mesh);
                 // scene.add(tile.mesh);
             }
-            
+            */
+
 
 
             this.moving = [];
