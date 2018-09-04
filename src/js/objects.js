@@ -116,13 +116,13 @@ class Animator {
             y: 0,
             z: 0
         };
-        if (dir == LEFT) 
+        if (dir == LEFT)
             this.dt.x = 1;
-        if (dir == RIGHT) 
+        if (dir == RIGHT)
             this.dt.x = -1;
-        if (dir == DOWN) 
+        if (dir == DOWN)
             this.dt.y = 1;
-        if (dir == UP) 
+        if (dir == UP)
             this.dt.y = -1;
         var pos = new Position(orig.x, orig.y);
         var next_sq = Board.tile_at(pos.next(dir));
@@ -180,7 +180,7 @@ class Tile {
     }
 
     getMat() {
-        if (this.color == WHITE) 
+        if (this.color == WHITE)
             return colors.white_piece;
         return colors.black_piece;
     }
@@ -525,9 +525,9 @@ var Board = {
     },
 
     _draw_tiles: function(push, dont_add = false) {
-        if (push) 
+        if (push)
             this.tiles = [];
-        
+
         /*
         var textureLoader = new THREE.TextureLoader();
         var whitePieceTexture = textureLoader.load("images/tiles/white_simple_pieces.png");
@@ -579,7 +579,7 @@ var Board = {
         remove = [];
         for (tile of this.animating) {
             var helper = tile.animator;
-            if (!helper.done()) 
+            if (!helper.done())
                 helper.step();
             tile.mesh.position.x += helper.ct.x;
             tile.mesh.position.y += helper.ct.y;
@@ -597,6 +597,16 @@ var Board = {
                 tile.animator = NONE;
                 scene.remove(tile);
             }
+
+
+            this.tiles = [];
+
+            for (tile of this.animating) {
+                this.tiles.push(tile.mesh);
+                // scene.add(tile.mesh);
+            }
+            
+
 
             this.moving = [];
             this.animating = [];
