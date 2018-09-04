@@ -34,7 +34,11 @@ class Position {
         if (this.x == -1) {
             this.x = x;
         }
-        this.y = parseInt(y) - 1;
+        if (typeof(y) === 'number') {
+          this.y = y;
+        } else {
+          this.y = parseInt(y) - 1;
+        }
     }
 
     next(dir) {
@@ -114,12 +118,13 @@ class Animator {
         };
         if (dir == LEFT)
             this.dt.x = -1;
-        if (dir == RIGHT)
             this.dt.x = 1;
+        if (dir == RIGHT)
+            this.dt.x = -1;
         if (dir == DOWN)
-            this.dt.y = -1;
-        if (dir == UP)
             this.dt.y = 1;
+        if (dir == UP)
+            this.dt.y = -1;
         var pos = new Position(orig.x, orig.y);
         var next_sq = Board.tile_at(pos.next(dir));
         var d_idx = next_sq.tiles.length - idx;
@@ -228,6 +233,8 @@ var Board = {
 
     // backend objects representing squares
     board: [],
+    old_board: [],
+    next_board: [],
 
     last_move: {
         start: null,
@@ -271,10 +278,7 @@ var Board = {
         for (i = 0; i < boardSize; i++) {
             arr = new Array();
             for (j = 0; j < boardSize; j++) {
-                arr.push(new Square({
-                    'x': i,
-                    'y': j
-                }, new Array()));
+                arr.push(new Square(new Position(i, j), new Array()));
             }
             this.board.push(arr)
         }
@@ -288,12 +292,35 @@ var Board = {
         this.board[x][y].add(tile);
     },
 
+    copy: function() {
+      a = [];
+      for (i = 0; i < boardSize; i++) {
+        row = [];
+        for (j = 0; j < boardSize; j++) {
+          var sq = this.board[i][j];
+          s = new Square(new Position(sq.x, sq.y));
+          for (idx: sq.tiles) {
+            var tile = sq.tiles[idx];
+            var nt = new Tile(tile.color, tile.stone);
+            s.add(nt))
+          }
+          row.push(s);
+        }
+        a.push(s);
+      }
+      return a;
+    }
+
     /*
     Execute a full move
     */
     move: function(move) {
+      this.old_board = this.copy();
+      this.next_board = this.copy();
+      console.log("Starting move", move);
         var old_pos = move.pos;
         var new_pos = move.pos.next(move.dir);
+        console.log("A", old_pos, new_pos);
         if (move.moves.length > 0) {
             var first = true;
             for (idx in move.moves) {
@@ -314,7 +341,7 @@ var Board = {
     One step of a move
     */
     _move: function(old_pos, new_pos, n, first) {
-        console.log(old_pos, new_pos);
+        console.log("B", old_pos, new_pos, n, first);
 
         var old_sq = this.board[old_pos.x][old_pos.y];
         var new_sq = this.board[new_pos.x][new_pos.y];
@@ -492,7 +519,7 @@ var Board = {
     },
 
     _draw_tiles: function(push) {
-        console.log("updating", push);
+        // console.log("updating", push);
         if (push)
             this.tiles = [];
 
@@ -545,6 +572,7 @@ var Board = {
             tile.mesh.position.z += helper.ct.z;
             if (helper.done()) {
               console.log("DONE!");
+              tile.animator = NONE;
                 remove.push(tile);
             }
         }

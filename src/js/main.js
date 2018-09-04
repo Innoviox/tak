@@ -134,7 +134,7 @@ function render() {
     if (modelsLoaded) {
         var deltaTime = clock.getDelta();
         // ViewBoard.draw();
-        if (frame++ % 30 == 0) {
+        if (frame++ % 2 == 0) {
             Board.draw();
         }
         renderer.render(scene, camera);
