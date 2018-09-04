@@ -5,7 +5,7 @@ var LEFT = "<",
     NONE = "0",
     DIRS = "<>+-";
 
-var ANIM_STEPS = 5;
+var ANIM_STEPS = 10;
 
 var colors = {
     white_piece: new THREE.MeshBasicMaterial({color: 0xd4b375}),
