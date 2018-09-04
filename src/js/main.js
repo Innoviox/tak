@@ -39,8 +39,8 @@ function load_models() {
     var obj = new THREE.OBJLoader().setPath('images/tiles/3d/');
     // White capstone model
     mtl.load('rook-small-door-matte.mtl', function(materials) {
-        materials.preload();
         obj.setMaterials(materials).load('rook-small-door-matte.obj', function(model) {
+            materials.preload();
             models.capModel = model;
             modelsLoaded = true;
         });
@@ -110,8 +110,13 @@ function initGraphics() {
 
     window.addEventListener('resize', onWindowResize, false);
 
+    setTimeout(testMove, 3000);
+
 }
 
+function testMove() {
+    Board.move(Move.create("B4>"));
+}
 function onWindowResize() {
 
     camera.aspect = window.innerWidth / window.innerHeight;
@@ -134,7 +139,7 @@ function render() {
     if (modelsLoaded) {
         var deltaTime = clock.getDelta();
         // ViewBoard.draw();
-        if (frame++ % 30 == 0) {
+        if (frame++ % 2 == 0) {
             Board.draw();
         }
         renderer.render(scene, camera);

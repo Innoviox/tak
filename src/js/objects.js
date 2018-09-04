@@ -5,6 +5,8 @@ var LEFT = "<",
     NONE = "0",
     DIRS = "<>+-";
 
+var ANIM_STEPS = 10;
+
 var colors = {
     white_piece: new THREE.MeshBasicMaterial({color: 0xd4b375}),
     black_piece: new THREE.MeshBasicMaterial({color: 0x573312}),
@@ -16,16 +18,27 @@ var colors = {
     outer: new THREE.MeshBasicMaterial({color: 0x6f4734}),
     letter: new THREE.MeshBasicMaterial({color: 0xFFF5B5}),
     highlighter: new THREE.LineBasicMaterial({color: 0x0000f0})
-}
+};
 
 function ctr(c) {
-    return 'abcde'.indexOf(c);
+    var a = 'ABCDE'.indexOf(c);
+    if (a == -1) {
+        return 'abcde'.indexOf(c);
+    }
+    return a;
 }
 
 class Position {
     constructor(x, y) {
         this.x = ctr(x);
-        this.y = parseInt(y) - 1;
+        if (this.x == -1) {
+            this.x = x;
+        }
+        if (typeof(y) === 'number') {
+            this.y = y;
+        } else {
+            this.y = parseInt(y) - 1;
+        }
     }
 
     next(dir) {
@@ -37,6 +50,22 @@ class Position {
             return new Position(this.x, this.y - 1);
         } else {
             return new Position(this.x, this.y + 1);
+        }
+    }
+
+    dir_from(next) {
+        if (next.y == this.y) {
+            if (next.x - 1 == this.x) {
+                return RIGHT;
+            } else {
+                return LEFT;
+            }
+        } else {
+            if (next.y - 1 == this.y) {
+                return DOWN;
+            } else {
+                return UP;
+            }
         }
     }
 }
@@ -51,7 +80,7 @@ class Move {
     }
 
     static create(str) {
-        dir = NONE;
+        var dir = NONE;
         for (i = 0, c = ''; c = DIRS.charAt(i); i++) {
             if (str.includes(c)) {
                 dir = c;
@@ -66,8 +95,9 @@ class Move {
             return new Move(1, s.charAt(0), new Position(s.charAt(1), s.charAt(2)), [], NONE);
         }
 
-        var moves = str[1].map((i) => parseInt(i));
+        var moves = str[1].split().map((i) => parseInt(i));
         var m_str = str[0];
+        var total;
         if (m_str.charAt(0).match(/[0-9]/i)) {
             total = parseInt(m_str.charAt(0));
             m_str = m_str.slice(1);
@@ -75,7 +105,47 @@ class Move {
             total = 1;
         }
         var pos = new Position(m_str.charAt(0), m_str.charAt(1));
-        return new Move(toatl, NONE, pos, moves, dir);
+        return new Move(total, NONE, pos, moves, dir);
+    }
+}
+
+class Animator {
+    constructor(dir, orig, idx) {
+        this.dt = {
+            x: 0,
+            y: 0,
+            z: 0
+        };
+        if (dir == LEFT) 
+            this.dt.x = 1;
+        if (dir == RIGHT) 
+            this.dt.x = -1;
+        if (dir == DOWN) 
+            this.dt.y = 1;
+        if (dir == UP) 
+            this.dt.y = -1;
+        var pos = new Position(orig.x, orig.y);
+        var next_sq = Board.tile_at(pos.next(dir));
+        var d_idx = next_sq.tiles.length - idx;
+        this.dt.z = d_idx * .2;
+
+        this.ct = {
+            x: 0,
+            y: 0,
+            z: 0
+        };
+        this.steps = 0;
+    }
+
+    step() {
+        this.ct.x += this.dt.x / ANIM_STEPS;
+        this.ct.y += this.dt.y / ANIM_STEPS;
+        this.ct.z += this.dt.z / ANIM_STEPS;
+        this.steps++;
+    }
+
+    done() {
+        return this.steps == ANIM_STEPS;
     }
 }
 
@@ -85,6 +155,7 @@ class Tile {
         this.stone = stone;
         this.pos = new Position(0, 0);
         this.setMesh();
+        this.animator = NONE;
     }
 
     setStone(stone) {
@@ -98,16 +169,16 @@ class Tile {
     }
 
     getGeom() {
-        console.log(models.capModel);
-
-        if (this.stone == FLAT) 
+        if (this.stone == FLAT) {
             return new THREE.BoxGeometry(1, 1, .2);
-        else if (this.stone == STAND) 
+        } else if (this.stone == STAND) {
             return new THREE.BoxGeometry(1, .2, 1);
-        if (modelsLoaded) 
+        }
+        if (modelsLoaded) {
             return models.capModel.clone();
         }
-    
+    }
+
     getMat() {
         if (this.color == WHITE) 
             return colors.white_piece;
@@ -123,6 +194,11 @@ class Tile {
         } else {
             this.mesh = new THREE.Mesh(this.geom, this.mat);
         }
+    }
+
+    animate(new_pos) {
+        var dir = new_pos.dir_from(this.pos);
+        this.animator = new Animator(dir, this.pos, 0);/* TODO: idx animation */
     }
 }
 
@@ -146,6 +222,8 @@ class Square {
 var Board = {
     objects: [],
     tiles: [],
+    moving: [],
+    animating: [],
     size: 0,
     totcaps: 0,
     tottiles: 0,
@@ -155,13 +233,10 @@ var Board = {
 
     // backend objects representing squares
     board: [],
+    old_board: [],
+    next_board: [],
 
-    last_move: {
-        start: null,
-        end: null,
-        dir: '',
-        squares: []
-    },
+    last_move: {},
 
     init: function(sz, color) {
         boardSize = sz;
@@ -198,25 +273,54 @@ var Board = {
         for (i = 0; i < boardSize; i++) {
             arr = new Array();
             for (j = 0; j < boardSize; j++) {
-                arr.push(new Square({
-                    'x': i,
-                    'y': j
-                }, new Array()));
+                arr.push(new Square(new Position(i, j), new Array()));
             }
-            this.board.push(arr)
+            this.board.push(arr);
         }
+    },
+
+    tile_at: function(pos) {
+        return this.board[pos.x][pos.y];
     },
 
     add_tile: function(x, y, tile) {
         this.board[x][y].add(tile);
     },
 
+    add_next_tile: function(x, y, tile) {
+        this.next_board[x][y].add(tile);
+    },
+
+    copy: function() {
+        a = [];
+        for (i = 0; i < boardSize; i++) {
+            row = [];
+            for (j = 0; j < boardSize; j++) {
+                var sq = this.board[i][j];
+                s = new Square(new Position(sq.pos.x, sq.pos.y));
+                for (idx in sq.tiles) {
+                    var tile = sq.tiles[idx];
+                    var nt = new Tile(tile.color, tile.stone);
+                    s.add(nt);
+                }
+                row.push(s);
+            }
+            a.push(row);
+        }
+        return a;
+    },
+
     /*
     Execute a full move
     */
     move: function(move) {
+        this.last_move = move;
+        this.old_board = this.copy();
+        this.next_board = this.copy();
+        console.log("Starting move", move);
         var old_pos = move.pos;
         var new_pos = move.pos.next(move.dir);
+        console.log("A", old_pos, new_pos);
         if (move.moves.length > 0) {
             var first = true;
             for (idx in move.moves) {
@@ -226,7 +330,7 @@ var Board = {
         } else {
             var sq = this.board[old_pos.x][old_pos.y];
             if (sq.tiles.length == 0) {
-                this.add_tile(old_pos.x, old_pos.y, new Tile(this.mycolor, move.stone));
+                this.add_next_tile(old_pos.x, old_pos.y, new Tile(this.mycolor, move.stone));
             } else {
                 //TODO: Throw error?
             }
@@ -237,21 +341,38 @@ var Board = {
     One step of a move
     */
     _move: function(old_pos, new_pos, n, first) {
-        var old_sq = this.board[old_pos.x][old_pos.y];
-        var new_sq = this.board[new_pos.x][new_pos.y];
+        console.log("B", old_pos, new_pos, n, first);
+
+        var old_sq = this.next_board[old_pos.x][old_pos.y];
+        var new_sq = this.next_board[new_pos.x][new_pos.y];
 
         var tiles = old_sq.tiles.slice(-n);
-        var n_stone = new_pos.tiles.slice(-1)[0].stone;
-        if (new_pos.tiles.length == 0 || (n_stone == FLAT)) {
-            old_sq.tiles = old_sq.tiles(0, old_sq.tiles.length - n);
+        var btiles = this.board[old_pos.x][old_pos.y].tiles.slice(-n);
+        var n_stone;
+        if (new_sq.tiles.length) {
+            n_stone = new_sq.tiles.slice(-1)[0].stone;
+        } else {
+            n_stone = NONE;
+        }
+        if (new_sq.tiles.length == 0 || (n_stone == FLAT)) {
+            console.log("oboy");
+            old_sq.tiles = old_sq.tiles.slice(0, old_sq.tiles.length - n);
+            console.log(old_sq);
             for (idx in tiles) {
+                console.log(tiles);
                 new_sq.add(tiles[idx]);
+                btiles[idx].animate(new_pos);
+                this.moving.push(btiles[idx]);
+                this.animating.push(btiles[idx]);
             }
         } else if (n == 1 && tiles.slice(-1)[0].stone == CAP && n_stone == STAND) {
-            old_sq.tiles = old_sq.tiles(0, old_sq.tiles.length - n);
-            new_sq.tiles.slice(-1)[0].stone = FLAT;
+            old_sq.tiles = old_sq.tiles.slice(0, old_sq.tiles.length - n);
+            new_sq.tiles.slice(-1)[0].setStone(FLAT);
             for (idx in tiles) {
                 new_sq.add(tiles[idx]);
+                btiles[idx].animate(new_pos);
+                this.moving.push(btiles[idx]);
+                this.animating.push(btiles[idx]);
             }
         } else {
             //TODO Throw error?
@@ -403,8 +524,7 @@ var Board = {
         rot++;
     },
 
-    _draw_tiles: function(push) {
-        console.log("updating", push);
+    _draw_tiles: function(push, dont_add = false) {
         if (push) 
             this.tiles = [];
         
@@ -436,7 +556,8 @@ var Board = {
                         tile_mesh.position.set(x, y, .2 * idx + .2);
                         tile_mesh.rotation.x = 39.25;
                     }
-                    if (push || !scene.children.includes(tile_mesh)) {
+                    if (!dont_add && (push || !scene.children.includes(tile_mesh))) {
+                        console.log("ADDING", tile_mesh);
                         this.tiles.push(tile_mesh);
                         scene.add(tile_mesh);
                     }
@@ -447,5 +568,41 @@ var Board = {
 
     update_tiles: function() {
         this._draw_tiles(false);
+        this.animate_tiles();
+        if (this.moving.length == 0) {
+            this.execute_move();
+        }
+    },
+
+    animate_tiles: function() {
+
+        remove = [];
+        for (tile of this.animating) {
+            var helper = tile.animator;
+            if (!helper.done()) 
+                helper.step();
+            tile.mesh.position.x += helper.ct.x;
+            tile.mesh.position.y += helper.ct.y;
+            tile.mesh.position.z += helper.ct.z;
+            if (helper.done()) {
+                remove.push(tile);
+            }
+        }
+        this.moving = this.moving.filter((el) => !remove.includes(el));
+    },
+
+    execute_move: function() {
+        if (this.animating.length > 0) {
+            for (tile of this.animating) {
+                tile.animator = NONE;
+                scene.remove(tile);
+            }
+
+            this.moving = [];
+            this.animating = [];
+            this.old_board = this.board;
+            this.board = this.next_board;
+            this.next_board = [];
+        }
     }
 }
