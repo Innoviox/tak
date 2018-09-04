@@ -117,7 +117,6 @@ class Animator {
             z: 0
         };
         if (dir == LEFT)
-            this.dt.x = -1;
             this.dt.x = 1;
         if (dir == RIGHT)
             this.dt.x = -1;
