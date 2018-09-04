@@ -18,7 +18,7 @@ var colors = {
     outer: new THREE.MeshBasicMaterial({color: 0x6f4734}),
     letter: new THREE.MeshBasicMaterial({color: 0xFFF5B5}),
     highlighter: new THREE.LineBasicMaterial({color: 0x0000f0})
-}
+};
 
 function ctr(c) {
     var a = 'ABCDE'.indexOf(c);
@@ -35,9 +35,9 @@ class Position {
             this.x = x;
         }
         if (typeof(y) === 'number') {
-          this.y = y;
+            this.y = y;
         } else {
-          this.y = parseInt(y) - 1;
+            this.y = parseInt(y) - 1;
         }
     }
 
@@ -138,9 +138,9 @@ class Animator {
     }
 
     step() {
-      this.ct.x += this.dt.x / ANIM_STEPS;
-      this.ct.y += this.dt.y / ANIM_STEPS;
-      this.ct.z += this.dt.z / ANIM_STEPS;
+        this.ct.x += this.dt.x / ANIM_STEPS;
+        this.ct.y += this.dt.y / ANIM_STEPS;
+        this.ct.z += this.dt.z / ANIM_STEPS;
         this.steps++;
     }
 
@@ -223,6 +223,7 @@ var Board = {
     objects: [],
     tiles: [],
     moving: [],
+    animating: [],
     size: 0,
     totcaps: 0,
     tottiles: 0,
@@ -235,12 +236,7 @@ var Board = {
     old_board: [],
     next_board: [],
 
-    last_move: {
-        start: null,
-        end: null,
-        dir: '',
-        squares: []
-    },
+    last_move: {},
 
     init: function(sz, color) {
         boardSize = sz;
@@ -279,7 +275,7 @@ var Board = {
             for (j = 0; j < boardSize; j++) {
                 arr.push(new Square(new Position(i, j), new Array()));
             }
-            this.board.push(arr)
+            this.board.push(arr);
         }
     },
 
@@ -291,32 +287,37 @@ var Board = {
         this.board[x][y].add(tile);
     },
 
+    add_next_tile: function(x, y, tile) {
+        this.next_board[x][y].add(tile);
+    },
+
     copy: function() {
-      a = [];
-      for (i = 0; i < boardSize; i++) {
-        row = [];
-        for (j = 0; j < boardSize; j++) {
-          var sq = this.board[i][j];
-          s = new Square(new Position(sq.x, sq.y));
-          for (idx: sq.tiles) {
-            var tile = sq.tiles[idx];
-            var nt = new Tile(tile.color, tile.stone);
-            s.add(nt))
-          }
-          row.push(s);
+        a = [];
+        for (i = 0; i < boardSize; i++) {
+            row = [];
+            for (j = 0; j < boardSize; j++) {
+                var sq = this.board[i][j];
+                s = new Square(new Position(sq.pos.x, sq.pos.y));
+                for (idx in sq.tiles) {
+                    var tile = sq.tiles[idx];
+                    var nt = new Tile(tile.color, tile.stone);
+                    s.add(nt);
+                }
+                row.push(s);
+            }
+            a.push(row);
         }
-        a.push(s);
-      }
-      return a;
-    }
+        return a;
+    },
 
     /*
     Execute a full move
     */
     move: function(move) {
-      this.old_board = this.copy();
-      this.next_board = this.copy();
-      console.log("Starting move", move);
+        this.last_move = move;
+        this.old_board = this.copy();
+        this.next_board = this.copy();
+        console.log("Starting move", move);
         var old_pos = move.pos;
         var new_pos = move.pos.next(move.dir);
         console.log("A", old_pos, new_pos);
@@ -329,7 +330,7 @@ var Board = {
         } else {
             var sq = this.board[old_pos.x][old_pos.y];
             if (sq.tiles.length == 0) {
-                this.add_tile(old_pos.x, old_pos.y, new Tile(this.mycolor, move.stone));
+                this.add_next_tile(old_pos.x, old_pos.y, new Tile(this.mycolor, move.stone));
             } else {
                 //TODO: Throw error?
             }
@@ -342,30 +343,36 @@ var Board = {
     _move: function(old_pos, new_pos, n, first) {
         console.log("B", old_pos, new_pos, n, first);
 
-        var old_sq = this.board[old_pos.x][old_pos.y];
-        var new_sq = this.board[new_pos.x][new_pos.y];
+        var old_sq = this.next_board[old_pos.x][old_pos.y];
+        var new_sq = this.next_board[new_pos.x][new_pos.y];
 
         var tiles = old_sq.tiles.slice(-n);
+        var btiles = this.board[old_pos.x][old_pos.y].tiles.slice(-n);
         var n_stone;
         if (new_sq.tiles.length) {
-          n_stone = new_sq.tiles.slice(-1)[0].stone;
+            n_stone = new_sq.tiles.slice(-1)[0].stone;
         } else {
-          n_stone = NONE;
+            n_stone = NONE;
         }
         if (new_sq.tiles.length == 0 || (n_stone == FLAT)) {
+          console.log("oboy");
             old_sq.tiles = old_sq.tiles.slice(0, old_sq.tiles.length - n);
+            console.log(old_sq);
             for (idx in tiles) {
+              console.log(tiles);
                 new_sq.add(tiles[idx]);
-                tiles[idx].animate(new_pos);
-                this.moving.push(tiles[idx]);
+                btiles[idx].animate(new_pos);
+                this.moving.push(btiles[idx]);
+                this.animating.push(btiles[idx]);
             }
         } else if (n == 1 && tiles.slice(-1)[0].stone == CAP && n_stone == STAND) {
             old_sq.tiles = old_sq.tiles.slice(0, old_sq.tiles.length - n);
             new_sq.tiles.slice(-1)[0].setStone(FLAT);
             for (idx in tiles) {
                 new_sq.add(tiles[idx]);
-                tiles[idx].animate(new_pos);
-                this.moving.push(tiles[idx]);
+                btiles[idx].animate(new_pos);
+                this.moving.push(btiles[idx]);
+                this.animating.push(btiles[idx]);
             }
         } else {
             //TODO Throw error?
@@ -561,20 +568,38 @@ var Board = {
 
     update_tiles: function() {
         this._draw_tiles(false);
+        this.animate_tiles();
+        if (this.moving.length == 0) {
+            this.execute_move();
+        }
+    },
+
+    animate_tiles: function() {
         remove = [];
-        for (idx in this.moving) {
-            var tile = this.moving[idx];
+        for (idx in this.animating) {
+            var tile = this.animating[idx];
             var helper = tile.animator;
-            helper.step();
+            if (!helper.done())
+                helper.step();
             tile.mesh.position.x += helper.ct.x;
             tile.mesh.position.y += helper.ct.y;
             tile.mesh.position.z += helper.ct.z;
             if (helper.done()) {
-              console.log("DONE!");
-              tile.animator = NONE;
                 remove.push(tile);
             }
         }
         this.moving = this.moving.filter((el) => !remove.includes(el));
+    },
+
+    execute_move: function() {
+        if (this.animating.length > 0) {
+            for (idx in this.animating) {
+                this.animating[idx].animator = NONE;
+            }
+            this.animating = [];
+            this.old_board = this.board;
+            this.board = this.next_board;
+            this.next_board = [];
+        }
     }
 }
