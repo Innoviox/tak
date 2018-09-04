@@ -80,7 +80,7 @@ class Move {
     }
 
     static create(str) {
-        dir = NONE;
+        var dir = NONE;
         for (i = 0, c = ''; c = DIRS.charAt(i); i++) {
             if (str.includes(c)) {
                 dir = c;
@@ -116,13 +116,13 @@ class Animator {
             y: 0,
             z: 0
         };
-        if (dir == LEFT)
+        if (dir == LEFT) 
             this.dt.x = 1;
-        if (dir == RIGHT)
+        if (dir == RIGHT) 
             this.dt.x = -1;
-        if (dir == DOWN)
+        if (dir == DOWN) 
             this.dt.y = 1;
-        if (dir == UP)
+        if (dir == UP) 
             this.dt.y = -1;
         var pos = new Position(orig.x, orig.y);
         var next_sq = Board.tile_at(pos.next(dir));
@@ -180,7 +180,7 @@ class Tile {
     }
 
     getMat() {
-        if (this.color == WHITE)
+        if (this.color == WHITE) 
             return colors.white_piece;
         return colors.black_piece;
     }
@@ -197,7 +197,7 @@ class Tile {
     }
 
     animate(new_pos) {
-        dir = new_pos.dir_from(this.pos);
+        var dir = new_pos.dir_from(this.pos);
         this.animator = new Animator(dir, this.pos, 0);/* TODO: idx animation */
     }
 }
@@ -355,11 +355,11 @@ var Board = {
             n_stone = NONE;
         }
         if (new_sq.tiles.length == 0 || (n_stone == FLAT)) {
-          console.log("oboy");
+            console.log("oboy");
             old_sq.tiles = old_sq.tiles.slice(0, old_sq.tiles.length - n);
             console.log(old_sq);
             for (idx in tiles) {
-              console.log(tiles);
+                console.log(tiles);
                 new_sq.add(tiles[idx]);
                 btiles[idx].animate(new_pos);
                 this.moving.push(btiles[idx]);
@@ -524,11 +524,10 @@ var Board = {
         rot++;
     },
 
-    _draw_tiles: function(push) {
-        // console.log("updating", push);
-        if (push)
+    _draw_tiles: function(push, dont_add = false) {
+        if (push) 
             this.tiles = [];
-
+        
         /*
         var textureLoader = new THREE.TextureLoader();
         var whitePieceTexture = textureLoader.load("images/tiles/white_simple_pieces.png");
@@ -557,7 +556,8 @@ var Board = {
                         tile_mesh.position.set(x, y, .2 * idx + .2);
                         tile_mesh.rotation.x = 39.25;
                     }
-                    if (push || !scene.children.includes(tile_mesh)) {
+                    if (!dont_add && (push || !scene.children.includes(tile_mesh))) {
+                        console.log("ADDING", tile_mesh);
                         this.tiles.push(tile_mesh);
                         scene.add(tile_mesh);
                     }
@@ -575,11 +575,11 @@ var Board = {
     },
 
     animate_tiles: function() {
+
         remove = [];
-        for (idx in this.animating) {
-            var tile = this.animating[idx];
+        for (tile of this.animating) {
             var helper = tile.animator;
-            if (!helper.done())
+            if (!helper.done()) 
                 helper.step();
             tile.mesh.position.x += helper.ct.x;
             tile.mesh.position.y += helper.ct.y;
@@ -593,9 +593,12 @@ var Board = {
 
     execute_move: function() {
         if (this.animating.length > 0) {
-            for (idx in this.animating) {
-                this.animating[idx].animator = NONE;
+            for (tile of this.animating) {
+                tile.animator = NONE;
+                scene.remove(tile);
             }
+
+            this.moving = [];
             this.animating = [];
             this.old_board = this.board;
             this.board = this.next_board;

@@ -40,7 +40,7 @@ function load_models() {
     // White capstone model
     mtl.load('rook-small-door-matte.mtl', function(materials) {
         obj.setMaterials(materials).load('rook-small-door-matte.obj', function(model) {
-          materials.preload();
+            materials.preload();
             models.capModel = model;
             modelsLoaded = true;
         });
@@ -110,8 +110,13 @@ function initGraphics() {
 
     window.addEventListener('resize', onWindowResize, false);
 
+    setTimeout(testMove, 3000);
+
 }
 
+function testMove() {
+    Board.move(Move.create("B4>"));
+}
 function onWindowResize() {
 
     camera.aspect = window.innerWidth / window.innerHeight;
