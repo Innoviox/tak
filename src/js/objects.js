@@ -423,9 +423,10 @@ var Board = {
         for (i = -boardSize / 2 + .6; i < boardSize / 2 + .6; i += 1.1) {
             for (j = -boardSize / 2 + .6; j < boardSize / 2 + .6; j += 1.1) {
                 geom = new THREE.BoxGeometry(1, 1, .5);
-                obj = new THREE.Mesh(geom, white_sqr);
+                obj = new THREE.Mesh(geom, white_sqr.clone());
                 obj.position.set(i - .3, j - .3, 0);
                 obj.updateMatrix();
+                obj.name = "square"
                 this.inner.push(obj);
                 this.objects.push(obj);
 
