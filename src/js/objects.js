@@ -145,7 +145,7 @@ class Animator {
     }
 
     done() {
-        return this.steps >=  1.1 * ANIM_STEPS;
+        return this.steps >= 1.1 * ANIM_STEPS;
     }
 }
 
@@ -599,9 +599,8 @@ var Board = {
             }
 
             for (tile of this.tiles) {
-              scene.remove(tile.mesh);
+                scene.remove(tile.mesh);
             }
-
 
             this.tiles = [];
             this.moving = [];
