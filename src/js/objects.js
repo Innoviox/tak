@@ -604,15 +604,6 @@ var Board = {
 
 
             this.tiles = [];
-            /*
-            for (tile of this.animating) {
-                this.tiles.push(tile.mesh);
-                // scene.add(tile.mesh);
-            }
-            */
-
-
-
             this.moving = [];
             this.animating = [];
             this.old_board = this.board;
