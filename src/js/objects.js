@@ -2,7 +2,6 @@ var LEFT = "<",
     RIGHT = ">",
     UP = "+",
     DOWN = "-",
-    NONE = "0",
     DIRS = "<>+-";
 
 var ANIM_STEPS = 10;
@@ -26,6 +25,10 @@ function ctr(c) {
         return 'abcde'.indexOf(c);
     }
     return a;
+}
+
+function rtc(r) {
+    return 'ABCDE'.charAt(r);
 }
 
 class Position {
@@ -80,7 +83,7 @@ class Move {
     }
 
     static create(str) {
-        var dir = NONE;
+        var dir = undefined;
         for (i = 0, c = ''; c = DIRS.charAt(i); i++) {
             if (str.includes(c)) {
                 dir = c;
@@ -89,9 +92,9 @@ class Move {
             }
         }
 
-        if (dir == NONE) {
+        if (dir == undefined) {
             var s = str.padStart(3, "F");
-            return new Move(1, s.charAt(0), new Position(s.charAt(1), s.charAt(2)), [], NONE);
+            return new Move(1, s.charAt(0), new Position(s.charAt(1), s.charAt(2)), [], undefined);
         }
 
         var moves = str[1].split().map((i) => parseInt(i));
@@ -104,7 +107,7 @@ class Move {
             total = 1;
         }
         var pos = new Position(m_str.charAt(0), m_str.charAt(1));
-        return new Move(total, NONE, pos, moves, dir);
+        return new Move(total, undefined, pos, moves, dir);
     }
 }
 
@@ -154,7 +157,7 @@ class Tile {
         this.stone = stone;
         this.pos = new Position(0, 0);
         this.setMesh();
-        this.animator = NONE;
+        this.animator = undefined;
     }
 
     setStone(stone) {
@@ -230,6 +233,7 @@ var Board = {
     whitepiecesleft: 0,
     blackpiecesleft: 0,
     mycolor: "white",
+    placed: false,
 
     // backend objects representing squares
     board: [],
@@ -288,7 +292,10 @@ var Board = {
     },
 
     add_next_tile: function(x, y, tile) {
+        console.log("adding tile");
+        console.log(this.next_board[x][y]);
         this.next_board[x][y].add(tile);
+        console.log(this.next_board[x][y]);
     },
 
     copy: function() {
@@ -326,9 +333,12 @@ var Board = {
                 first = false;
             }
         } else {
+            console.log(move);
             var sq = this.board[old_pos.x][old_pos.y];
             if (sq.tiles.length == 0) {
+                console.log("adding tile");
                 this.add_next_tile(old_pos.x, old_pos.y, new Tile(this.mycolor, move.stone));
+                this.placed = true;
             } else {
                 //TODO: Throw error?
             }
@@ -348,7 +358,7 @@ var Board = {
         if (new_sq.tiles.length) {
             n_stone = new_sq.tiles.slice(-1)[0].stone;
         } else {
-            n_stone = NONE;
+            n_stone = undefined;
         }
         if (new_sq.tiles.length == 0 || (n_stone == FLAT)) {
             old_sq.tiles = old_sq.tiles.slice(0, old_sq.tiles.length - n);
@@ -420,13 +430,14 @@ var Board = {
         var white_sqr = new THREE.MeshBasicMaterial({
             map: loader.load("images/tiles/white_simple.png", () => {})
         });
-        for (i = -boardSize / 2 + .6; i < boardSize / 2 + .6; i += 1.1) {
-            for (j = -boardSize / 2 + .6; j < boardSize / 2 + .6; j += 1.1) {
+        for (x = -1, i = -boardSize / 2 + .6; x++, i < boardSize / 2 + .6; i += 1.1) {
+            for (y = 5, j = -boardSize / 2 + .6; y--, j < boardSize / 2 + .6; j += 1.1) {
                 geom = new THREE.BoxGeometry(1, 1, .5);
                 obj = new THREE.Mesh(geom, white_sqr.clone());
                 obj.position.set(i - .3, j - .3, 0);
                 obj.updateMatrix();
                 obj.name = "square"
+                obj.pos = new Position(x, y);
                 this.inner.push(obj);
                 this.objects.push(obj);
 
@@ -581,9 +592,9 @@ var Board = {
     },
 
     execute_move: function() {
-        if (this.animating.length > 0) {
+        if (this.animating.length > 0 || this.placed) {
             for (tile of this.animating) {
-                tile.animator = NONE;
+                tile.animator = undefined;
                 scene.remove(tile.mesh);
             }
 
@@ -597,6 +608,16 @@ var Board = {
             this.old_board = this.board;
             this.board = this.next_board;
             this.next_board = [];
+            this.placed = false;
+        }
+    },
+
+    click: function(obj) {
+        var sq = this.tile_at(obj.pos);
+        if (sq.tiles.length == 0) {
+            var move = rtc(obj.pos.x) + (obj.pos.y + 1).toString();
+            console.log(move, Move.create(move));
+            this.move(Move.create(move));
         }
     }
 }

@@ -29,7 +29,7 @@ var projector,
     INTERSECTED;
 
 var models = {
-    capModel: NONE
+    capModel: undefined
 }
 
 initGraphics();
@@ -82,7 +82,7 @@ function initGraphics() {
     camera.position.z = 10
     camera.lookAt(new THREE.Vector3(0, 0, 0));
 
-    projector = new THREE.Projector();
+    // projector = new THREE.Projector();
 
     controls = new THREE.OrbitControls(camera);
     load_models();
@@ -122,8 +122,7 @@ function initGraphics() {
     document.addEventListener('mousemove', onDocumentMouseMove, false);
     document.addEventListener('mousedown', onDocumentMouseDown, false);
 
-    setTimeout(testMove, 3000);
-
+    // setTimeout(testMove, 3000);
 }
 
 function onDocumentMouseMove(event) {
@@ -158,7 +157,7 @@ function onDocumentMouseDown(event) {
     if (intersects.length > 0) {
         for (obj of intersects) {
             if (obj.object.name == "square") {
-                console.log(obj);
+                Board.click(obj.object);
             }
         }
     }
