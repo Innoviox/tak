@@ -209,6 +209,7 @@ class Square {
     constructor(pos) {
         this.pos = pos;
         this.tiles = new Array();
+        this.upped = 0;
     }
 
     add(tile) {
@@ -234,6 +235,7 @@ var Board = {
     blackpiecesleft: 0,
     mycolor: "white",
     placed: false,
+    manual_positions: [],
 
     // backend objects representing squares
     board: [],
@@ -568,6 +570,9 @@ var Board = {
             this.execute_move();
             this._draw_tiles(false);
         }
+        for (fn of this.manual_positions) {
+          fn();
+        }
     },
 
     animate_tiles: function() {
@@ -612,6 +617,10 @@ var Board = {
         if (sq.tiles.length == 0) {
             var move = rtc(obj.pos.x) + (obj.pos.y + 1).toString();
             this.move(Move.create(move));
+        } else {
+            var tile_up = sq.tiles[sq.upped++];
+            if (tile_up.mesh !== undefined)
+              this.manual_positions.push(() => { tile_up.mesh.position.z += .2; });
         }
     }
 }
