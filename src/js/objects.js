@@ -91,7 +91,6 @@ class Move {
 
         if (dir == NONE) {
             var s = str.padStart(3, "F");
-            console.log(s);
             return new Move(1, s.charAt(0), new Position(s.charAt(1), s.charAt(2)), [], NONE);
         }
 
@@ -224,6 +223,7 @@ var Board = {
     tiles: [],
     moving: [],
     animating: [],
+    inner: [],
     size: 0,
     totcaps: 0,
     tottiles: 0,
@@ -317,10 +317,8 @@ var Board = {
         this.last_move = move;
         this.old_board = this.copy();
         this.next_board = this.copy();
-        console.log("Starting move", move);
         var old_pos = move.pos;
         var new_pos = move.pos.next(move.dir);
-        console.log("A", old_pos, new_pos);
         if (move.moves.length > 0) {
             var first = true;
             for (idx in move.moves) {
@@ -341,8 +339,6 @@ var Board = {
     One step of a move
     */
     _move: function(old_pos, new_pos, n, first) {
-        console.log("B", old_pos, new_pos, n, first);
-
         var old_sq = this.next_board[old_pos.x][old_pos.y];
         var new_sq = this.next_board[new_pos.x][new_pos.y];
 
@@ -355,11 +351,8 @@ var Board = {
             n_stone = NONE;
         }
         if (new_sq.tiles.length == 0 || (n_stone == FLAT)) {
-            console.log("oboy");
             old_sq.tiles = old_sq.tiles.slice(0, old_sq.tiles.length - n);
-            console.log(old_sq);
             for (idx in tiles) {
-                console.log(tiles);
                 new_sq.add(tiles[idx]);
                 btiles[idx].animate(new_pos);
                 this.moving.push(btiles[idx]);
@@ -422,7 +415,7 @@ var Board = {
 
         var geom,
             obj;
-        var squareGeom = new THREE.Geometry();
+        // var squareGeom = new THREE.Geometry();
         var loader = new THREE.TextureLoader();
         var white_sqr = new THREE.MeshBasicMaterial({
             map: loader.load("images/tiles/white_simple.png", () => {})
@@ -433,12 +426,14 @@ var Board = {
                 obj = new THREE.Mesh(geom, white_sqr);
                 obj.position.set(i - .3, j - .3, 0);
                 obj.updateMatrix();
+                this.inner.push(obj);
+                this.objects.push(obj);
 
-                squareGeom.merge(obj.geometry, obj.matrix);
+                // squareGeom.merge(obj.geometry, obj.matrix);
             }
         }
-        var squareMesh = new THREE.Mesh(squareGeom, white_sqr);
-        this.objects.push(squareMesh);
+        // var squareMesh = new THREE.Mesh(squareGeom, white_sqr);
+        // this.objects.push(squareMesh);
 
         var innerGeom = new THREE.Geometry();
         for (i = 0; i < 6; i++) {
@@ -446,13 +441,14 @@ var Board = {
             obj = new THREE.Mesh(geom, colors.inner);
             obj.position.set(0, boardSize / 2 - 5.25 + 1.1 * i, 0);
             obj.updateMatrix();
-
+            obj.name = "inner";
             innerGeom.merge(obj.geometry, obj.matrix);
 
             geom = new THREE.BoxGeometry(.1, boardSize + .6, .5);
             obj = new THREE.Mesh(geom, colors.inner);
             obj.position.set(boardSize / 2 - 5.25 + 1.1 * i, 0, 0);
             obj.updateMatrix();
+            obj.name = "inner";
 
             innerGeom.merge(obj.geometry, obj.matrix);
         }
@@ -524,16 +520,9 @@ var Board = {
         rot++;
     },
 
-    _draw_tiles: function(push, dont_add = false) {
+    _draw_tiles: function(push) {
         if (push)
             this.tiles = [];
-
-        /*
-        var textureLoader = new THREE.TextureLoader();
-        var whitePieceTexture = textureLoader.load("images/tiles/white_simple_pieces.png");
-        whitePieceTexture.wrapS = THREE.RepeatWrapping;
-        whitePieceTexture.wrapT = THREE.RepeatWrapping;
-        */
 
         for (row = 0; row < boardSize; row++) {
             for (col = 0; col < boardSize; col++) {
@@ -556,8 +545,7 @@ var Board = {
                         tile_mesh.position.set(x, y, .2 * idx + .2);
                         tile_mesh.rotation.x = 39.25;
                     }
-                    if (!dont_add && (push || !scene.children.includes(tile_mesh))) {
-                        console.log("ADDING", tile_mesh);
+                    if (push || !scene.children.includes(tile_mesh)) {
                         this.tiles.push(tile_mesh);
                         scene.add(tile_mesh);
                     }
