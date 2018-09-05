@@ -292,10 +292,7 @@ var Board = {
     },
 
     add_next_tile: function(x, y, tile) {
-        console.log("adding tile");
-        console.log(this.next_board[x][y]);
         this.next_board[x][y].add(tile);
-        console.log(this.next_board[x][y]);
     },
 
     copy: function() {
@@ -333,10 +330,8 @@ var Board = {
                 first = false;
             }
         } else {
-            console.log(move);
             var sq = this.board[old_pos.x][old_pos.y];
             if (sq.tiles.length == 0) {
-                console.log("adding tile");
                 this.add_next_tile(old_pos.x, old_pos.y, new Tile(this.mycolor, move.stone));
                 this.placed = true;
             } else {
@@ -616,7 +611,6 @@ var Board = {
         var sq = this.tile_at(obj.pos);
         if (sq.tiles.length == 0) {
             var move = rtc(obj.pos.x) + (obj.pos.y + 1).toString();
-            console.log(move, Move.create(move));
             this.move(Move.create(move));
         }
     }
