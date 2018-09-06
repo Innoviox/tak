@@ -235,6 +235,8 @@ class Square {
         }
         return --this.upped;
     }
+
+    equals(sq) {return this.pos.equals(sq.pos);}
 }
 
 var Board = {
@@ -567,6 +569,7 @@ var Board = {
                         tile_mesh = tile.mesh;
                     }
                     tile_mesh.name = "tile mesh";
+                    
                     if (tile.stone == FLAT) {
                         tile_mesh.position.set(x, y, .2 * idx + .3);
                     } else if (tile.stone == STAND) {
@@ -576,12 +579,15 @@ var Board = {
                         tile_mesh.position.set(x, y, .2 * idx + .2);
                         tile_mesh.rotation.x = 39.25;
                     }
+
                     if (this.lifted.includes(tile_mesh)) {
                         tile_mesh.position.z += .2;
-                        // tile_mesh.position.needsUpdate = true;
                     } else if (push || !scene.children.includes(tile_mesh)) {
                         this.tiles.push(tile_mesh);
                         scene.add(tile_mesh);
+                    } else if (this.lifted_sq != undefined && sq.equals(this.lifted_sq) && idx > sq.upped) {
+                        this.lifted.push(tile_mesh);
+                        tile_mesh.position.z += .2;
                     }
                 }
             }
@@ -617,19 +623,14 @@ var Board = {
         if (this.animating.length > 0 || this.placed) {
             for (tile of this.animating) {
                 tile.animator = undefined;
-                if (!this.lifted.includes(tile.mesh)) {
-                  scene.remove(tile.mesh);
-                }
+                scene.remove(tile.mesh);
             }
 
             for (tile of this.tiles) {
-                if (!this.lifted.includes(tile.mesh)) {
-                  scene.remove(tile.mesh);
-                }
+                scene.remove(tile.mesh);
             }
-            console.log(scene.children);
-            this.tiles = this.moving.filter((el) => !this.lifted.includes(el.mesh));
-            console.log(this.tiles);
+
+            this.tiles = [];
             this.moving = [];
             this.animating = [];
             this.old_board = this.board;
@@ -683,9 +684,9 @@ var Board = {
                     this.held_move.dir = dir;
 
                     this.move(this.create_held());
-                    console.log(this.lifted);
                     this.lifted.splice(0, 1);
-                    console.log(this.lifted);
+                    this.lifted_sq = this.lifted_sq.next(dir);
+                    this.lifted_sq.up();
                     // this.held_move.moves.push(1);
                 }
             }
