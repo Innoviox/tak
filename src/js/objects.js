@@ -236,7 +236,9 @@ class Square {
         return --this.upped;
     }
 
-    equals(sq) {return this.pos.equals(sq.pos);}
+    equals(sq) {
+        return this.pos.equals(sq.pos);
+    }
 }
 
 var Board = {
@@ -569,7 +571,7 @@ var Board = {
                         tile_mesh = tile.mesh;
                     }
                     tile_mesh.name = "tile mesh";
-                    
+
                     if (tile.stone == FLAT) {
                         tile_mesh.position.set(x, y, .2 * idx + .3);
                     } else if (tile.stone == STAND) {
@@ -697,11 +699,7 @@ var Board = {
         var s = "";
         for (i = 1; i < this.held_move.moves.length; i++)
             s += this.held_move.moves[i].toString();
-        var mstr = this.held_move.moves[0].toString() +
-                   rtc(this.held_move.started_at.pos.x) +
-                   (this.held_move.started_at.pos.y + 1).toString() +
-                   this.held_move.dir +
-                   s;
+        var mstr = this.held_move.moves[0].toString() + rtc(this.held_move.started_at.pos.x) + (this.held_move.started_at.pos.y + 1).toString() + this.held_move.dir + s;
         console.log(mstr);
         return Move.create(mstr);
     }
