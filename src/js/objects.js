@@ -578,7 +578,7 @@ var Board = {
                     }
                     if (this.lifted.includes(tile_mesh)) {
                         tile_mesh.position.z += .2;
-                        tile_mesh.position.needsUpdate = true;
+                        // tile_mesh.position.needsUpdate = true;
                     } else if (push || !scene.children.includes(tile_mesh)) {
                         this.tiles.push(tile_mesh);
                         scene.add(tile_mesh);
@@ -617,14 +617,19 @@ var Board = {
         if (this.animating.length > 0 || this.placed) {
             for (tile of this.animating) {
                 tile.animator = undefined;
-                scene.remove(tile.mesh);
+                if (!this.lifted.includes(tile.mesh)) {
+                  scene.remove(tile.mesh);
+                }
             }
 
             for (tile of this.tiles) {
-                scene.remove(tile.mesh);
+                if (!this.lifted.includes(tile.mesh)) {
+                  scene.remove(tile.mesh);
+                }
             }
-
-            this.tiles = [];
+            console.log(scene.children);
+            this.tiles = this.moving.filter((el) => !this.lifted.includes(el.mesh));
+            console.log(this.tiles);
             this.moving = [];
             this.animating = [];
             this.old_board = this.board;
@@ -674,12 +679,13 @@ var Board = {
                 console.log("found a direction", dir);
                 if (this.held_move.started_at == undefined) {
                     this.held_move.started_at = this.lifted_sq;
-                    console.log(this.held_move);
                     this.held_move.moves.push(this.lifted.length);
                     this.held_move.dir = dir;
 
                     this.move(this.create_held());
-                    // this.lifted.pop(0);
+                    console.log(this.lifted);
+                    this.lifted.splice(0, 1);
+                    console.log(this.lifted);
                     // this.held_move.moves.push(1);
                 }
             }
