@@ -231,7 +231,7 @@ class Square {
 
     up() {
         if (this.upped < this.tiles.length) {
-          return ++this.upped;
+            return ++this.upped;
         }
         return --this.upped;
     }
@@ -259,6 +259,11 @@ var Board = {
     next_board: [],
 
     last_move: {},
+    held_move: {
+        moves: [],
+        started_at: undefined,
+        dir: undefined
+    },
 
     init: function(sz, color) {
         boardSize = sz;
@@ -664,7 +669,22 @@ var Board = {
                 this.lifted_sq = sq;
             } else {
                 console.log("found a direction", dir);
+                if (this.held_move.started_at == undefined) {
+                    this.held_move.started_at = this.lifted_sq;
+                    console.log(this.held_move);
+                    this.held_move.moves.push(this.lifted.length);
+                    this.held_move.dir = dir;
+
+                    this.lifted.pop(0);
+                    this.move(this.create_held());
+                }
             }
         }
+    },
+
+    create_held() {
+        return Move.create(this.held_move.moves[0].toString() +
+                           rtc(this.held_move.started_at.pos.x) +
+                           (this.held_move.started_at.pos.y + 1).toString() + this.held_move.dir);
     }
 }
