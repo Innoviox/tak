@@ -71,6 +71,10 @@ class Position {
             }
         }
     }
+
+    equals(pos) {
+        return this.x == pos.x && this.y == pos.y;
+    }
 }
 
 class Move {
@@ -220,6 +224,17 @@ class Square {
             //TODO: tile is not flat
         }
     }
+
+    next(dir) {
+        return Board.tile_at(this.pos.next(dir));
+    }
+
+    up() {
+        if (this.upped < this.tiles.length) {
+          return ++this.upped;
+        }
+        return --this.upped;
+    }
 }
 
 var Board = {
@@ -235,7 +250,8 @@ var Board = {
     blackpiecesleft: 0,
     mycolor: "white",
     placed: false,
-    manual_positions: [],
+    lifted: [],
+    lifted_sq: undefined,
 
     // backend objects representing squares
     board: [],
@@ -554,7 +570,9 @@ var Board = {
                         tile_mesh.position.set(x, y, .2 * idx + .2);
                         tile_mesh.rotation.x = 39.25;
                     }
-                    if (push || !scene.children.includes(tile_mesh)) {
+                    if (this.lifted.includes(tile_mesh)) {
+                        tile_mesh.position.z += .2;
+                    } else if (push || !scene.children.includes(tile_mesh)) {
                         this.tiles.push(tile_mesh);
                         scene.add(tile_mesh);
                     }
@@ -569,9 +587,6 @@ var Board = {
         if (this.moving.length == 0) {
             this.execute_move();
             this._draw_tiles(false);
-        }
-        for (fn of this.manual_positions) {
-          fn();
         }
     },
 
@@ -614,13 +629,42 @@ var Board = {
 
     click: function(obj) {
         var sq = this.tile_at(obj.pos);
-        if (sq.tiles.length == 0) {
+        console.log("recieved click at", sq);
+        if (this.lifted_sq == undefined && sq.tiles.length == 0) {
+            console.log("\tclicked on empty tile and not holding a tile");
             var move = rtc(obj.pos.x) + (obj.pos.y + 1).toString();
             this.move(Move.create(move));
         } else {
-            var tile_up = sq.tiles[sq.upped++];
-            if (tile_up.mesh !== undefined)
-              this.manual_positions.push(() => { tile_up.mesh.position.z += .2; });
+            console.log("either clicked on full tile or holding tile");
+            var dir;
+            if (this.lifted_sq === undefined) {
+                console.log("not holding a tile! pick up this one");
+                this.lifted_sq = sq;
+            } else {
+                console.log("holding a tile! checking if this tile is next to it!");
+                for (d of DIRS.split("")) {
+                    if (sq.pos.equals(this.lifted_sq.next(d).pos)) {
+                        dir = d;
+                        console.log("found it! it is", d);
+                        break;
+                    }
+                }
+            }
+            if (dir === undefined) {
+                console.log("didn't find a direction or wasn't holding a tile");
+                this.lifted = [];
+                var a = -sq.tiles.length + sq.up();
+                var uptiles = sq.tiles.slice(a);
+                console.log("square has lifted", a);
+                for (tile_up of uptiles) {
+                    if (tile_up !== undefined && tile_up.mesh !== undefined) {
+                        this.lifted.push(tile_up.mesh);
+                    }
+                }
+                this.lifted_sq = sq;
+            } else {
+                console.log("found a direction", dir);
+            }
         }
     }
 }

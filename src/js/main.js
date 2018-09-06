@@ -120,7 +120,7 @@ function initGraphics() {
     window.addEventListener('resize', onWindowResize, false);
 
     document.addEventListener('mousemove', onDocumentMouseMove, false);
-    document.addEventListener('mousedown', onDocumentMouseDown, false);
+    document.addEventListener('click', onDocumentMouseClick, false);
 
     // setTimeout(testMove, 3000);
 }
@@ -134,7 +134,7 @@ function toString(v) {
     return "[ " + v.x + ", " + v.y + ", " + v.z + " ]";
 }
 
-function onDocumentMouseDown(event) {
+function onDocumentMouseClick(event) {
     mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
     mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
@@ -153,6 +153,7 @@ function onDocumentMouseDown(event) {
         for (obj of intersects) {
             if (obj.object.name == "square") {
                 Board.click(obj.object);
+                return;
             }
         }
     }
