@@ -566,6 +566,7 @@ var Board = {
                         tile.setMesh();
                         tile_mesh = tile.mesh;
                     }
+                    tile_mesh.name = "tile mesh";
                     if (tile.stone == FLAT) {
                         tile_mesh.position.set(x, y, .2 * idx + .3);
                     } else if (tile.stone == STAND) {
@@ -577,6 +578,7 @@ var Board = {
                     }
                     if (this.lifted.includes(tile_mesh)) {
                         tile_mesh.position.z += .2;
+                        tile_mesh.position.needsUpdate = true;
                     } else if (push || !scene.children.includes(tile_mesh)) {
                         this.tiles.push(tile_mesh);
                         scene.add(tile_mesh);
@@ -648,6 +650,7 @@ var Board = {
             } else {
                 console.log("holding a tile! checking if this tile is next to it!");
                 for (d of DIRS.split("")) {
+                    console.log(d);
                     if (sq.pos.equals(this.lifted_sq.next(d).pos)) {
                         dir = d;
                         console.log("found it! it is", d);
@@ -675,16 +678,24 @@ var Board = {
                     this.held_move.moves.push(this.lifted.length);
                     this.held_move.dir = dir;
 
-                    this.lifted.pop(0);
                     this.move(this.create_held());
+                    // this.lifted.pop(0);
+                    // this.held_move.moves.push(1);
                 }
             }
         }
     },
 
     create_held() {
-        return Move.create(this.held_move.moves[0].toString() +
-                           rtc(this.held_move.started_at.pos.x) +
-                           (this.held_move.started_at.pos.y + 1).toString() + this.held_move.dir);
+        var s = "";
+        for (i = 1; i < this.held_move.moves.length; i++)
+            s += this.held_move.moves[i].toString();
+        var mstr = this.held_move.moves[0].toString() +
+                   rtc(this.held_move.started_at.pos.x) +
+                   (this.held_move.started_at.pos.y + 1).toString() +
+                   this.held_move.dir +
+                   s;
+        console.log(mstr);
+        return Move.create(mstr);
     }
 }

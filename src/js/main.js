@@ -157,11 +157,10 @@ function onDocumentMouseClick(event) {
         scene.add(tile);
 
     if (intersects.length > 0) {
-        for (obj of intersects) {
-            if (obj.object.name == "square") {
-                Board.click(obj.object);
-                return;
-            }
+        // for (obj of intersects) {
+        if (intersects[0].name == "square") {
+              Board.click(obj.object);
+              return;
         }
     }
 }
