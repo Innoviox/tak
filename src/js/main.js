@@ -121,10 +121,17 @@ function initGraphics() {
 
     document.addEventListener('mousemove', onDocumentMouseMove, false);
     document.addEventListener('click', onDocumentMouseClick, false);
+    document.addEventListener('keyup', pressKey, false);
 
     // setTimeout(testMove, 3000);
 }
 
+function pressKey(event) {
+    if (event.keyCode == 27) {
+        Board.lifted = [];
+        Board.lifted_sq = undefined;
+    }
+}
 function onDocumentMouseMove(event) {
     mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
     mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
