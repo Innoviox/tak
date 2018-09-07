@@ -448,7 +448,9 @@ var Board = {
                     this.lifted_sq.up();
                     // this.held_move.moves.push(1);
                 } else {
-                    if (this.held_move.dir == dir) {}
+                    if (this.held_move.dir == dir) {
+                        
+                    }
                 }
             }
         }

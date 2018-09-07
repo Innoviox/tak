@@ -6,3 +6,17 @@
 	z-index: 100;
 	display:block;
 }
+
+body {
+		color: #61443e;
+		font-family: Monospace;
+		font-size: 13px;
+		text-align: center;
+		background-color: #bfd1e5;
+		margin: 0px;
+		overflow: hidden;
+}
+
+a {
+		color: #a06851;
+}
