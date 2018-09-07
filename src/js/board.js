@@ -410,8 +410,9 @@ var Board = {
                 this.lifted_sq = sq;
                 sq.upped = sq.tiles.length - 1;
                 for (tile of sq.tiles)
-                  this.lifted.push(tile.mesh);
-            } else {
+                    this.lifted.push(tile.mesh);
+                }
+            else {
                 for (d of DIRS.split("")) {
                     if (sq.pos.equals(this.lifted_sq.next(d).pos)) {
                         dir = d;
@@ -421,7 +422,6 @@ var Board = {
                 if (this.lifted_sq.equals(sq)) {
                     console.log("RECLICK!");
                 } else if (dir === undefined) {
-                    consoel.log("First click on a square");
                     this.lifted = [];
                     var a = -sq.tiles.length + sq.up();
                     var uptiles = sq.tiles.slice(a);
@@ -444,7 +444,13 @@ var Board = {
                         // this.held_move.moves.push(1);
                     } else {
                         if (this.held_move.dir == dir) {
+                            if (this.held_move.moves.length == 1) {
+                                this.held_move.moves.push(this.lifted.length - this.tile_at(this.lifted_sq.pos).tiles.length);
+                            }
                             this.held_move.moves.push(this.lifted_sq.upped + 1);
+                            this.move(this.create_held());
+                            this.lifted.splice(0, 1);
+                            this.lifted_sq = this.lifted_sq.next(dir);
                         }
                     }
                 }
