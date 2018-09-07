@@ -408,6 +408,9 @@ var Board = {
             var dir;
             if (this.lifted_sq === undefined) {
                 this.lifted_sq = sq;
+                sq.upped = sq.tiles.length - 1;
+                for (tile of sq.tiles)
+                  this.lifted.push(tile.mesh);
             } else {
                 for (d of DIRS.split("")) {
                     if (sq.pos.equals(this.lifted_sq.next(d).pos)) {
@@ -415,31 +418,34 @@ var Board = {
                         break;
                     }
                 }
-            }
-            if (dir === undefined) {
-                this.lifted = [];
-                var a = -sq.tiles.length + sq.up();
-                var uptiles = sq.tiles.slice(a);
-                for (tile_up of uptiles) {
-                    if (tile_up !== undefined && tile_up.mesh !== undefined) {
-                        this.lifted.push(tile_up.mesh);
+                if (this.lifted_sq.equals(sq)) {
+                    console.log("RECLICK!");
+                } else if (dir === undefined) {
+                    consoel.log("First click on a square");
+                    this.lifted = [];
+                    var a = -sq.tiles.length + sq.up();
+                    var uptiles = sq.tiles.slice(a);
+                    for (tile_up of uptiles) {
+                        if (tile_up !== undefined && tile_up.mesh !== undefined) {
+                            this.lifted.push(tile_up.mesh);
+                        }
                     }
-                }
-                this.lifted_sq = sq;
-            } else {
-                if (this.held_move.started_at == undefined) {
-                    this.held_move.started_at = this.lifted_sq;
-                    this.held_move.moves.push(this.lifted.length);
-                    this.held_move.dir = dir;
-
-                    this.move(this.create_held());
-                    this.lifted.splice(0, 1);
-                    this.lifted_sq = this.lifted_sq.next(dir);
-                    // this.lifted_sq.up();
-                    // this.held_move.moves.push(1);
+                    this.lifted_sq = sq;
                 } else {
-                    if (this.held_move.dir == dir) {
-                        this.held_move.moves.push(this.lifted_sq.upped + 1);
+                    if (this.held_move.started_at == undefined) {
+                        this.held_move.started_at = this.lifted_sq;
+                        this.held_move.moves.push(this.lifted.length);
+                        this.held_move.dir = dir;
+
+                        this.move(this.create_held());
+                        this.lifted.splice(0, 1);
+                        this.lifted_sq = this.lifted_sq.next(dir);
+                        // this.lifted_sq.up();
+                        // this.held_move.moves.push(1);
+                    } else {
+                        if (this.held_move.dir == dir) {
+                            this.held_move.moves.push(this.lifted_sq.upped + 1);
+                        }
                     }
                 }
             }
