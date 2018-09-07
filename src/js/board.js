@@ -401,34 +401,25 @@ var Board = {
 
     click: function(obj) {
         var sq = this.tile_at(obj.pos);
-        console.log("recieved click at", sq);
         if (this.lifted_sq == undefined && sq.tiles.length == 0) {
-            console.log("\tclicked on empty tile and not holding a tile");
             var move = rtc(obj.pos.x) + (obj.pos.y + 1).toString();
             this.move(Move.create(move));
         } else {
-            console.log("either clicked on full tile or holding tile");
             var dir;
             if (this.lifted_sq === undefined) {
-                console.log("not holding a tile! pick up this one");
                 this.lifted_sq = sq;
             } else {
-                console.log("holding a tile! checking if this tile is next to it!");
                 for (d of DIRS.split("")) {
-                    console.log(d);
                     if (sq.pos.equals(this.lifted_sq.next(d).pos)) {
                         dir = d;
-                        console.log("found it! it is", d);
                         break;
                     }
                 }
             }
             if (dir === undefined) {
-                console.log("didn't find a direction or wasn't holding a tile");
                 this.lifted = [];
                 var a = -sq.tiles.length + sq.up();
                 var uptiles = sq.tiles.slice(a);
-                console.log("square has lifted", a);
                 for (tile_up of uptiles) {
                     if (tile_up !== undefined && tile_up.mesh !== undefined) {
                         this.lifted.push(tile_up.mesh);
@@ -436,7 +427,6 @@ var Board = {
                 }
                 this.lifted_sq = sq;
             } else {
-                console.log("found a direction", dir);
                 if (this.held_move.started_at == undefined) {
                     this.held_move.started_at = this.lifted_sq;
                     this.held_move.moves.push(this.lifted.length);
