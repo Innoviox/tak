@@ -445,11 +445,11 @@ var Board = {
                     this.move(this.create_held());
                     this.lifted.splice(0, 1);
                     this.lifted_sq = this.lifted_sq.next(dir);
-                    this.lifted_sq.up();
+                    // this.lifted_sq.up();
                     // this.held_move.moves.push(1);
                 } else {
                     if (this.held_move.dir == dir) {
-                        
+                        this.held_move.moves.push(this.lifted_sq.upped + 1);
                     }
                 }
             }

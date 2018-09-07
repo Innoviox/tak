@@ -38,7 +38,9 @@ animate();
 function loadSampleBoard() {
     Board.add_tile(1, 2, new Tile(BLACK, FLAT)); // B3
     Board.add_tile(1, 3, new Tile(WHITE, STAND)); // B4
-    Board.add_tile(1, 2, new Tile(BLACK, CAP)); //  B3
+    // Board.add_tile(1, 2, new Tile(BLACK, CAP)); //  B3
+    Board.add_tile(1, 2, new Tile(WHITE, FLAT));
+    Board.add_tile(1, 2, new Tile(BLACK, FLAT));
 }
 
 function load_models() {
