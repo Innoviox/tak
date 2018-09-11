@@ -98,10 +98,8 @@ var Board = {
         return a;
     },
 
-    /*
-    Execute a full move
-    */
     move: function(move) {
+        console.log(move);
         this.last_move = move;
         this.old_board = this.copy();
         this.next_board = this.copy();
@@ -109,8 +107,8 @@ var Board = {
         var new_pos = move.pos.next(move.dir);
         if (move.moves.length > 0) {
             var first = true;
-            for (idx in move.moves) {
-                this._move(old_pos, new_pos, move.moves[idx], first);
+            for (n of move.moves) {
+                this._move(old_pos, new_pos, n, first);
                 first = false;
             }
         } else {
@@ -124,10 +122,8 @@ var Board = {
         }
     },
 
-    /*
-    One step of a move
-    */
     _move: function(old_pos, new_pos, n, first) {
+        console.log(old_pos, new_pos, n, first);
         var old_sq = this.next_board[old_pos.x][old_pos.y];
         var new_sq = this.next_board[new_pos.x][new_pos.y];
 
@@ -402,6 +398,7 @@ var Board = {
     click: function(obj) {
         var sq = this.tile_at(obj.pos);
         if (this.lifted_sq == undefined && sq.tiles.length == 0) {
+            return;
             var move = rtc(obj.pos.x) + (obj.pos.y + 1).toString();
             this.move(Move.create(move));
         } else {
@@ -422,6 +419,8 @@ var Board = {
                 if (this.lifted_sq.equals(sq)) {
                     console.log("RECLICK!");
                 } else if (dir === undefined) {
+                    console.log("MISCLICK");
+                    // TODO: Misclick
                     this.lifted = [];
                     var a = -sq.tiles.length + sq.up();
                     var uptiles = sq.tiles.slice(a);
@@ -432,7 +431,9 @@ var Board = {
                     }
                     this.lifted_sq = sq;
                 } else {
+                    console.log("DIRCLICK");
                     if (this.held_move.started_at == undefined) {
+                        console.log("> first side click");
                         this.held_move.started_at = this.lifted_sq;
                         this.held_move.moves.push(this.lifted.length);
                         this.held_move.dir = dir;
@@ -448,7 +449,8 @@ var Board = {
                                 this.held_move.moves.push(this.lifted.length - this.tile_at(this.lifted_sq.pos).tiles.length);
                             }
                             this.held_move.moves.push(this.lifted_sq.upped + 1);
-                            this.move(this.create_held());
+                            // this.move(this.create_held());
+                            this.move(this.create_last_held());
                             this.lifted.splice(0, 1);
                             this.lifted_sq = this.lifted_sq.next(dir);
                         }
@@ -456,6 +458,19 @@ var Board = {
                 }
             }
         }
+    },
+
+    create_last_held() {
+        var mstr = "";
+        mstr += (this.lifted.length / 2).toString(); // this.held_move.moves.slice(-1)[0].toString();
+        var pos = this.held_move.started_at.pos.clone();
+        for (i = 2; i < this.held_move.moves.length; i++) {
+            pos = pos.next(this.held_move.dir);
+        }
+        mstr += rtc(pos.x) + (pos.y + 1).toString();
+        mstr += this.held_move.dir;
+        console.log(mstr);
+        return Move.create(mstr);
     },
 
     create_held() {
