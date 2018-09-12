@@ -418,8 +418,14 @@ var Board = {
                         break;
                     }
                 }
-                if (this.lifted_sq.equals(sq)) {} else if (dir === undefined) {
-
+                if (this.lifted_sq.equals(sq)) {
+                    this.lifted_sq.click();
+                    // console.log(this.lifted_sq.tiles);
+                    console.log(this.lifted_sq.clicked);
+                    this.lifted = this.lifted_sq.tiles.slice((this.lifted_sq.clicked)).map((i) => i.mesh);
+                    console.log(this.lifted);
+                    // this.lifted.splice(0, 1);
+                } else if (dir === undefined) {
                     // TODO: Misclick
                     this.lifted = [];
                     var a = -sq.tiles.length + sq.up();
@@ -434,7 +440,6 @@ var Board = {
                 } else {
 
                     if (this.held_move.started_at == undefined) {
-
                         this.held_move.started_at = this.lifted_sq;
                         this.held_move.moves.push(this.lifted.length);
                         this.held_move.dir = dir;

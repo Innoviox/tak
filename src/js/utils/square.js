@@ -1,9 +1,9 @@
 class Square {
-
     constructor(pos) {
         this.pos = pos;
         this.tiles = new Array();
         this.upped = 0;
+        this.clicked = 0;
     }
 
     add(tile) {
@@ -24,6 +24,11 @@ class Square {
             return ++this.upped;
         }
         return --this.upped;
+    }
+
+    click() {
+        this.clicked = (++this.clicked) % (this.tiles.length + 1);
+        return this.clicked;
     }
 
     equals(sq) {
