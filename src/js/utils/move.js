@@ -22,6 +22,7 @@ class Move {
             return new Move(1, s.charAt(0), new Position(s.charAt(1), s.charAt(2)), [], undefined);
         }
 
+        var moves = str[1].split("").map((i) => parseInt(i));
         if (moves.length == 0) {
             moves.push(str[0][0]);
         }
