@@ -339,8 +339,8 @@ var Board = {
                     } else if (push || !scene.children.includes(tile_mesh)) {
                         this.tiles.push(tile_mesh);
                         scene.add(tile_mesh);
-                    } else if (this.lifted_sq != undefined && sq.equals(this.lifted_sq) && idx > sq.upped) {
-
+                    } else if (this.lifted_sq != undefined && sq.equals(this.lifted_sq) && idx > sq.clicked) {
+                        console.log(idx, sq.clicked);
                         this.lifted.push(tile_mesh);
                         tile_mesh.position.z += .2;
                     }
@@ -393,6 +393,7 @@ var Board = {
             this.next_board = [];
             this.lifted = [];
             this.placed = false;
+            this.lifted_sq = this.tile_at(this.lifted_sq.pos);
         }
     },
 
@@ -408,7 +409,6 @@ var Board = {
                 this.lifted_sq = sq;
                 sq.upped = sq.tiles.length - 1;
                 for (tile of sq.tiles) {
-
                     this.lifted.push(tile.mesh);
                 }
             } else {
@@ -419,12 +419,9 @@ var Board = {
                     }
                 }
                 if (this.lifted_sq.equals(sq)) {
-                    this.lifted_sq.click();
-                    // console.log(this.lifted_sq.tiles);
+                    console.log("RECLICK");
+                    this.lifted = this.lifted_sq.tiles.slice((this.lifted_sq.click())).map((i) => i.mesh);
                     console.log(this.lifted_sq.clicked);
-                    this.lifted = this.lifted_sq.tiles.slice((this.lifted_sq.clicked)).map((i) => i.mesh);
-                    console.log(this.lifted);
-                    // this.lifted.splice(0, 1);
                 } else if (dir === undefined) {
                     // TODO: Misclick
                     this.lifted = [];
@@ -432,7 +429,6 @@ var Board = {
                     var uptiles = sq.tiles.slice(a);
                     for (tile_up of uptiles) {
                         if (tile_up !== undefined && tile_up.mesh !== undefined) {
-
                             this.lifted.push(tile_up.mesh);
                         }
                     }
@@ -447,7 +443,6 @@ var Board = {
                         this.move(this.create_held());
 
                         this.lifted.splice(0, 1);
-
                         this.lifted_sq = this.lifted_sq.next(dir);
                     } else {
                         if (this.held_move.dir == dir) {
