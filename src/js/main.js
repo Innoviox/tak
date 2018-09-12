@@ -21,10 +21,15 @@ var time = 0;
 var frame = 0;
 var modelsLoaded = false;
 var keyboard = new THREEx.KeyboardState();
-var projector, mouse = { x: 0, y: 0 }, INTERSECTED;
+var projector,
+    mouse = {
+        x: 0,
+        y: 0
+    },
+    INTERSECTED;
 
 var models = {
-    capModel: NONE
+    capModel: undefined
 }
 
 initGraphics();
@@ -33,7 +38,9 @@ animate();
 function loadSampleBoard() {
     Board.add_tile(1, 2, new Tile(BLACK, FLAT)); // B3
     Board.add_tile(1, 3, new Tile(WHITE, STAND)); // B4
-    Board.add_tile(1, 2, new Tile(BLACK, CAP)); //  B3
+    // Board.add_tile(1, 2, new Tile(WHITE, CAP)); //  B3
+    Board.add_tile(1, 2, new Tile(WHITE, FLAT));
+    Board.add_tile(1, 2, new Tile(BLACK, FLAT));
 }
 
 function load_models() {
@@ -77,7 +84,7 @@ function initGraphics() {
     camera.position.z = 10
     camera.lookAt(new THREE.Vector3(0, 0, 0));
 
-    projector = new THREE.Projector();
+    // projector = new THREE.Projector();
 
     controls = new THREE.OrbitControls(camera);
     load_models();
@@ -113,20 +120,54 @@ function initGraphics() {
     }
 
     window.addEventListener('resize', onWindowResize, false);
-    document.addEventListener( 'mousemove', onDocumentMouseMove, false );
 
-    setTimeout(testMove, 3000);
+    document.addEventListener('mousemove', onDocumentMouseMove, false);
+    document.addEventListener('click', onDocumentMouseClick, false);
+    document.addEventListener('keyup', pressKey, false);
 
+    // setTimeout(testMove, 3000);
 }
 
-function onDocumentMouseMove( event ) {
-	// the following line would stop any other event handler from firing
-	// (such as the mouse's TrackballControls)
-	// event.preventDefault();
+function pressKey(event) {
+    if (event.keyCode == 27) {
+        Board.lifted = [];
+        Board.lifted_sq = undefined;
+    }
+}
+function onDocumentMouseMove(event) {
+    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+}
 
-	// update the mouse variable
-	mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
-	mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+function toString(v) {
+    return "[ " + v.x + ", " + v.y + ", " + v.z + " ]";
+}
+
+function onDocumentMouseClick(event) {
+    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+    var vector = new THREE.Vector3(mouse.x, mouse.y, 1);
+    vector.unproject(camera);
+    var ray = new THREE.Raycaster(camera.position, vector.sub(camera.position).normalize());
+    for (tile of Board.tiles)
+        scene.remove(tile);
+
+    var intersects = ray.intersectObjects(scene.children);
+
+    for (tile of Board.tiles)
+        scene.add(tile);
+
+    if (intersects.length > 0) {
+        for (obj of intersects) {
+            if (obj.object.name == "tile mesh") {} else if (obj.object.name == "square") {
+                Board.click(obj.object);
+                return;
+            } else {
+                return;
+            }
+        }
+    }
 }
 
 function testMove() {
@@ -152,47 +193,34 @@ function animate() {
 }
 
 function update() {
-  // find intersections
+    var vector = new THREE.Vector3(mouse.x, mouse.y, 1);
+    vector.unproject(camera);
+    var ray = new THREE.Raycaster(camera.position, vector.sub(camera.position).normalize());
 
-	// create a Ray with origin at the mouse position
-	//   and direction into the scene (camera direction)
-	var vector = new THREE.Vector3( mouse.x, mouse.y, 1 );
-	// projector.unprojectVector( vector, camera );
-  vector.unproject(camera);
-	var ray = new THREE.Raycaster( camera.position, vector.sub( camera.position ).normalize() );
+    for (tile of Board.tiles)
+        scene.remove(tile);
 
-	// create an array containing all objects in the scene with which the ray intersects
-	var intersects = ray.intersectObjects( scene.children );
+    var intersects = ray.intersectObjects(scene.children);
 
-	// INTERSECTED = the object in the scene currently closest to the camera
-	//		and intersected by the Ray projected from the mouse position
+    for (tile of Board.tiles)
+        scene.add(tile);
 
-	// if there is one (or more) intersections
-	if ( intersects.length > 0 )
-	{
-		// if the closest object intersected is not the currently stored intersection object
-		if ( intersects[ 0 ].object != INTERSECTED )
-		{
-		    // restore previous intersection object (if it exists) to its original color
-			if ( INTERSECTED )
-				INTERSECTED.material.color.setHex( INTERSECTED.currentHex );
-			// store reference to closest object as current intersection object
-			INTERSECTED = intersects[ 0 ].object;
-			// store color of closest object (for later restoration)
-			INTERSECTED.currentHex = INTERSECTED.material.color.getHex();
-			// set a new color for closest object
-			INTERSECTED.material.color.setHex( 0xffff00 );
-		}
-	}
-	else // there are no intersections
-	{
-		// restore previous intersection object (if it exists) to its original color
-		if ( INTERSECTED )
-			INTERSECTED.material.color.setHex( INTERSECTED.currentHex );
-		// remove previous intersection object reference
-		//     by setting current intersection object to "nothing"
-		INTERSECTED = null;
-	}
+    if (intersects.length > 0) {
+        if (intersects[0].object != INTERSECTED) {
+            if (INTERSECTED)
+                INTERSECTED.material.color.setHex(INTERSECTED.currentHex);
+            if (intersects[0].object.name == "square") {
+                INTERSECTED = intersects[0].object;
+                INTERSECTED.currentHex = INTERSECTED.material.color.getHex();
+                INTERSECTED.material.color.setHex(0xffff00);
+            }
+        }
+    } else {
+        if (INTERSECTED)
+            INTERSECTED.material.color.setHex(INTERSECTED.currentHex);
+
+        INTERSECTED = null;
+    }
 }
 function render() {
     if (modelsLoaded) {

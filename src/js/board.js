@@ -1,223 +1,3 @@
-var LEFT = "<",
-    RIGHT = ">",
-    UP = "+",
-    DOWN = "-",
-    NONE = "0",
-    DIRS = "<>+-";
-
-var ANIM_STEPS = 10;
-
-var colors = {
-    white_piece: new THREE.MeshBasicMaterial({color: 0xd4b375}),
-    black_piece: new THREE.MeshBasicMaterial({color: 0x573312}),
-    white_cap: new THREE.MeshBasicMaterial({color: 0xd4b375}),
-    black_cap: new THREE.MeshBasicMaterial({color: 0x573312}),
-    white_sqr: new THREE.MeshBasicMaterial({color: 0xe6d4a7}),
-    black_sqr: new THREE.MeshBasicMaterial({color: 0xba6639}),
-    inner: new THREE.MeshBasicMaterial({color: 0xc48d44}),
-    outer: new THREE.MeshBasicMaterial({color: 0x6f4734}),
-    letter: new THREE.MeshBasicMaterial({color: 0xFFF5B5}),
-    highlighter: new THREE.LineBasicMaterial({color: 0x0000f0})
-};
-
-function ctr(c) {
-    var a = 'ABCDE'.indexOf(c);
-    if (a == -1) {
-        return 'abcde'.indexOf(c);
-    }
-    return a;
-}
-
-class Position {
-    constructor(x, y) {
-        this.x = ctr(x);
-        if (this.x == -1) {
-            this.x = x;
-        }
-        if (typeof(y) === 'number') {
-            this.y = y;
-        } else {
-            this.y = parseInt(y) - 1;
-        }
-    }
-
-    next(dir) {
-        if (dir == LEFT) {
-            return new Position(this.x - 1, this.y);
-        } else if (dir == RIGHT) {
-            return new Position(this.x + 1, this.y);
-        } else if (dir == UP) {
-            return new Position(this.x, this.y - 1);
-        } else {
-            return new Position(this.x, this.y + 1);
-        }
-    }
-
-    dir_from(next) {
-        if (next.y == this.y) {
-            if (next.x - 1 == this.x) {
-                return RIGHT;
-            } else {
-                return LEFT;
-            }
-        } else {
-            if (next.y - 1 == this.y) {
-                return DOWN;
-            } else {
-                return UP;
-            }
-        }
-    }
-}
-
-class Move {
-    constructor(total, stone, pos, moves, dir) {
-        this.total = total;
-        this.stone = stone;
-        this.pos = pos;
-        this.moves = moves;
-        this.dir = dir;
-    }
-
-    static create(str) {
-        var dir = NONE;
-        for (i = 0, c = ''; c = DIRS.charAt(i); i++) {
-            if (str.includes(c)) {
-                dir = c;
-                str = str.split(c);
-                break;
-            }
-        }
-
-        if (dir == NONE) {
-            var s = str.padStart(3, "F");
-            return new Move(1, s.charAt(0), new Position(s.charAt(1), s.charAt(2)), [], NONE);
-        }
-
-        var moves = str[1].split().map((i) => parseInt(i));
-        var m_str = str[0];
-        var total;
-        if (m_str.charAt(0).match(/[0-9]/i)) {
-            total = parseInt(m_str.charAt(0));
-            m_str = m_str.slice(1);
-        } else {
-            total = 1;
-        }
-        var pos = new Position(m_str.charAt(0), m_str.charAt(1));
-        return new Move(total, NONE, pos, moves, dir);
-    }
-}
-
-class Animator {
-    constructor(dir, orig, idx) {
-        this.dt = {
-            x: 0,
-            y: 0,
-            z: 0
-        };
-        if (dir == LEFT)
-            this.dt.x = 1;
-        if (dir == RIGHT)
-            this.dt.x = -1;
-        if (dir == DOWN)
-            this.dt.y = 1;
-        if (dir == UP)
-            this.dt.y = -1;
-        var pos = new Position(orig.x, orig.y);
-        var next_sq = Board.tile_at(pos.next(dir));
-        var d_idx = next_sq.tiles.length - idx;
-        this.dt.z = d_idx * .2;
-
-        this.ct = {
-            x: 0,
-            y: 0,
-            z: 0
-        };
-        this.steps = 0;
-    }
-
-    step() {
-        this.ct.x += this.dt.x / ANIM_STEPS;
-        this.ct.y += this.dt.y / ANIM_STEPS;
-        this.ct.z += this.dt.z / ANIM_STEPS;
-        this.steps++;
-    }
-
-    done() {
-        return this.steps >= 1.1 * ANIM_STEPS;
-    }
-}
-
-class Tile {
-    constructor(color, stone) {
-        this.color = color;
-        this.stone = stone;
-        this.pos = new Position(0, 0);
-        this.setMesh();
-        this.animator = NONE;
-    }
-
-    setStone(stone) {
-        this.stone = stone;
-        this.setMesh();
-    }
-
-    setColor(color) {
-        this.color = color;
-        this.setMesh();
-    }
-
-    getGeom() {
-        if (this.stone == FLAT) {
-            return new THREE.BoxGeometry(1, 1, .2);
-        } else if (this.stone == STAND) {
-            return new THREE.BoxGeometry(1, .2, 1);
-        }
-        if (modelsLoaded) {
-            return models.capModel.clone();
-        }
-    }
-
-    getMat() {
-        if (this.color == WHITE)
-            return colors.white_piece;
-        return colors.black_piece;
-    }
-
-    setMesh() {
-        this.geom = this.getGeom();
-        this.mat = this.getMat();
-
-        if (this.stone == CAP) {
-            this.mesh = this.geom;
-        } else {
-            this.mesh = new THREE.Mesh(this.geom, this.mat);
-        }
-    }
-
-    animate(new_pos) {
-        var dir = new_pos.dir_from(this.pos);
-        this.animator = new Animator(dir, this.pos, 0);/* TODO: idx animation */
-    }
-}
-
-class Square {
-
-    constructor(pos) {
-        this.pos = pos;
-        this.tiles = new Array();
-    }
-
-    add(tile) {
-        if (this.tiles.length == 0 || (this.tiles.length > 0 && this.tiles[this.tiles.length - 1].stone == FLAT)) {
-            this.tiles.push(tile);
-            tile.pos = this.pos;
-        } else {
-            //TODO: tile is not flat
-        }
-    }
-}
-
 var Board = {
     objects: [],
     tiles: [],
@@ -230,6 +10,9 @@ var Board = {
     whitepiecesleft: 0,
     blackpiecesleft: 0,
     mycolor: "white",
+    placed: false,
+    lifted: [],
+    lifted_sq: undefined,
 
     // backend objects representing squares
     board: [],
@@ -237,6 +20,11 @@ var Board = {
     next_board: [],
 
     last_move: {},
+    held_move: {
+        moves: [],
+        started_at: undefined,
+        dir: undefined
+    },
 
     init: function(sz, color) {
         boardSize = sz;
@@ -310,10 +98,8 @@ var Board = {
         return a;
     },
 
-    /*
-    Execute a full move
-    */
     move: function(move) {
+
         this.last_move = move;
         this.old_board = this.copy();
         this.next_board = this.copy();
@@ -321,23 +107,21 @@ var Board = {
         var new_pos = move.pos.next(move.dir);
         if (move.moves.length > 0) {
             var first = true;
-            for (idx in move.moves) {
-                this._move(old_pos, new_pos, move.moves[idx], first);
+            for (n of move.moves) {
+                this._move(old_pos, new_pos, n, first);
                 first = false;
             }
         } else {
             var sq = this.board[old_pos.x][old_pos.y];
             if (sq.tiles.length == 0) {
                 this.add_next_tile(old_pos.x, old_pos.y, new Tile(this.mycolor, move.stone));
+                this.placed = true;
             } else {
                 //TODO: Throw error?
             }
         }
     },
 
-    /*
-    One step of a move
-    */
     _move: function(old_pos, new_pos, n, first) {
         var old_sq = this.next_board[old_pos.x][old_pos.y];
         var new_sq = this.next_board[new_pos.x][new_pos.y];
@@ -348,7 +132,7 @@ var Board = {
         if (new_sq.tiles.length) {
             n_stone = new_sq.tiles.slice(-1)[0].stone;
         } else {
-            n_stone = NONE;
+            n_stone = undefined;
         }
         if (new_sq.tiles.length == 0 || (n_stone == FLAT)) {
             old_sq.tiles = old_sq.tiles.slice(0, old_sq.tiles.length - n);
@@ -420,12 +204,14 @@ var Board = {
         var white_sqr = new THREE.MeshBasicMaterial({
             map: loader.load("images/tiles/white_simple.png", () => {})
         });
-        for (i = -boardSize / 2 + .6; i < boardSize / 2 + .6; i += 1.1) {
-            for (j = -boardSize / 2 + .6; j < boardSize / 2 + .6; j += 1.1) {
+        for (x = -1, i = -boardSize / 2 + .6; x++, i < boardSize / 2 + .6; i += 1.1) {
+            for (y = 5, j = -boardSize / 2 + .6; y--, j < boardSize / 2 + .6; j += 1.1) {
                 geom = new THREE.BoxGeometry(1, 1, .5);
-                obj = new THREE.Mesh(geom, white_sqr);
+                obj = new THREE.Mesh(geom, white_sqr.clone());
                 obj.position.set(i - .3, j - .3, 0);
                 obj.updateMatrix();
+                obj.name = "square"
+                obj.pos = new Position(x, y);
                 this.inner.push(obj);
                 this.objects.push(obj);
 
@@ -536,6 +322,8 @@ var Board = {
                         tile.setMesh();
                         tile_mesh = tile.mesh;
                     }
+                    tile_mesh.name = "tile mesh";
+
                     if (tile.stone == FLAT) {
                         tile_mesh.position.set(x, y, .2 * idx + .3);
                     } else if (tile.stone == STAND) {
@@ -545,9 +333,16 @@ var Board = {
                         tile_mesh.position.set(x, y, .2 * idx + .2);
                         tile_mesh.rotation.x = 39.25;
                     }
-                    if (push || !scene.children.includes(tile_mesh)) {
+
+                    if (this.lifted.includes(tile_mesh)) {
+                        tile_mesh.position.z += .2;
+                    } else if (push || !scene.children.includes(tile_mesh)) {
                         this.tiles.push(tile_mesh);
                         scene.add(tile_mesh);
+                    } else if (this.lifted_sq != undefined && sq.equals(this.lifted_sq) && idx > sq.clicked) {
+                        console.log(idx, sq.clicked);
+                        this.lifted.push(tile_mesh);
+                        tile_mesh.position.z += .2;
                     }
                 }
             }
@@ -580,9 +375,9 @@ var Board = {
     },
 
     execute_move: function() {
-        if (this.animating.length > 0) {
+        if (this.animating.length > 0 || this.placed) {
             for (tile of this.animating) {
-                tile.animator = NONE;
+                tile.animator = undefined;
                 scene.remove(tile.mesh);
             }
 
@@ -596,6 +391,96 @@ var Board = {
             this.old_board = this.board;
             this.board = this.next_board;
             this.next_board = [];
+            this.lifted = [];
+            this.placed = false;
+            this.lifted_sq = this.tile_at(this.lifted_sq.pos);
         }
+    },
+
+    click: function(obj) {
+        var sq = this.tile_at(obj.pos);
+        if (this.lifted_sq == undefined && sq.tiles.length == 0) {
+            return;
+            var move = rtc(obj.pos.x) + (obj.pos.y + 1).toString();
+            this.move(Move.create(move));
+        } else {
+            var dir;
+            if (this.lifted_sq === undefined) {
+                this.lifted_sq = sq;
+                sq.upped = sq.tiles.length - 1;
+                for (tile of sq.tiles) {
+                    this.lifted.push(tile.mesh);
+                }
+            } else {
+                for (d of DIRS.split("")) {
+                    if (sq.pos.equals(this.lifted_sq.next(d).pos)) {
+                        dir = d;
+                        break;
+                    }
+                }
+                if (this.lifted_sq.equals(sq)) {
+                    console.log("RECLICK");
+                    this.lifted = this.lifted_sq.tiles.slice((this.lifted_sq.click())).map((i) => i.mesh);
+                    console.log(this.lifted_sq.clicked);
+                } else if (dir === undefined) {
+                    // TODO: Misclick
+                    this.lifted = [];
+                    var a = -sq.tiles.length + sq.up();
+                    var uptiles = sq.tiles.slice(a);
+                    for (tile_up of uptiles) {
+                        if (tile_up !== undefined && tile_up.mesh !== undefined) {
+                            this.lifted.push(tile_up.mesh);
+                        }
+                    }
+                    this.lifted_sq = sq;
+                } else {
+
+                    if (this.held_move.started_at == undefined) {
+                        this.held_move.started_at = this.lifted_sq;
+                        this.held_move.moves.push(this.lifted.length);
+                        this.held_move.dir = dir;
+
+                        this.move(this.create_held());
+
+                        this.lifted.splice(0, 1);
+                        this.lifted_sq = this.lifted_sq.next(dir);
+                    } else {
+                        if (this.held_move.dir == dir) {
+                            if (this.held_move.moves.length == 1) {
+                                this.held_move.moves.push(this.lifted.length - this.tile_at(this.lifted_sq.pos).tiles.length);
+                            }
+                            this.held_move.moves.push(this.lifted_sq.upped + 1);
+                            this.move(this.create_last_held());
+
+                            this.lifted.splice(0, 1);
+
+                            this.lifted_sq = this.lifted_sq.next(dir);
+                        }
+                    }
+                }
+            }
+        }
+    },
+
+    create_last_held() {
+        var mstr = "";
+        mstr += this.lifted.length.toString();
+        var pos = this.held_move.started_at.pos.clone();
+        for (i = 2; i < this.held_move.moves.length; i++) {
+            pos = pos.next(this.held_move.dir);
+        }
+        mstr += rtc(pos.x) + (pos.y + 1).toString();
+        mstr += this.held_move.dir;
+
+        return Move.create(mstr);
+    },
+
+    create_held() {
+        var s = "";
+        for (i = 1; i < this.held_move.moves.length; i++)
+            s += this.held_move.moves[i].toString();
+        var mstr = this.held_move.moves[0].toString() + rtc(this.held_move.started_at.pos.x) + (this.held_move.started_at.pos.y + 1).toString() + this.held_move.dir + s;
+
+        return Move.create(mstr);
     }
 }
