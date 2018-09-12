@@ -88,7 +88,7 @@ var Board = {
                 s = new Square(new Position(sq.pos.x, sq.pos.y));
                 for (idx in sq.tiles) {
                     var tile = sq.tiles[idx];
-                    var nt = new Tile(tile.color, tile.stone);
+                    var nt = new Tile(tile.color, tile.stone, tile.id);
                     s.add(nt);
                 }
                 row.push(s);
@@ -156,10 +156,10 @@ var Board = {
         }
     },
 
-    create: function() {
+    create: function(push = true) {
         this.make_board_frame();
         this.create_texts();
-        this._draw_tiles(true);
+        this._draw_tiles(push);
     },
 
     draw: function() {
@@ -309,13 +309,14 @@ var Board = {
     _draw_tiles: function(push) {
         if (push)
             this.tiles = [];
-
+        var drawn = 0;
         for (row = 0; row < boardSize; row++) {
             for (col = 0; col < boardSize; col++) {
                 var x = -(boardSize / 2) + 1.1 * row + .3,
                     y = -(boardSize / 2) + 1.1 * (boardSize - 1 - col) + .3;
                 sq = this.board[row][col];
                 for (idx in sq.tiles) {
+                    drawn++;
                     var tile = sq.tiles[idx];
                     var tile_mesh = tile.mesh;
                     if (tile_mesh === undefined) {
@@ -339,14 +340,18 @@ var Board = {
                     } else if (push || !scene.children.includes(tile_mesh)) {
                         this.tiles.push(tile_mesh);
                         scene.add(tile_mesh);
+                        if (!scene_ids.includes(tile.id)) {
+                            scene_ids.push(tile.id);
+                        }
                     } else if (this.lifted_sq != undefined && sq.equals(this.lifted_sq) && idx > sq.clicked) {
-                        console.log(idx, sq.clicked);
+                        console.log("pushing C");
                         this.lifted.push(tile_mesh);
                         tile_mesh.position.z += .2;
                     }
                 }
             }
         }
+        // console.log(drawn);
     },
 
     update_tiles: function() {
@@ -381,8 +386,11 @@ var Board = {
                 scene.remove(tile.mesh);
             }
 
-            for (tile of this.tiles) {
-                scene.remove(tile.mesh);
+            for (let i = scene.children.length - 1; i >= 0; i--) {
+                let child = scene.children[i];
+                if (child.name == "tile mesh") {
+                    scene.remove(child);
+                }
             }
 
             this.tiles = [];
@@ -394,6 +402,7 @@ var Board = {
             this.lifted = [];
             this.placed = false;
             this.lifted_sq = this.tile_at(this.lifted_sq.pos);
+            this.lifted_sq.clicked++;
         }
     },
 
@@ -409,6 +418,7 @@ var Board = {
                 this.lifted_sq = sq;
                 sq.upped = sq.tiles.length - 1;
                 for (tile of sq.tiles) {
+                    console.log("pushing A");
                     this.lifted.push(tile.mesh);
                 }
             } else {
@@ -419,9 +429,7 @@ var Board = {
                     }
                 }
                 if (this.lifted_sq.equals(sq)) {
-                    console.log("RECLICK");
                     this.lifted = this.lifted_sq.tiles.slice((this.lifted_sq.click())).map((i) => i.mesh);
-                    console.log(this.lifted_sq.clicked);
                 } else if (dir === undefined) {
                     // TODO: Misclick
                     this.lifted = [];
@@ -429,6 +437,7 @@ var Board = {
                     var uptiles = sq.tiles.slice(a);
                     for (tile_up of uptiles) {
                         if (tile_up !== undefined && tile_up.mesh !== undefined) {
+                            console.log("pushing B");
                             this.lifted.push(tile_up.mesh);
                         }
                     }
@@ -441,7 +450,6 @@ var Board = {
                         this.held_move.dir = dir;
 
                         this.move(this.create_held());
-
                         this.lifted.splice(0, 1);
                         this.lifted_sq = this.lifted_sq.next(dir);
                     } else {

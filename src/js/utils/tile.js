@@ -1,10 +1,19 @@
+var GLOBAL_ID = 1;
+var global_tiles = []; //{};
+
 class Tile {
-    constructor(color, stone) {
+    constructor(color, stone, id = 0) {
         this.color = color;
         this.stone = stone;
         this.pos = new Position(0, 0);
         this.setMesh();
         this.animator = undefined;
+        if (id != 0) {
+            this.id = id;
+        } else {
+            this.id = ++GLOBAL_ID;
+            global_tiles.push(this);
+        }
     }
 
     setStone(stone) {

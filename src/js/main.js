@@ -30,7 +30,9 @@ var projector,
 
 var models = {
     capModel: undefined
-}
+};
+
+var scene_ids = [];
 
 initGraphics();
 animate();
@@ -38,9 +40,13 @@ animate();
 function loadSampleBoard() {
     Board.add_tile(1, 2, new Tile(BLACK, FLAT)); // B3
     Board.add_tile(1, 3, new Tile(WHITE, STAND)); // B4
-    // Board.add_tile(1, 2, new Tile(WHITE, CAP)); //  B3
-    Board.add_tile(1, 2, new Tile(WHITE, FLAT));
-    Board.add_tile(1, 2, new Tile(BLACK, FLAT));
+    test = 1;
+    if (test == 1) {
+        Board.add_tile(1, 2, new Tile(WHITE, CAP)); //  B3
+    } else {
+        Board.add_tile(1, 2, new Tile(WHITE, FLAT));
+        Board.add_tile(1, 2, new Tile(BLACK, FLAT));
+    }
 }
 
 function load_models() {
