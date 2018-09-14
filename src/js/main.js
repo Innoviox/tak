@@ -29,7 +29,9 @@ var projector,
     INTERSECTED;
 
 var models = {
-    capModel: undefined
+    capModel: undefined,
+    white_sqr: undefined,
+    black_sqr: undefined
 }
 
 initGraphics();
@@ -38,7 +40,7 @@ animate();
 function loadSampleBoard() {
     Board.add_tile(1, 2, new Tile(BLACK, FLAT)); // B3
     Board.add_tile(1, 3, new Tile(WHITE, STAND)); // B4
-    // Board.add_tile(1, 2, new Tile(WHITE, CAP)); //  B3
+    // Board.add_tile(1, 2, new Tile(WHITE, CAP));   B3
     Board.add_tile(1, 2, new Tile(WHITE, FLAT));
     Board.add_tile(1, 2, new Tile(BLACK, FLAT));
 }
@@ -46,14 +48,42 @@ function loadSampleBoard() {
 function load_models() {
     var mtl = new THREE.MTLLoader().setPath('images/tiles/3d/');
     var obj = new THREE.OBJLoader().setPath('images/tiles/3d/');
+    var loader = new THREE.TextureLoader();
+
+    models.white_sqr = new THREE.MeshBasicMaterial({
+        map: loader.load("images/tiles/white_simple_pieces.png", () => {})
+    });
+
+    models.black_sqr = new THREE.MeshBasicMaterial({
+        map: loader.load("images/tiles/black_simple_pieces.png", () => {})
+    });
+
+    models.board_sqr = new THREE.MeshBasicMaterial({
+        map: loader.load("images/tiles/white_simple.png", () => {})
+    });
+
     // White capstone model
     mtl.load('rook-small-door-matte.mtl', function(materials) {
         obj.setMaterials(materials).load('rook-small-door-matte.obj', function(model) {
             materials.preload();
             models.capModel = model;
             modelsLoaded = true;
+            onModelLoad();
         });
     });
+}
+
+function onModelLoad() {
+    Board.init(5, "white");
+    Board.create();
+
+    loadSampleBoard();
+    for (idx in Board.objects) {
+        var obj = Board.objects[idx];
+        obj.receiveShadow = true;
+        obj.castShadow = true;
+        scene.add(obj);
+    }
 }
 
 function initGraphics() {
@@ -87,17 +117,8 @@ function initGraphics() {
     // projector = new THREE.Projector();
 
     controls = new THREE.OrbitControls(camera);
-    load_models();
-    Board.init(5, "white");
-    Board.create();
 
-    loadSampleBoard();
-    for (idx in Board.objects) {
-        var obj = Board.objects[idx];
-        obj.receiveShadow = true;
-        obj.castShadow = true;
-        scene.add(obj);
-    }
+    load_models();
 
     for (i = -10; i < 30; i += 20) {
         light = new THREE.DirectionalLight(0xffffff, 1);
@@ -124,7 +145,6 @@ function initGraphics() {
     document.addEventListener('mousemove', onDocumentMouseMove, false);
     document.addEventListener('click', onDocumentMouseClick, false);
     document.addEventListener('keyup', pressKey, false);
-
     // setTimeout(testMove, 3000);
 }
 

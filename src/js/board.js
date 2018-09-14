@@ -13,6 +13,7 @@ var Board = {
     placed: false,
     lifted: [],
     lifted_sq: undefined,
+    hud_tiles: [],
 
     // backend objects representing squares
     board: [],
@@ -99,7 +100,6 @@ var Board = {
     },
 
     move: function(move) {
-
         this.last_move = move;
         this.old_board = this.copy();
         this.next_board = this.copy();
@@ -159,6 +159,7 @@ var Board = {
     create: function() {
         this.make_board_frame();
         this.create_texts();
+        this.make_hud_tiles();
         this._draw_tiles(true);
     },
 
@@ -200,14 +201,10 @@ var Board = {
         var geom,
             obj;
         // var squareGeom = new THREE.Geometry();
-        var loader = new THREE.TextureLoader();
-        var white_sqr = new THREE.MeshBasicMaterial({
-            map: loader.load("images/tiles/white_simple.png", () => {})
-        });
         for (x = -1, i = -boardSize / 2 + .6; x++, i < boardSize / 2 + .6; i += 1.1) {
             for (y = 5, j = -boardSize / 2 + .6; y--, j < boardSize / 2 + .6; j += 1.1) {
                 geom = new THREE.BoxGeometry(1, 1, .5);
-                obj = new THREE.Mesh(geom, white_sqr.clone());
+                obj = new THREE.Mesh(geom, models.board_sqr.clone());
                 obj.position.set(i - .3, j - .3, 0);
                 obj.updateMatrix();
                 obj.name = "square"
@@ -317,22 +314,13 @@ var Board = {
                 sq = this.board[row][col];
                 for (idx in sq.tiles) {
                     var tile = sq.tiles[idx];
-                    var tile_mesh = tile.mesh;
-                    if (tile_mesh === undefined) {
+                    if (tile.mesh === undefined) {
                         tile.setMesh();
-                        tile_mesh = tile.mesh;
                     }
+                    var tile_mesh = tile.mesh;
                     tile_mesh.name = "tile mesh";
 
-                    if (tile.stone == FLAT) {
-                        tile_mesh.position.set(x, y, .2 * idx + .3);
-                    } else if (tile.stone == STAND) {
-                        tile_mesh.position.set(x, y, .2 * idx + .7);
-                        tile_mesh.rotation.z = 12;
-                    } else {
-                        tile_mesh.position.set(x, y, .2 * idx + .2);
-                        tile_mesh.rotation.x = 39.25;
-                    }
+                    tile.setPosition(x, y, idx);
 
                     if (this.lifted.includes(tile_mesh)) {
                         tile_mesh.position.z += .2;
@@ -347,6 +335,39 @@ var Board = {
                 }
             }
         }
+    },
+
+    make_hud_tiles: function() {
+        var row = 0,
+            idx = 0;
+        for (i = 0; i < this.tottiles; i++) {
+            this._draw_hud_tile(WHITE, FLAT, row, idx);
+            this._draw_hud_tile(BLACK, FLAT, boardSize - row, idx);
+            idx++;
+            if (idx % 5 == 0) {
+                idx = 0;
+                row++;
+            }
+        }
+
+        row = boardSize;
+
+        for (i = 0; i < this.totcaps; i++) {
+            this._draw_hud_tile(WHITE, CAP, row, 0);
+            this._draw_hud_tile(BLACK, CAP, boardSize - row, 0);
+            row--;
+        }
+    },
+
+    _draw_hud_tile(color, stone, row, idx) {
+        tile = new Tile(color, stone);
+        tile.setPosition(
+            color == WHITE
+            ? (-(boardSize / 2) - 2.1)
+            : (boardSize / 2 + 2.1),
+        (-boardSize / 2) + row * 1.1,
+        idx);
+        scene.add(tile.mesh);
     },
 
     update_tiles: function() {

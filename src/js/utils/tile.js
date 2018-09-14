@@ -30,8 +30,8 @@ class Tile {
 
     getMat() {
         if (this.color == WHITE)
-            return colors.white_piece;
-        return colors.black_piece;
+            return models.white_sqr; // colors.white_piece;
+        return models.black_sqr; // colors.black_piece;
     }
 
     setMesh() {
@@ -42,6 +42,18 @@ class Tile {
             this.mesh = this.geom;
         } else {
             this.mesh = new THREE.Mesh(this.geom, this.mat);
+        }
+    }
+
+    setPosition(x, y, idx) {
+        if (this.stone == FLAT) {
+            this.mesh.position.set(x, y, .2 * idx + .3);
+        } else if (this.stone == STAND) {
+            this.mesh.position.set(x, y, .2 * idx + .7);
+            this.mesh.rotation.z = 12;
+        } else {
+            this.mesh.position.set(x, y, .2 * idx + .2);
+            this.mesh.rotation.x = 39.25;
         }
     }
 
