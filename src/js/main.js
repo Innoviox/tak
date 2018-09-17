@@ -247,10 +247,8 @@ function update() {
     }
 }
 function render() {
-  return;
     if (modelsLoaded) {
         var deltaTime = clock.getDelta();
-        // ViewBoard.draw();
         if (frame++ % 2 == 0) {
             Board.draw();
         }
