@@ -359,7 +359,7 @@ var Board = {
         }
     },
 
-    _draw_hud_tile(color, stone, row, idx) {
+    _draw_hud_tile: function(color, stone, row, idx) {
         tile = new Tile(color, stone);
         tile.setPosition(
             color == WHITE
@@ -483,7 +483,7 @@ var Board = {
         }
     },
 
-    create_last_held() {
+    create_last_held: function() {
         var mstr = "";
         mstr += this.lifted.length.toString();
         var pos = this.held_move.started_at.pos.clone();
@@ -496,7 +496,7 @@ var Board = {
         return Move.create(mstr);
     },
 
-    create_held() {
+    create_held: function() {
         var s = "";
         for (i = 1; i < this.held_move.moves.length; i++)
             s += this.held_move.moves[i].toString();
