@@ -14,6 +14,7 @@ var Board = {
     lifted: [],
     lifted_sq: undefined,
     hud_tiles: [],
+    turn_number = 0,
 
     // backend objects representing squares
     board: [],
