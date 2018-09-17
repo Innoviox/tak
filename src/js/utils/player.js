@@ -9,12 +9,17 @@ class Player {
     }
 
     activate() {
+        players.map( (i) => { i.is_active_player = false; } );
         this.is_active_player = true;
+    }
+
+    deactivate() {
+        Player.with_color(flip_color(this.color)).activate();
     }
 
     get_color() {
         if (Board.turn == 1) {
-            return this.color == BLACK?WHITE:BLACK;
+            return flip_color(this.color);
         }
         return this.color;
     }

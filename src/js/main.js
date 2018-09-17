@@ -148,6 +148,10 @@ function initGraphics() {
     // setTimeout(testMove, 3000);
 }
 
+function startGame() {
+    Player.with_color(WHITE).activate();
+}
+
 function pressKey(event) {
     if (event.keyCode == 27) {
         Board.lifted = [];
@@ -243,6 +247,7 @@ function update() {
     }
 }
 function render() {
+  return;
     if (modelsLoaded) {
         var deltaTime = clock.getDelta();
         // ViewBoard.draw();

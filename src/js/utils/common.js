@@ -30,3 +30,7 @@ function ctr(c) {
 function rtc(r) {
     return 'ABCDE'.charAt(r);
 }
+
+function flip_color(c) {
+    return c==WHITE?BLACK:WHITE;
+}
