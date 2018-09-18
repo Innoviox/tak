@@ -341,8 +341,8 @@ var Board = {
         for (tile of this.hud_tiles) {
             if (tile.mesh.lifted) {
                 if (!tile.mesh.added) {
-                  tile.mesh.position.z += .2;
-                  tile.mesh = true;
+                    tile.mesh.position.z += .2;
+                    tile.mesh = true;
                 }
             }
         }
@@ -411,7 +411,8 @@ var Board = {
     },
 
     execute_move: function() {
-        if (this.animating.length > 0 || this.placed) {
+        a = false;
+        if (this.animating.length > 0) {
             for (tile of this.animating) {
                 tile.animator = undefined;
                 scene.remove(tile.mesh);
@@ -421,6 +422,13 @@ var Board = {
                 scene.remove(tile.mesh);
             }
 
+            this.lifted_sq = this.tile_at(this.lifted_sq.pos);
+            a = true;
+        } else if (this.placed) {
+            this.seleected = undefined;
+            a = true;
+        }
+        if (a) {
             this.tiles = [];
             this.moving = [];
             this.animating = [];
@@ -429,7 +437,6 @@ var Board = {
             this.next_board = [];
             this.lifted = [];
             this.placed = false;
-            this.lifted_sq = this.tile_at(this.lifted_sq.pos);
         }
     },
 
@@ -444,16 +451,17 @@ var Board = {
         }
 
         var sq = this.tile_at(obj.pos);
-        if (this.selected == undefined && this.lifted_sq == undefined && sq.tiles.length == 0) {
+        if (this.selected != undefined && this.lifted_sq == undefined && sq.tiles.length == 0) {
             // return;
             //TODO: select click animation
             scene.remove(this.selected);
-            this.selected = undefined;
+            // this.selected = undefined;
             var move = rtc(obj.pos.x) + (obj.pos.y + 1).toString();
+            console.log(move);
             this.move(Move.create(move));
         } else {
             var dir;
-            if (this.lifted_sq === undefined) {
+            if (this.lifted_sq == undefined) {
                 this.lifted_sq = sq;
                 sq.upped = sq.tiles.length - 1;
                 for (tile of sq.tiles) {
