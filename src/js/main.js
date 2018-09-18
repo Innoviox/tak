@@ -77,13 +77,15 @@ function onModelLoad() {
     Board.init(5, "white");
     Board.create();
 
-    loadSampleBoard();
+    // loadSampleBoard();
     for (idx in Board.objects) {
         var obj = Board.objects[idx];
         obj.receiveShadow = true;
         obj.castShadow = true;
         scene.add(obj);
     }
+
+    startGame();
 }
 
 function initGraphics() {
@@ -149,6 +151,8 @@ function initGraphics() {
 }
 
 function startGame() {
+    new Player(WHITE, "Bob1");
+    new Player(BLACK, "Bob2");
     Player.with_color(WHITE).activate();
 }
 
@@ -158,6 +162,7 @@ function pressKey(event) {
         Board.lifted_sq = undefined;
     }
 }
+
 function onDocumentMouseMove(event) {
     mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
     mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
@@ -184,7 +189,7 @@ function onDocumentMouseClick(event) {
 
     if (intersects.length > 0) {
         for (obj of intersects) {
-            if (obj.object.name == "tile mesh") {} else if (obj.object.name == "square") {
+            if (obj.object.name == "tile mesh") {} else if (obj.object.name == "square" || obj.object.name == "hud tile") {
                 Board.click(obj.object);
                 return;
             } else {
@@ -199,16 +204,13 @@ function testMove() {
 }
 
 function onWindowResize() {
-
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
 
     renderer.setSize(window.innerWidth, window.innerHeight);
-
 }
 
 function animate() {
-
     requestAnimationFrame(animate);
 
     render();
@@ -246,6 +248,7 @@ function update() {
         INTERSECTED = null;
     }
 }
+
 function render() {
     if (modelsLoaded) {
         var deltaTime = clock.getDelta();

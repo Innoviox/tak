@@ -15,6 +15,7 @@ var Board = {
     lifted_sq: undefined,
     hud_tiles: [],
     turn_number: 0,
+    hud_selected: undefined,
 
     // backend objects representing squares
     board: [],
@@ -336,6 +337,15 @@ var Board = {
                 }
             }
         }
+
+        for (tile of this.hud_tiles) {
+            if (tile.mesh.lifted) {
+                if (!tile.mesh.added) {
+                  tile.mesh.position.z += .2;
+                  tile.mesh = true;
+                }
+            }
+        }
     },
 
     make_hud_tiles: function() {
@@ -368,6 +378,10 @@ var Board = {
             : (boardSize / 2 + 2.1),
         (-boardSize / 2) + row * 1.1,
         idx);
+        this.hud_tiles.push(tile);
+        tile.mesh.name = "hud tile";
+        tile.mesh.lifted = false;
+        tile.mesh.added = false;
         scene.add(tile.mesh);
     },
 
@@ -420,9 +434,21 @@ var Board = {
     },
 
     click: function(obj) {
-        var sq = this.tile_at(obj.pos);
-        if (this.lifted_sq == undefined && sq.tiles.length == 0) {
+        if (obj.name == "hud tile" && this.selected == undefined) {
+            // this.lifted.push(obj);
+            obj.lifted = !obj.lifted;
+            obj.added = false;
+            this.selected = obj;
+            // console.log(obj);
             return;
+        }
+
+        var sq = this.tile_at(obj.pos);
+        if (this.selected == undefined && this.lifted_sq == undefined && sq.tiles.length == 0) {
+            // return;
+            //TODO: select click animation
+            scene.remove(this.selected);
+            this.selected = undefined;
             var move = rtc(obj.pos.x) + (obj.pos.y + 1).toString();
             this.move(Move.create(move));
         } else {
