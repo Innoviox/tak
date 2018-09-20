@@ -1,5 +1,5 @@
 class Animator {
-    constructor(dir, orig, idx) {
+    constructor(dir, orig, idx, first) {
         this.dt = {
             x: 0,
             y: 0,
@@ -15,7 +15,13 @@ class Animator {
             this.dt.y = -1;
         var pos = new Position(orig.x, orig.y);
         var next_sq = Board.tile_at(pos.next(dir));
-        var d_idx = next_sq.tiles.length - idx;
+        var new_idx = next_sq.tiles.length;
+        var d_idx;
+        if (first) {
+            d_idx = 0;
+        } else {
+            d_idx = new_idx;
+        }
         this.dt.z = d_idx * .2;
 
         this.ct = {

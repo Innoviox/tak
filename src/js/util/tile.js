@@ -57,8 +57,8 @@ class Tile {
         }
     }
 
-    animate(new_pos) {
+    animate(new_pos, old_idx, new_idx, first) {
         var dir = new_pos.dir_from(this.pos);
-        this.animator = new Animator(dir, this.pos, 0);/* TODO: idx animation */
+        this.animator = new Animator(dir, this.pos, old_idx, first); /* TODO: idx animation */
     }
 }

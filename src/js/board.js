@@ -138,20 +138,24 @@ var Board = {
         }
         if (new_sq.tiles.length == 0 || (n_stone == FLAT)) {
             old_sq.tiles = old_sq.tiles.slice(0, old_sq.tiles.length - n);
+            var first = true;
             for (idx in tiles) {
                 new_sq.add(tiles[idx]);
-                btiles[idx].animate(new_pos);
+                btiles[idx].animate(new_pos, idx, new_sq.tiles.length, first);
                 this.moving.push(btiles[idx]);
                 this.animating.push(btiles[idx]);
+                first = false;
             }
         } else if (n == 1 && tiles.slice(-1)[0].stone == CAP && n_stone == STAND) {
             old_sq.tiles = old_sq.tiles.slice(0, old_sq.tiles.length - n);
             new_sq.tiles.slice(-1)[0].setStone(FLAT);
+            var first = true;
             for (idx in tiles) {
                 new_sq.add(tiles[idx]);
-                btiles[idx].animate(new_pos);
+                btiles[idx].animate(new_pos, idx, new_sq.tiles.length, first);
                 this.moving.push(btiles[idx]);
                 this.animating.push(btiles[idx]);
+                first = false;
             }
         } else {
             //TODO Throw error?
@@ -425,7 +429,7 @@ var Board = {
             this.lifted_sq = this.tile_at(this.lifted_sq.pos);
             a = true;
         } else if (this.placed) {
-            this.seleected = undefined;
+            this.selected = undefined;
             a = true;
         }
         if (a) {
