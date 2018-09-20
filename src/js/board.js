@@ -442,20 +442,16 @@ var Board = {
 
     click: function(obj) {
         if (obj.name == "hud tile" && this.selected == undefined) {
-            // this.lifted.push(obj);
             obj.lifted = !obj.lifted;
             obj.added = false;
             this.selected = obj;
-            // console.log(obj);
             return;
         }
 
         var sq = this.tile_at(obj.pos);
         if (this.selected != undefined && this.lifted_sq == undefined && sq.tiles.length == 0) {
-            // return;
             //TODO: select click animation
             scene.remove(this.selected);
-            // this.selected = undefined;
             var move = rtc(obj.pos.x) + (obj.pos.y + 1).toString();
             console.log(move);
             this.move(Move.create(move));

@@ -94,7 +94,7 @@ function initGraphics() {
 
     renderer = new THREE.WebGLRenderer();
     renderer.setPixelRatio(window.devicePixelRatio);
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setSize(window.innerWidth, window.innerHeight - 50);
     renderer.shadowMap.enabled = true;
 
     container.innerHTML = "";
@@ -258,4 +258,8 @@ function render() {
         renderer.render(scene, camera);
         time += deltaTime;
     }
+}
+
+function do_move() {
+
 }
