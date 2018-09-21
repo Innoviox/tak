@@ -400,6 +400,7 @@ var Board = {
             console.log(this.lifted);
             this._draw_tiles(false);
             console.log(this.lifted);
+            this._draw_tiles(false);
         }
     },
 
