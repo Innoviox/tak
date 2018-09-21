@@ -329,7 +329,6 @@ var Board = {
                     var z = false;
 
                     if (this.lifted.includes(tile_mesh)) {
-                        // tile_mesh.position.z += .2;
                         z = true;
                     } else if (push || !scene.children.includes(tile_mesh)) {
                         this.tiles.push(tile_mesh);
@@ -337,7 +336,6 @@ var Board = {
                     } else if (this.lifted_sq != undefined && sq.equals(this.lifted_sq) && idx > sq.clicked) {
                         console.log(idx, sq.clicked);
                         this.lifted.push(tile_mesh);
-                        // tile_mesh.position.z += .2;
                         z = true;
                     }
 
@@ -397,8 +395,11 @@ var Board = {
         this._draw_tiles(false);
         this.animate_tiles();
         if (this.moving.length == 0) {
+            console.log(this.lifted);
             this.execute_move();
+            console.log(this.lifted);
             this._draw_tiles(false);
+            console.log(this.lifted);
         }
     },
 
