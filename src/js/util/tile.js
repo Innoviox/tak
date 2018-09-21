@@ -45,14 +45,14 @@ class Tile {
         }
     }
 
-    setPosition(x, y, idx) {
+    setPosition(x, y, idx, z_force) {
         if (this.stone == FLAT) {
-            this.mesh.position.set(x, y, .2 * idx + .3);
+            this.mesh.position.set(x, y, .2 * idx + .3 + z_force);
         } else if (this.stone == STAND) {
-            this.mesh.position.set(x, y, .2 * idx + .7);
+            this.mesh.position.set(x, y, .2 * idx + .7 + z_force);
             this.mesh.rotation.z = 12;
         } else {
-            this.mesh.position.set(x, y, .2 * idx + .2);
+            this.mesh.position.set(x, y, .2 * idx + .2 + z_force);
             this.mesh.rotation.x = 39.25;
         }
     }

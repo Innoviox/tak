@@ -326,18 +326,22 @@ var Board = {
                     var tile_mesh = tile.mesh;
                     tile_mesh.name = "tile mesh";
 
-                    tile.setPosition(x, y, idx);
+                    var z = false;
 
                     if (this.lifted.includes(tile_mesh)) {
-                        tile_mesh.position.z += .2;
+                        // tile_mesh.position.z += .2;
+                        z = true;
                     } else if (push || !scene.children.includes(tile_mesh)) {
                         this.tiles.push(tile_mesh);
                         scene.add(tile_mesh);
                     } else if (this.lifted_sq != undefined && sq.equals(this.lifted_sq) && idx > sq.clicked) {
                         console.log(idx, sq.clicked);
                         this.lifted.push(tile_mesh);
-                        tile_mesh.position.z += .2;
+                        // tile_mesh.position.z += .2;
+                        z = true;
                     }
+
+                    tile.setPosition(x, y, idx, z?.2:0);
                 }
             }
         }
@@ -381,7 +385,7 @@ var Board = {
             ? (-(boardSize / 2) - 2.1)
             : (boardSize / 2 + 2.1),
         (-boardSize / 2) + row * 1.1,
-        idx);
+        idx, 0);
         this.hud_tiles.push(tile);
         tile.mesh.name = "hud tile";
         tile.mesh.lifted = false;
