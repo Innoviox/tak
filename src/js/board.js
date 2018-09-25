@@ -478,6 +478,11 @@ var Board = {
                     this.lifted.push(tile.mesh);
                 }
             } else {
+                try {
+                    this.lifted_sq.next("-").pos;
+                } catch  {
+                    this.lifted_sq = undefined;
+                }
                 for (d of DIRS.split("")) {
                     if (sq.pos.equals(this.lifted_sq.next(d).pos)) {
                         dir = d;
