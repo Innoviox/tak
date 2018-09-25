@@ -76,7 +76,7 @@ function onModelLoad() {
     Board.init(5, "white");
     Board.create();
 
-    loadSampleBoard();
+    // loadSampleBoard();
     for (idx in Board.objects) {
         var obj = Board.objects[idx];
         obj.receiveShadow = true;
@@ -183,7 +183,7 @@ function onDocumentMouseClick(event) {
 
     if (intersects.length > 0) {
         for (obj of intersects) {
-            if (obj.object.name == "tile mesh") {} else if (obj.object.name == "square" || obj.object.name == "hud tile") {
+            if (obj.object.name == "tile mesh") {} else if (obj.object == Board.selected || obj.object.name == "square" || obj.object.name == "hud tile") {
                 Board.click(obj.object);
                 return;
             } else {

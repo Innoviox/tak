@@ -392,6 +392,7 @@ var Board = {
         tile.mesh.name = "hud tile";
         tile.mesh.lifted = false;
         tile.mesh.added = false;
+        tile.mesh.tile = tile;
         scene.add(tile.mesh);
     },
 
@@ -455,11 +456,28 @@ var Board = {
     },
 
     click: function(obj) {
-        if (obj.name == "hud tile" && this.selected == undefined) {
-            obj.lifted = !obj.lifted;
-            obj.added = false;
-            this.selected = obj;
-            return;
+        if (obj.name == "hud tile") {
+            if (this.selected == undefined) {
+                obj.lifted = !obj.lifted;
+                obj.added = false;
+                this.selected = obj;
+                return;
+            } else if (obj == this.selected) {
+                console.log("true");
+                var tile = this.selected.tile;
+                tile.stone = tile.stone == FLAT
+                    ? STAND
+                    : FLAT;
+                var position = this.selected.position
+                scene.remove(this.selected);
+                tile.setMesh();
+                tile.mesh.position.set(position.x, position.y, position.z);
+                tile.mesh.name = "hud tile";
+                this.selected = tile.mesh;
+                tile.mesh.tile = tile;
+                scene.add(this.selected);
+                return;
+            }
         }
 
         var sq = this.tile_at(obj.pos);
