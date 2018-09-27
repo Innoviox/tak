@@ -461,6 +461,7 @@ var Board = {
                 obj.lifted = !obj.lifted;
                 obj.added = false;
                 this.selected = obj;
+                this.selected.position.z += 1;
                 return;
             } else if (obj == this.selected) {
                 console.log("true");
@@ -484,7 +485,7 @@ var Board = {
         if (this.selected != undefined && this.lifted_sq == undefined && sq.tiles.length == 0) {
             //TODO: select click animation
             scene.remove(this.selected);
-            var move = rtc(obj.pos.x) + (obj.pos.y + 1).toString();
+            var move = this.selected.tile.stone + rtc(obj.pos.x) + (obj.pos.y + 1).toString();
             console.log(move);
             this.move(Move.create(move));
         } else {
