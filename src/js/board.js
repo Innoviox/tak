@@ -171,6 +171,9 @@ var Board = {
 
     draw: function() {
         this.update_tiles();
+        if (this.held_move.started_at != undefined) {
+            $("#btn-submit").text("Submit Move: " + this.create_held().str());
+        }
     },
 
     make_board_frame: function() {
@@ -486,7 +489,8 @@ var Board = {
             //TODO: select click animation
             scene.remove(this.selected);
             var move = this.selected.tile.stone + rtc(obj.pos.x) + (obj.pos.y + 1).toString();
-            console.log(move);
+            this.held_move.started_at = this.tile_at(obj.pos);
+            this.held_move.stone = this.selected.tile.stone;
             this.move(Move.create(move));
         } else {
             var dir;
@@ -567,9 +571,15 @@ var Board = {
 
     create_held: function() {
         var s = "";
-        for (i = 1; i < this.held_move.moves.length; i++)
-            s += this.held_move.moves[i].toString();
-        var mstr = this.held_move.moves[0].toString() + rtc(this.held_move.started_at.pos.x) + (this.held_move.started_at.pos.y + 1).toString() + this.held_move.dir + s;
+        var mstr = "";
+        if (this.held_move.moves.length > 0) {
+            for (i = 1; i < this.held_move.moves.length; i++)
+                s += Math.abs(this.held_move.moves[i]).toString();
+            mstr = this.held_move.moves[0].toString()
+        } else {
+            mstr = this.held_move.stone
+        }
+        mstr += rtc(this.held_move.started_at.pos.x) + (this.held_move.started_at.pos.y + 1).toString() + this.held_move.dir + s;
 
         return Move.create(mstr);
     }
