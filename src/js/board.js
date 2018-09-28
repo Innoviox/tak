@@ -336,8 +336,8 @@ var Board = {
                     } else if (push || !scene.children.includes(tile_mesh)) {
                         this.tiles.push(tile_mesh);
                         scene.add(tile_mesh);
-                    } else if (this.lifted_sq != undefined && sq.equals(this.lifted_sq) && idx > sq.clicked) {
-                        console.log(idx, sq.clicked);
+                    } else if (this.lifted_sq != undefined && sq.equals(this.lifted_sq) && idx > this.lifted_sq.clicked) {
+                        console.log("ADDING!", idx, sq.clicked);
                         this.lifted.push(tile_mesh);
                         z = true;
                     }
@@ -535,9 +535,18 @@ var Board = {
                         this.held_move.dir = dir;
 
                         this.move(this.create_held());
-
-                        this.lifted.splice(0, 1);
+                        // this.lifted.splice(0, 1);
                         this.lifted_sq = this.lifted_sq.next(dir);
+                        // console.log(this.lifted_sq.tiles);
+                        // console.log(this.lifted_sq.tiles.length);
+                        // console.log(this.lifted);
+                        for (tile of this.lifted) {
+                            scene.remove(tile);
+                        }
+                        this.lifted.splice(0, this.lifted_sq.tiles.length);
+                        this.lifted_sq.clicked = this.lifted_sq.tiles.length;
+                        this.tile_at(this.lifted_sq.pos).clicked = this.lifted_sq.tiles.length;
+                        // console.log(this.lifted);
                     } else {
                         if (this.held_move.dir == dir) {
                             if (this.held_move.moves.length == 1) {
