@@ -21,11 +21,11 @@
   },
   "homepage": "https://github.com/Innoviox/tak#readme",
   "dependencies": {
-    "ammo": "^3.0.1",
-    "requirejs": "^2.3.5",
-    "three": "^0.95.0",
-    "surge": "^0.20.1",
+    "airtable": "^0.5.6",
     "express": "^4.16.3",
-    "socket.io": "^2.1.1"
+    "requirejs": "^2.3.5",
+    "socket.io": "^2.1.1",
+    "surge": "^0.20.1",
+    "three": "^0.95.0"
   }
 }
