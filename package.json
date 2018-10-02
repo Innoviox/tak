@@ -4,7 +4,7 @@
   "description": "Sole goal is to be better than https://github.com/tybug/tak",
   "main": "src/js/main.js",
   "scripts": {
-    "start": "cd src && node index.js",
+    "start": "cd src && node index.js"
   },
   "repository": {
     "type": "git",
