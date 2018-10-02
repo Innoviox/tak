@@ -17,25 +17,34 @@
         <br />Loading...</div>
 
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-    <script src="js/lib/three.min.js"></script>
-    <script src="js/lib/stats.min.js"></script>
-    <script src="js/lib/MTLLoader.js"></script>
-    <script src="js/lib/OBJLoader.js"></script>
-    <script src="js/lib/OrbitControls.js"></script>
-    <script src="js/lib/THREEx.KeyboardState.js"></script>
-    <script src="js/lib/THREEx.FullScreen.js"></script>
-    <script src="js/lib/THREEx.WindowResize.js"></script>
 
-    <script src="js/util/common.js"></script>
-    <script src="js/util/position.js"></script>
-    <script src="js/util/move.js"></script>
-    <script src="js/util/animator.js"></script>
-    <script src="js/util/tile.js"></script>
-    <script src="js/util/square.js"></script>
-    <script src="js/util/player.js"></script>
+    <script src="js/graphics/lib/three.min.js"></script>
+    <script src="js/graphics/lib/stats.min.js"></script>
+    <script src="js/graphics/lib/MTLLoader.js"></script>
+    <script src="js/graphics/lib/OBJLoader.js"></script>
+    <script src="js/graphics/lib/OrbitControls.js"></script>
+    <script src="js/graphics/lib/THREEx.KeyboardState.js"></script>
+    <script src="js/graphics/lib/THREEx.FullScreen.js"></script>
+    <script src="js/graphics/lib/THREEx.WindowResize.js"></script>
 
-    <script src="js/board.js"></script>
-    <script src="js/main.js"></script>
+    <script src="js/graphics/util/common.js"></script>
+    <script src="js/graphics/util/position.js"></script>
+    <script src="js/graphics/util/move.js"></script>
+    <script src="js/graphics/util/animator.js"></script>
+    <script src="js/graphics/util/tile.js"></script>
+    <script src="js/graphics/util/square.js"></script>
+    <script src="js/graphics/util/player.js"></script>
+
+    <script src="js/graphics/board.js"></script>
+    <script src="js/graphics/main.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <!--<script src="js/server/socket.js"></script>-->
+    <script>
+    var socket = io();
+    socket.on('connection', function(socket) {
+        console.log('a user connected');
+    });
+    </script>
 
     <center>
         <button type="button" class="btn btn-outline-primary" id="btn-submit" onclick="doMove();">Submit Move: (none)</button>
