@@ -93,7 +93,7 @@ function initGraphics() {
 
     renderer = new THREE.WebGLRenderer();
     renderer.setPixelRatio(window.devicePixelRatio);
-    renderer.setSize(window.innerWidth - 100, window.innerHeight - 100);
+    renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.shadowMap.enabled = true;
 
     container.innerHTML = "";
@@ -158,8 +158,8 @@ function pressKey(event) {
 }
 
 function onDocumentMouseMove(event) {
-    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+    mouse.x = ((event.clientX - renderer.domElement.offsetLeft) / renderer.domElement.clientWidth) * 2 - 1;
+    mouse.y = -((event.clientY - renderer.domElement.offsetTop) / renderer.domElement.clientHeight) * 2 + 1;
 }
 
 function toString(v) {
@@ -167,8 +167,8 @@ function toString(v) {
 }
 
 function onDocumentMouseClick(event) {
-    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1 + .1;
+    mouse.x = ((event.clientX - renderer.domElement.offsetLeft) / renderer.domElement.clientWidth) * 2 - 1;
+    mouse.y = -((event.clientY - renderer.domElement.offsetTop) / renderer.domElement.clientHeight) * 2 + 1;
 
     var vector = new THREE.Vector3(mouse.x, mouse.y, 1);
     vector.unproject(camera);
@@ -253,6 +253,4 @@ function render() {
     }
 }
 
-function do_move() {
-
-}
+function do_move() {}
