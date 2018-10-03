@@ -93,7 +93,7 @@ function initGraphics() {
 
     renderer = new THREE.WebGLRenderer();
     renderer.setPixelRatio(window.devicePixelRatio);
-    renderer.setSize(window.innerWidth, window.innerHeight - 50);
+    renderer.setSize(window.innerWidth - 100, window.innerHeight - 100);
     renderer.shadowMap.enabled = true;
 
     container.innerHTML = "";
@@ -168,7 +168,7 @@ function toString(v) {
 
 function onDocumentMouseClick(event) {
     mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1 + .1;
 
     var vector = new THREE.Vector3(mouse.x, mouse.y, 1);
     vector.unproject(camera);

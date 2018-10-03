@@ -6,15 +6,28 @@
     <title>Tak</title>
     <link rel="stylesheet" type="text/css" href="css/main.css" />
     <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+    <link rel="stylesheet" href="js/server/lib/vex/css/vex.css" />
+    <link rel="stylesheet" href="js/server/lib/vex/css/vex-theme-os.css" />
 </head>
 
 <body>
+    <nav class="navbar navbar-inverse" id="sticky">
+        <span id="username"></span>
+        <button type="button" class="btn btn-outline-warning navbar-btn navbar-right" id="btn-login" onclick="login();">Login</button>
+    </nav>
+
     <div id="container">
         <br />
         <br />
         <br />
         <br />
         <br />Loading...</div>
+
+    <!--<nav class="navbar navbar-inverse navbar-sticky-bottom" id="sticky">-->
+    <center>
+        <button type="button" class="btn btn-outline-primary" id="btn-submit" onclick="doMove();">Submit Move: (none)</button>
+    </center>
+    <!--</nav>-->
 
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 
@@ -37,12 +50,15 @@
 
     <script src="js/graphics/board.js"></script>
     <script src="js/graphics/main.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script src="js/server/socket.js"></script>
 
-    <center>
-        <button type="button" class="btn btn-outline-primary" id="btn-submit" onclick="doMove();">Submit Move: (none)</button>
-    </center>
+    <script src="js/server/lib/vex/js/vex.combined.js"></script>
+    <script>vex.defaultOptions.className = 'vex-theme-flat-attack'</script>
+    <script src="js/server/modals.js"></script>
+
 </body>
 
 </html>
