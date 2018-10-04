@@ -6,7 +6,7 @@ var cookieParser = require('cookie-parser')
 
 var Airtable = require('airtable');
 
-Airtable.configure({endpointUrl: 'https://api.airtable.com', apiKey: ''});
+Airtable.configure({endpointUrl: 'https://api.airtable.com', apiKey: 'key0S23VokV1zvdT0'});
 
 var base = Airtable.base('appvViVoTQrAVwGwR');
 

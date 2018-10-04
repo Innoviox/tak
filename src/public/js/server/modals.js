@@ -1,4 +1,6 @@
 function create() {
+    controls.enabled = false;
+    vex.closeTop();
     vex.dialog.open({
         message: 'Enter your username and password:',
         input: ['<input name="username" type="text" placeholder="Username" required />', '<input name="password" type="password" placeholder="Password" required />'].join(''),
@@ -6,7 +8,8 @@ function create() {
             $.extend({}, vex.dialog.buttons.YES, {text: 'Create Account'}), $.extend({}, vex.dialog.buttons.NO, {text: 'Back'})
         ],
         callback: function(data) {
-            console.log(data);
+            if (controls.enabled) return;
+            controls.enabled = true;
             if (!data) {
                 console.log('Cancelled')
             } else {
@@ -21,7 +24,6 @@ function create() {
                         alert("Looks like that user isn't registered.");
                     }
                 });
-
             }
         },
         className: 'vex-theme-flat-attack'
@@ -29,6 +31,7 @@ function create() {
 }
 
 function login() {
+    controls.enabled = false;
     vex.dialog.open({
         message: 'Enter your username and password:',
         input: ['<input name="username" type="text" placeholder="Username" required />', '<input name="password" type="password" placeholder="Password" required />'].join(''),
@@ -40,6 +43,7 @@ function login() {
             }), $.extend({}, vex.dialog.buttons.NO, {text: 'Back'})
         ],
         callback: function(data) {
+            controls.enabled = true;
             if (!data) {
                 console.log('Cancelled')
             } else {

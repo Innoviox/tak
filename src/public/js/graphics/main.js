@@ -171,39 +171,28 @@ function toString(v) {
 }
 
 function onDocumentMouseClick(event) {
-    event.preventDefault();
-    event.stopPropagation();
-    if (event.srcElement.localName == "canvas") {
-        mouse.x = ((event.clientX - renderer.domElement.offsetLeft) / renderer.domElement.clientWidth) * 2 - 1;
-        mouse.y = -((event.clientY - renderer.domElement.offsetTop) / renderer.domElement.clientHeight) * 2 + 1;
+    mouse.x = ((event.clientX - renderer.domElement.offsetLeft) / renderer.domElement.clientWidth) * 2 - 1;
+    mouse.y = -((event.clientY - renderer.domElement.offsetTop) / renderer.domElement.clientHeight) * 2 + 1;
 
-        var vector = new THREE.Vector3(mouse.x, mouse.y, 1);
-        vector.unproject(camera);
-        var ray = new THREE.Raycaster(camera.position, vector.sub(camera.position).normalize());
-        for (tile of Board.tiles)
-            scene.remove(tile);
+    var vector = new THREE.Vector3(mouse.x, mouse.y, 1);
+    vector.unproject(camera);
+    var ray = new THREE.Raycaster(camera.position, vector.sub(camera.position).normalize());
+    for (tile of Board.tiles)
+        scene.remove(tile);
 
-        var intersects = ray.intersectObjects(scene.children);
+    var intersects = ray.intersectObjects(scene.children);
 
-        for (tile of Board.tiles)
-            scene.add(tile);
+    for (tile of Board.tiles)
+        scene.add(tile);
 
-        if (intersects.length > 0) {
-            for (obj of intersects) {
-                if (obj.object.name == "tile mesh") {} else if (obj.object == Board.selected || obj.object.name == "square" || obj.object.name == "hud tile") {
-                    Board.click(obj.object);
-                    return;
-                } else {
-                    return;
-                }
+    if (intersects.length > 0) {
+        for (obj of intersects) {
+            if (obj.object.name == "tile mesh") {} else if (obj.object == Board.selected || obj.object.name == "square" || obj.object.name == "hud tile") {
+                Board.click(obj.object);
+                return;
+            } else {
+                return;
             }
-        }
-    } else {
-        el = event.srcElement;
-        if (el.id) {
-            $("#" + el.id).click();
-        } else {
-            $("." + el.classList[0]).first().trigger("click");
         }
     }
 }
