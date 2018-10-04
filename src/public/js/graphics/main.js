@@ -189,11 +189,15 @@ function onDocumentMouseClick(event) {
         for (obj of intersects) {
             if (obj.object.name == "tile mesh") {} else if (obj.object == Board.selected || obj.object.name == "square" || obj.object.name == "hud tile") {
                 Board.click(obj.object);
-                return;
+                break;
+                //return;
             } else {
-                return;
+              break;
+                // return;
             }
         }
+    } else {
+      Board.click_off();
     }
 }
 

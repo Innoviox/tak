@@ -68,6 +68,7 @@ var Board = {
             }
             this.board.push(arr);
         }
+        this.next_board = this.copy();
     },
 
     tile_at: function(pos) {
@@ -513,9 +514,8 @@ var Board = {
                     }
                 }
                 if (this.lifted_sq.equals(sq)) {
-                    console.log("RECLICK");
+                    this.lifted_sq = sq;
                     this.lifted = this.lifted_sq.tiles.slice((this.lifted_sq.click())).map((i) => i.mesh);
-                    console.log(this.lifted_sq.clicked);
                 } else if (dir === undefined) {
                     // TODO: Misclick
                     this.lifted = [];
@@ -535,18 +535,13 @@ var Board = {
                         this.held_move.dir = dir;
 
                         this.move(this.create_held());
-                        // this.lifted.splice(0, 1);
                         this.lifted_sq = this.lifted_sq.next(dir);
-                        // console.log(this.lifted_sq.tiles);
-                        // console.log(this.lifted_sq.tiles.length);
-                        // console.log(this.lifted);
                         for (tile of this.lifted) {
                             scene.remove(tile);
                         }
                         this.lifted.splice(0, this.lifted_sq.tiles.length);
                         this.lifted_sq.clicked = this.lifted_sq.tiles.length;
                         this.tile_at(this.lifted_sq.pos).clicked = this.lifted_sq.tiles.length;
-                        // console.log(this.lifted);
                     } else {
                         if (this.held_move.dir == dir) {
                             if (this.held_move.moves.length == 1) {
@@ -591,5 +586,32 @@ var Board = {
         mstr += rtc(this.held_move.started_at.pos.x) + (this.held_move.started_at.pos.y + 1).toString() + this.held_move.dir + s;
 
         return Move.create(mstr);
+    },
+
+    click_off: function() {
+        console.log("clicked off!");
+        if (this.selected) {
+            var tile = this.selected.tile;
+            var stone = tile.stone;
+            tile.stone = FLAT;
+            var position = this.selected.position;
+            scene.remove(this.selected);
+            tile.setMesh();
+            tile.mesh.position.set(position.x, position.y, position.z - 1.2);
+            tile.mesh.name = "hud tile";
+            this.selected = tile.mesh;
+            tile.mesh.tile = tile;
+            scene.add(this.selected);
+            this.selected = null;
+            return;
+        } else if (this.lifted) {
+            this.lifted_sq = this.tile_at(this.lifted_sq.pos);
+            if (this.lifted_sq) {
+                this.lifted_sq.clicked = this.lifted_sq.tiles.length;
+            }
+            console.log("clicked off!");
+            console.log(this.lifted_sq);
+            this.lifted = [];
+        }
     }
 }

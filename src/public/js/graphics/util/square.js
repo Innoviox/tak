@@ -27,7 +27,7 @@ class Square {
     }
 
     click() {
-        console.log(this.tiles.length);
+        console.log("C", this.tiles.length);
         this.clicked = (++this.clicked) % (this.tiles.length + 1);
         return this.clicked;
     }
