@@ -5,7 +5,7 @@
   "main": "src/js/main.js",
   "scripts": {
     "start": "cd src && nodemon index.js",
-    "build": "now --public && pbpaste | xargs -I '{}' now alias '{}' tak.now.sh"
+    "produce": "now --public && pbpaste | xargs -I '{}' now alias '{}' tak.now.sh"
   },
   "repository": {
     "type": "git",
@@ -30,7 +30,6 @@
     "nodemon": "^1.18.4",
     "requirejs": "^2.3.5",
     "socket.io": "^2.1.1",
-    "surge": "^0.20.1",
     "three": "^0.95.0",
     "vex": "0.0.4",
     "xss": "^1.0.3"
