@@ -6,13 +6,12 @@ var cookieParser = require('cookie-parser')
 
 var Airtable = require('airtable');
 
-Airtable.configure({endpointUrl: 'https://api.airtable.com', apiKey: 'key0S23VokV1zvdT0'});
+Airtable.configure({endpointUrl: 'https://api.airtable.com', apiKey: ''});
 
 var base = Airtable.base('appvViVoTQrAVwGwR');
 
 function login(user, res) {
     res.cookie("username", user, {maxAge: 900000});
-    res.redirect("/");
 }
 
 app.use(express.static('public'));
@@ -31,6 +30,7 @@ app.get('/login', function(req, res) {
         records.forEach(function(record) {
             if (record.get("Password") == req.query['password']) {
                 login(record.get("Username"), res);
+                res.redirect("/");
                 return;
             }
         });
@@ -54,6 +54,8 @@ app.get('/create', function(req, res) {
             return;
         }
         login(req.query['username'], res);
+        res.redirect("/");
+        return;
     });
 })
 

@@ -1,3 +1,4 @@
+console.log("socket loaded!");
 var socket = io();
 var user = "guest-" + (
 Math.floor(Math.random() * 90000) + 10000);
@@ -31,12 +32,14 @@ $(function() {
         if (message != "" && message != null) {
             socket.emit('send', message);
         }
+        $("#message").focus();
     });
 
     $('#message').keypress(function(e) {
         if (e.which == 13) {
             $(this).blur();
             $('#submit').focus().click();
+            $("#message").focus();
         }
     });
 });
