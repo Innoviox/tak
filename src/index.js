@@ -10,7 +10,11 @@ Airtable.configure({endpointUrl: 'https://api.airtable.com', apiKey: ''});
 
 var base = Airtable.base('appvViVoTQrAVwGwR');
 
-// Serve scripts, css, and resources
+function login(user, res) {
+    res.cookie("username", user, {maxAge: 900000});
+    res.redirect("/");
+}
+
 app.use(express.static('public'));
 app.use(cookieParser());
 
@@ -26,8 +30,7 @@ app.get('/login', function(req, res) {
     }).eachPage(function page(records, fetchNextPage) {
         records.forEach(function(record) {
             if (record.get("Password") == req.query['password']) {
-                res.cookie("username", record.get("Username"), {maxAge: 900000});
-                res.redirect("/");
+                login(record.get("Username"), res);
                 return;
             }
         });
@@ -37,10 +40,42 @@ app.get('/login', function(req, res) {
             return;
         }
     });
+});
+
+app.get('/create', function(req, res) {
+    console.log("got create request");
+    base('Table 1').create({
+        "Username": req.query['username'],
+        "Password": req.query['password'],
+        "Admin?": false
+    }, function(err, record) {
+        if (err) {
+            console.error(err);
+            return;
+        }
+        login(req.query['username'], res);
+    });
 })
 
-io.on('connection', function(socket) {
-    console.log('a user connected');
+var players = {};
+io.sockets.on('connection', function(socket) {
+    socket.on('send', function(data) {
+        io.sockets.emit('update-chat', socket.username, data);
+    });
+
+    socket.on('add-user', function(username) {
+        socket.username = username;
+        players[username] = username;
+        socket.emit('update-chat', '[AUTO-MSG', 'you have connected]');
+        socket.broadcast.emit('update-chat', '[AUTO-MSG', username + ' has connected]');
+        io.sockets.emit('update-players', players);
+    });
+
+    socket.on('disconnect', function() {
+        delete players[socket.username];
+        io.sockets.emit('update-players', players);
+        socket.broadcast.emit('update-chat', '[AUTO-MSG', socket.username + ' has disconnected]');
+    });
 });
 
 http.listen(3001, function() {

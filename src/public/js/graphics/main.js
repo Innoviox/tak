@@ -112,7 +112,7 @@ function initGraphics() {
 
     // projector = new THREE.Projector();
 
-    controls = new THREE.OrbitControls(camera);
+    controls = new THREE.OrbitControls(camera, renderer.domElement);
 
     load_models();
 
@@ -158,8 +158,12 @@ function pressKey(event) {
 }
 
 function onDocumentMouseMove(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    //if (event.srcElement.localName == "canvas") {
     mouse.x = ((event.clientX - renderer.domElement.offsetLeft) / renderer.domElement.clientWidth) * 2 - 1;
     mouse.y = -((event.clientY - renderer.domElement.offsetTop) / renderer.domElement.clientHeight) * 2 + 1;
+    //  } else {}
 }
 
 function toString(v) {
@@ -167,6 +171,9 @@ function toString(v) {
 }
 
 function onDocumentMouseClick(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    //if (event.srcElement.localName == "canvas") {
     mouse.x = ((event.clientX - renderer.domElement.offsetLeft) / renderer.domElement.clientWidth) * 2 - 1;
     mouse.y = -((event.clientY - renderer.domElement.offsetTop) / renderer.domElement.clientHeight) * 2 + 1;
 
@@ -191,6 +198,13 @@ function onDocumentMouseClick(event) {
             }
         }
     }
+    //
+    /* else {
+        el = event.srcElement;
+        if (el.id) {
+          $("#" + el.id).focus();
+        }
+    }*/
 }
 
 function testMove() {

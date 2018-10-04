@@ -23,6 +23,7 @@
   "dependencies": {
     "airtable": "^0.5.6",
     "cookie-parser": "^1.4.3",
+    "cryptiles": "^4.1.2",
     "express": "^4.16.3",
     "jscookie": "^1.1.0",
     "requirejs": "^2.3.5",

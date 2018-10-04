@@ -4,10 +4,8 @@
 <head>
     <meta charset=utf-8>
     <title>Tak</title>
-    <link rel="stylesheet" type="text/css" href="css/main.css" />
     <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
-    <link rel="stylesheet" href="js/server/lib/vex/css/vex.css" />
-    <link rel="stylesheet" href="js/server/lib/vex/css/vex-theme-os.css" />
+    <link rel="stylesheet" type="text/css" href="css/main.css" />
 </head>
 
 <body>
@@ -16,18 +14,24 @@
         <button type="button" class="btn btn-outline-warning navbar-btn navbar-right" id="btn-login" onclick="login();">Login</button>
     </nav>
 
+    <nav class="navbar navbar-fixed-bottom" id="sticky-bottom">
+        <button type="button" class="btn btn-outline-primary" onclick="doMove();" id="btn-submit">Submit Move: (none)</button>
+    </nav>
+
+    <div class="fixed-left" id="comments">
+        <div id="players"></div>
+        <div id="chat"></div>
+        <br>
+        <input type="text" name="message" id="message" placeholder="Message..."></input>
+        <button type="button" name="submit" id="submit" class="btn btn-outline-success">Send</button>
+    </div>
+
     <div id="container">
         <br />
         <br />
         <br />
         <br />
         <br />Loading...</div>
-
-    <!--<nav class="navbar navbar-inverse navbar-sticky-bottom" id="sticky">-->
-    <center>
-        <button type="button" class="btn btn-outline-primary" id="btn-submit" onclick="doMove();">Submit Move: (none)</button>
-    </center>
-    <!--</nav>-->
 
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 
@@ -56,9 +60,10 @@
     <script src="js/server/socket.js"></script>
 
     <script src="js/server/lib/vex/js/vex.combined.js"></script>
-    <script>vex.defaultOptions.className = 'vex-theme-flat-attack'</script>
+    <script>
+    vex.defaultOptions.className = 'vex-theme-flat-attack'
+    </script>
     <script src="js/server/modals.js"></script>
-
 </body>
 
 </html>
