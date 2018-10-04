@@ -4,7 +4,8 @@
   "description": "Sole goal is to be better than https://github.com/tybug/tak",
   "main": "src/js/main.js",
   "scripts": {
-    "start": "cd src && node index.js"
+    "start": "cd src && nodemon index.js",
+    "build": "now --public && pbpaste | xargs -I '{}' now alias '{}' tak.now.sh"
   },
   "repository": {
     "type": "git",
@@ -26,10 +27,12 @@
     "cryptiles": "^4.1.2",
     "express": "^4.16.3",
     "jscookie": "^1.1.0",
+    "nodemon": "^1.18.4",
     "requirejs": "^2.3.5",
     "socket.io": "^2.1.1",
     "surge": "^0.20.1",
     "three": "^0.95.0",
-    "vex": "0.0.4"
+    "vex": "0.0.4",
+    "xss": "^1.0.3"
   }
 }

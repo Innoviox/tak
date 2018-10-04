@@ -1,6 +1,6 @@
 function create() {
-    controls.enabled = false;
     vex.closeTop();
+    controls.enabled = false;
     vex.dialog.open({
         message: 'Enter your username and password:',
         input: ['<input name="username" type="text" placeholder="Username" required />', '<input name="password" type="password" placeholder="Password" required />'].join(''),
@@ -8,7 +8,11 @@ function create() {
             $.extend({}, vex.dialog.buttons.YES, {text: 'Create Account'}), $.extend({}, vex.dialog.buttons.NO, {text: 'Back'})
         ],
         callback: function(data) {
-            if (controls.enabled) return;
+            console.log(data);
+            if (controls.enabled) {
+                console.log("not creating!");
+                return;
+            }
             controls.enabled = true;
             if (!data) {
                 console.log('Cancelled')

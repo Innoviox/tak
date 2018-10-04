@@ -2,11 +2,12 @@ var express = require('express');
 var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
-var cookieParser = require('cookie-parser')
+var cookieParser = require('cookie-parser');
+var xss = require('xss');
 
 var Airtable = require('airtable');
 
-Airtable.configure({endpointUrl: 'https://api.airtable.com', apiKey: ''});
+Airtable.configure({endpointUrl: 'https://api.airtable.com', apiKey: 'key0S23VokV1zvdT0'});
 
 var base = Airtable.base('appvViVoTQrAVwGwR');
 
@@ -18,6 +19,7 @@ app.use(express.static('public'));
 app.use(cookieParser());
 
 app.get('/', function(req, res) {
+    console.log("got / request");
     res.sendFile(__dirname + '/index.html');
 });
 
@@ -30,7 +32,8 @@ app.get('/login', function(req, res) {
         records.forEach(function(record) {
             if (record.get("Password") == req.query['password']) {
                 login(record.get("Username"), res);
-                res.redirect("/");
+                res.statusCode = 307;
+                res.redirect("/?x=y");
                 return;
             }
         });
@@ -54,7 +57,8 @@ app.get('/create', function(req, res) {
             return;
         }
         login(req.query['username'], res);
-        res.redirect("/");
+        res.statusCode = 307;
+        res.redirect("/?x=y");
         return;
     });
 })
@@ -62,14 +66,15 @@ app.get('/create', function(req, res) {
 var players = {};
 io.sockets.on('connection', function(socket) {
     socket.on('send', function(data) {
-        io.sockets.emit('update-chat', socket.username, data);
+        io.sockets.emit('update-chat', socket.username, xss(data));
     });
 
     socket.on('add-user', function(username) {
-        socket.username = username;
-        players[username] = username;
+        var sanitized = xss(username);
+        socket.username = sanitized;
+        players[sanitized] = sanitized;
         socket.emit('update-chat', '[AUTO-MSG', 'you have connected]');
-        socket.broadcast.emit('update-chat', '[AUTO-MSG', username + ' has connected]');
+        socket.broadcast.emit('update-chat', '[AUTO-MSG', sanitized + ' has connected]');
         io.sockets.emit('update-players', players);
     });
 
