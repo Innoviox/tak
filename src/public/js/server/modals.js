@@ -6,6 +6,7 @@ function create() {
             $.extend({}, vex.dialog.buttons.YES, {text: 'Create Account'}), $.extend({}, vex.dialog.buttons.NO, {text: 'Back'})
         ],
         callback: function(data) {
+            console.log(data);
             if (!data) {
                 console.log('Cancelled')
             } else {
