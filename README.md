@@ -13,3 +13,5 @@ Todo list (in order):
     - Chat, multiplayer
       - start with single game & others spectate
       - then multiple games
+      
+ Note: there is a flag on the server. Please do not exploit, thanks.
