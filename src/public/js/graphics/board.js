@@ -589,7 +589,6 @@ var Board = {
     },
 
     click_off: function() {
-        console.log("clicked off!");
         if (this.selected) {
             var tile = this.selected.tile;
             var stone = tile.stone;
@@ -609,7 +608,6 @@ var Board = {
             if (this.lifted_sq) {
                 this.lifted_sq.clicked = this.lifted_sq.tiles.length;
             }
-            console.log("clicked off!");
             console.log(this.lifted_sq);
             this.lifted = [];
         }

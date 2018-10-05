@@ -10,6 +10,7 @@ var Airtable = require('airtable');
 Airtable.configure({endpointUrl: 'https://api.airtable.com', apiKey: 'key0S23VokV1zvdT0'});
 
 var base = Airtable.base('appvViVoTQrAVwGwR');
+var players = {};
 
 function login(user, res) {
     res.cookie("username", user, {maxAge: 900000});
@@ -19,7 +20,12 @@ app.use(express.static('public'));
 app.use(cookieParser());
 
 app.get('/', function(req, res) {
-    console.log("got / request");
+    console.log("got / request", req.query);
+    io.sockets.emit("reload-players");
+    io.sockets.emit('update-players', players);
+    if (req.query['login']) {
+        io.sockets.emit('login-correct-toaster');
+    }
     res.sendFile(__dirname + '/index.html');
 });
 
@@ -32,8 +38,7 @@ app.get('/login', function(req, res) {
         records.forEach(function(record) {
             if (record.get("Password") == req.query['password']) {
                 login(record.get("Username"), res);
-                res.statusCode = 307;
-                res.redirect("/?x=y");
+                res.redirect("/?login=true");
                 return;
             }
         });
@@ -42,6 +47,7 @@ app.get('/login', function(req, res) {
             console.log(err);
             return;
         }
+        res.redirect("/?login=false");
     });
 });
 
@@ -54,16 +60,15 @@ app.get('/create', function(req, res) {
     }, function(err, record) {
         if (err) {
             console.error(err);
+            res.redirect("/?created=false")
             return;
         }
         login(req.query['username'], res);
-        res.statusCode = 307;
-        res.redirect("/?x=y");
+        res.redirect("/?created=true");
         return;
     });
 })
 
-var players = {};
 io.sockets.on('connection', function(socket) {
     socket.on('send', function(data) {
         io.sockets.emit('update-chat', socket.username, xss(data));
@@ -82,6 +87,12 @@ io.sockets.on('connection', function(socket) {
         delete players[socket.username];
         io.sockets.emit('update-players', players);
         socket.broadcast.emit('update-chat', '[AUTO-MSG', socket.username + ' has disconnected]');
+    });
+
+    socket.on('remove-user', function(data) {
+        delete players[data];
+        io.sockets.emit('update-players', players);
+        socket.broadcast.emit('update-chat', '[AUTO-MSG', data + ' has disconnected]');
     });
 });
 

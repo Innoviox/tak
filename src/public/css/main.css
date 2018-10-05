@@ -18,6 +18,9 @@ canvas {
     position: static;
 }
 
+.front {
+    z-index: 1000;
+}
 /*
 body {
     color: #61443e;

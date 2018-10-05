@@ -10,7 +10,6 @@ function create() {
         callback: function(data) {
             console.log(data);
             if (controls.enabled) {
-                console.log("not creating!");
                 return;
             }
             controls.enabled = true;
