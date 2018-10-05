@@ -36,6 +36,11 @@ socket.on('login-correct-toaster', function() {
     Toastify({text: "Logged in successfully!", backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)", className: "front", duration: 300000}).showToast();
 });
 
+/*
+background: rgb(253,75,29);
+background: linear-gradient(90deg, rgba(253,75,29,1) 34%, rgba(252,248,69,1) 100%);
+*/
+
 $(function() {
     $('#submit').click(function() {
         var message = $('#message').val();
