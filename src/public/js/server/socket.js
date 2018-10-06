@@ -3,6 +3,8 @@ const socket = io();
 var user = "guest-" + (
 Math.floor(Math.random() * 90000) + 10000);
 var old_user;
+const CLOSE_ANIM_LENGTH = 500;
+
 function get_user() {
     if (user) {
         old_user = user;
@@ -49,6 +51,22 @@ socket.on('create-toaster', function(username, auth) {
         } else {
             Toastify({text: "Account creation failed. Please contact a system admin ASAP.", backgroundColor: "linear-gradient(to right, #fd4b1d, #f47d41)", className: "front", duration: 3000, close: true}).showToast();
         }
+    }
+});
+
+$("#chat-close").click(function(e) {
+    if ($("#chat-close").val() === "<") {
+        $("#comments").animate({left: "-=255px", height: "toggle"}, CLOSE_ANIM_LENGTH, function() {
+            $("#chat-close").html(">");
+            $("#chat-close").val(">");
+        });
+        $("#chat-close").animate({left: "-=255px"}, CLOSE_ANIM_LENGTH);
+    } else {
+        $("#comments").animate({left: "+=255px", height: "toggle"}, CLOSE_ANIM_LENGTH, function() {
+            $("#chat-close").html("<");
+            $("#chat-close").val("<");
+        });
+        $("#chat-close").animate({left: "+=255px"}, CLOSE_ANIM_LENGTH);
     }
 });
 

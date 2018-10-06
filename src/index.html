@@ -19,12 +19,17 @@
         <button type="button" class="btn btn-outline-primary" onclick="doMove();" id="btn-submit">Submit Move: (none)</button>
     </nav>
 
-    <div class="fixed-left" id="comments">
-        <div id="players"></div>
-        <div id="chat"></div>
-        <br>
-        <input type="text" name="message" id="message" placeholder="Message..."></input>
-        <button type="button" name="submit" id="submit" class="btn btn-outline-success">Send</button>
+    <div id="chat-container">
+        <div class="fixed-left" id="comments">
+            <div id="players"></div>
+            <div id="chat"></div>
+            <br>
+            <input type="text" name="message" id="message" placeholder="Message..." />
+            <button type="button" name="submit" id="submit" class="btn btn-outline-success">Send</button>
+        </div>
+
+        <!--<div id="chat-close"><span><<br>c<br>h<br>a<br>t</b></span> </div>-->
+        <button type="button" name="chat-close" id="chat-close" value="<" class="btn btn-sm btn-danger"><</button>
     </div>
 
     <div id="container">
