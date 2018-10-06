@@ -70,6 +70,24 @@ $("#chat-close").click(function(e) {
     }
 });
 
+function do_move() {
+    console.log("making move");
+    socket.emit("made-move", user, Board.create_held().str());
+}
+
+socket.on("make-move", function(username, move) {
+    if (username !== user) {
+        Board.move(Move.create(move));
+        Toastify({
+            text: username + " made move " + move,
+            backgroundColor: "linear-gradient(to right, #a8c0ff, #3f2b96);",
+            className: "front",
+            duration: 3000,
+            close: true
+        }).showToast();
+    }
+});
+
 $(function() {
     $('#submit').click(function() {
         var message = $('#message').val();

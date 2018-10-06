@@ -4,8 +4,7 @@ const http = require('http').Server(app);
 const io = require('socket.io')(http);
 const cookieParser = require('cookie-parser');
 const xss = require('xss');
-
-var Airtable = require('airtable');
+const Airtable = require('airtable');
 
 Airtable.configure({
     endpointUrl: 'https://api.airtable.com',
@@ -78,6 +77,11 @@ app.get('/create', function (req, res) {
 io.sockets.on('connection', function (socket) {
     socket.on('send', function (data) {
         io.sockets.emit('update-chat', socket.username, xss(data));
+    });
+
+    socket.on("made-move", function(username, move) {
+        console.log("made move");
+        io.sockets.emit("make-move", username, move);
     });
 
     socket.on('add-user', function (username) {

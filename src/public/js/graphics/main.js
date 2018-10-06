@@ -260,5 +260,3 @@ function render() {
         time += deltaTime;
     }
 }
-
-function do_move() {}
