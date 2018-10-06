@@ -1,5 +1,5 @@
 console.log("socket loaded!");
-var socket = io();
+const socket = io();
 var user = "guest-" + (
 Math.floor(Math.random() * 90000) + 10000);
 var old_user;
@@ -32,28 +32,39 @@ socket.on('update-players', function(data) {
 
 socket.on('reload-players', get_user);
 
-socket.on('login-correct-toaster', function(username) {
-    if (username == user) {
-        Toastify({text: "Logged in successfully!", backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)", className: "front", duration: 3000, close: true}).showToast();
+socket.on('login-toaster', function(username, auth) {
+    if (username === user) {
+        if (auth === 'true') {
+            Toastify({text: "Logged in successfully!", backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)", className: "front", duration: 3000, close: true}).showToast();
+        } else {
+            Toastify({text: "Login failed.", backgroundColor: "linear-gradient(to right, #fd4b1d, #f47d41)", className: "front", duration: 3000, close: true}).showToast();
+        }
     }
 });
 
-/* background: rgb(253,75,29);
-background: linear-gradient(90deg, rgba(253,75,29,1) 34%, rgba(252,248,69,1) 100%); */
+socket.on('create-toaster', function(username, auth) {
+    if (username === user) {
+        if (auth === 'true') {
+            Toastify({text: "Account created successfuly!", backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)", className: "front", duration: 3000, close: true}).showToast();
+        } else {
+            Toastify({text: "Account creation failed. Please contact a system admin ASAP.", backgroundColor: "linear-gradient(to right, #fd4b1d, #f47d41)", className: "front", duration: 3000, close: true}).showToast();
+        }
+    }
+});
 
 $(function() {
     $('#submit').click(function() {
         var message = $('#message').val();
         $('#message').val('');
 
-        if (message != "" && message != null) {
+        if (message !== "" && message != null) {
             socket.emit('send', message);
         }
         $("#message").focus();
     });
 
     $('#message').keypress(function(e) {
-        if (e.which == 13) {
+        if (e.which === 13) {
             $(this).blur();
             $('#submit').focus().click();
             $("#message").focus();

@@ -16,6 +16,7 @@ function create() {
             if (!data) {
                 console.log('Cancelled')
             } else {
+                data['curr_sock_user'] = user;
                 $.ajax({
                     type: "GET",
                     url: "/create/",
@@ -50,6 +51,7 @@ function login() {
             if (!data) {
                 console.log('Cancelled')
             } else {
+                data['curr_sock_user'] = user;
                 $.ajax({
                     type: "GET",
                     url: "/login/",

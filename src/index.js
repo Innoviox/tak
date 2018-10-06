@@ -1,9 +1,9 @@
-var express = require('express');
-var app = express();
-var http = require('http').Server(app);
-var io = require('socket.io')(http);
-var cookieParser = require('cookie-parser');
-var xss = require('xss');
+const express = require('express');
+const app = express();
+const http = require('http').Server(app);
+const io = require('socket.io')(http);
+const cookieParser = require('cookie-parser');
+const xss = require('xss');
 
 var Airtable = require('airtable');
 
@@ -17,7 +17,7 @@ var players = {};
 
 function login(user, res) {
     res.cookie("username", user, {
-        maxAge: 900000
+        maxAge: 900000000
     });
 }
 
@@ -28,8 +28,10 @@ app.get('/', function (req, res) {
     console.log("got / request", req.query);
     io.sockets.emit("reload-players");
     io.sockets.emit('update-players', players);
-    if (req.query['login']) {
-        io.sockets.emit('login-correct-toaster', req.query["username"]);
+    if (req.query['login'] !== undefined) {
+        io.sockets.emit('login-toaster', req.query["username"], req.query['login']);
+    } else if (req.query['created'] !== undefined) {
+        io.sockets.emit('create-toaster', req.query["username"], req.query["created"])
     }
     res.sendFile(__dirname + '/index.html');
 });
@@ -41,18 +43,18 @@ app.get('/login', function (req, res) {
         filterByFormula: "{Username} = \"" + req.query['username'] + "\""
     }).eachPage(function page(records, fetchNextPage) {
         records.forEach(function (record) {
-            if (record.get("Password") == req.query['password']) {
+            if (record.get("Password") === req.query['password']) {
                 login(record.get("Username"), res);
                 res.redirect("/?login=true&username=" + record.get("Username"));
-                return;
             }
         });
+        fetchNextPage();
     }, function done(err) {
         if (err) {
             console.log(err);
             return;
         }
-        res.redirect("/?login=false");
+        res.redirect("/?login=false&username=" + req.query['curr_sock_user']);
     });
 });
 
@@ -65,12 +67,11 @@ app.get('/create', function (req, res) {
     }, function (err, record) {
         if (err) {
             console.error(err);
-            res.redirect("/?created=false")
+            res.redirect("/?created=false&username=" + req.query['username']);
             return;
         }
         login(req.query['username'], res);
-        res.redirect("/?created=true");
-        return;
+        res.redirect("/?created=true&username=" + req.query['username']);
     });
 })
 
