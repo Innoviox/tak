@@ -1,0 +1,14 @@
+# Made using Asset Forge (www.assetforge.io) version 1.3 
+
+newmtl lightStone (Instance)
+Ka 0.000000 0.000000 0.000000 
+Kd 0.812 0.808 0.855 
+Ks 0.330000 0.330000 0.330000 
+map_Kd Textures/lightStone (Instance).png
+
+newmtl lightStone (Instance) (Instance)
+Ka 0.000000 0.000000 0.000000 
+Kd 0.812 0.808 0.855 
+Ks 0.330000 0.330000 0.330000 
+map_Kd Textures/lightStone (Instance) (Instance).png
+

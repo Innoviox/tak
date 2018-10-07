@@ -62,8 +62,8 @@ function load_models() {
     });
 
     // White capstone model
-    mtl.load('rook-small-door-matte.mtl', function(materials) {
-        obj.setMaterials(materials).load('rook-small-door-matte.obj', function(model) {
+    mtl.load('rook-tiny-untextured.mtl', function(materials) {
+        obj.setMaterials(materials).load('rook-tiny-untextured.obj', function(model) {
             materials.preload();
             models.capModel = model;
             modelsLoaded = true;
@@ -151,7 +151,7 @@ function startGame() {
 }
 
 function pressKey(event) {
-    if (event.keyCode == 27) {
+    if (event.keyCode === 27) {
         Board.lifted = [];
         Board.lifted_sq = undefined;
     }

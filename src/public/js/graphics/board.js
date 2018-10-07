@@ -487,7 +487,7 @@ var Board = {
         }
 
         var sq = this.tile_at(obj.pos);
-        if (this.selected != undefined && this.lifted_sq == undefined && sq.tiles.length == 0) {
+        if (this.selected !== undefined && this.lifted_sq === undefined && sq.tiles.length === 0) {
             //TODO: select click animation
             scene.remove(this.selected);
             var move = this.selected.tile.stone + rtc(obj.pos.x) + (obj.pos.y + 1).toString();
@@ -505,7 +505,7 @@ var Board = {
             } else {
                 try {
                     this.lifted_sq.next("-").pos;
-                } catch  {
+                } catch (err) {
                     this.lifted_sq = undefined;
                 }
                 for (d of DIRS.split("")) {

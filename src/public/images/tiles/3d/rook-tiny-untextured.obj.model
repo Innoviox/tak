@@ -1,0 +1,17 @@
+# Made using Asset Forge (1.3)
+
+:models
+Castles/wall_doorwayRound[(0.2, 0, 0);(0.0, 0.0, 0.0);(1.0, 0.6, 0.6);wall_doorwayRound_0;stone+lightStone]
+Castles/wall_doorwayRound[(0.8, 0, -3.73E-09);(0.0, 0.0, 0.0);(1.0, 0.6, 0.6);wall_doorwayRound_1;stone+lightStone]
+Castles/wall_doorwayRound[(0, 0, -0.2);(0.0, 90.0, 0.0);(1.0, 0.6, -0.6);wall_doorwayRound_2;stone+lightStone]
+Castles/wall_doorwayRound[(0, 0, -0.8);(0.0, 90.0, 0.0);(1.0, 0.6, -0.6);wall_doorwayRound_3;stone+lightStone]
+Castles/battlement_corner[(0, 0.6, 0);(0.0, 0.0, 0.0);(0.8, 1.0, 0.8);battlement_corner_6;stone]
+Castles/battlement_corner[(0, 0.6, 0);(0.0, 180.0, 0.0);(0.8, 1.0, 0.8);battlement_corner_7;stone]
+
+:materials
+stone[RGBA(0.667, 0.663, 0.737, 1.000);]
+lightStone[RGBA(0.812, 0.808, 0.855, 1.000);]
+
+:textures
+
+:extra
