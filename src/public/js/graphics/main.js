@@ -62,9 +62,9 @@ function load_models() {
     });
 
     // White capstone model
-    mtl.load('rook-tiny-untextured.mtl', function(materials) {
-        obj.setMaterials(materials).load('rook-tiny-untextured.obj', function(model) {
-            materials.preload();
+    mtl.load('rook-small-door-matte.mtl', function(materials) {
+        materials.preload();
+        obj.setMaterials(materials).load('rook-small-door-matte.obj', function(model) {
             models.capModel = model;
             modelsLoaded = true;
             onModelLoad();
@@ -116,6 +116,7 @@ function initGraphics() {
 
     load_models();
 
+    /*
     for (i = -10; i < 30; i += 20) {
         light = new THREE.DirectionalLight(0xffffff, 1);
         light.position.set(i, i, 5);
@@ -135,6 +136,13 @@ function initGraphics() {
         lights.push(light);
         scene.add(light);
     }
+    */
+
+    hemiLight = new THREE.HemisphereLight( 0xffffff, 0xffffff, 0.6 );
+    // hemiLight.color.setHSL( 0.6, 1, 0.6 );
+    // hemiLight.groundColor.setHSL( 0.095, 1, 0.75 );
+    hemiLight.position.set( 0, 50, 0 );
+    scene.add( hemiLight );
 
     window.addEventListener('resize', onWindowResize, false);
 
