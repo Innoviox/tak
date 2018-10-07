@@ -47,7 +47,13 @@ socket.on('login-toaster', function(username, auth) {
 socket.on('create-toaster', function(username, auth) {
     if (username === user) {
         if (auth === 'true') {
-            Toastify({text: "Account created successfuly!", backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)", className: "front", duration: 3000, close: true}).showToast();
+            Toastify({
+                text: "Account created successfuly!",
+                backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
+                className: "front",
+                duration: 3000,
+                close: true
+            }).showToast();
         } else {
             Toastify({text: "Account creation failed. Please contact a system admin ASAP.", backgroundColor: "linear-gradient(to right, #fd4b1d, #f47d41)", className: "front", duration: 3000, close: true}).showToast();
         }
@@ -72,11 +78,12 @@ $("#chat-close").click(function(e) {
 
 function do_move() {
     console.log("making move");
-    socket.emit("made-move", user, Board.create_held().str());
+    socket.emit("made-move", user, Board.create_held());
 }
 
-socket.on("make-move", function(username, move) {
+socket.on("make-move", function(username, move, force) {
     if (username !== user) {
+        Board.force_board = force;
         Board.move(Move.create(move));
         Toastify({
             text: username + " made move " + move,

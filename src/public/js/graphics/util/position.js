@@ -1,3 +1,15 @@
+function ctr(c) {
+    var a = 'ABCDE'.indexOf(c);
+    if (a == -1) {
+        return 'abcde'.indexOf(c);
+    }
+    return a;
+}
+
+function rtc(r) {
+    return 'ABCDE'.charAt(r);
+}
+
 class Position {
     constructor(x, y) {
         this.x = ctr(x);
@@ -47,3 +59,5 @@ class Position {
         return new Position(this.x, this.y);
     }
 }
+
+module.exports = Position;

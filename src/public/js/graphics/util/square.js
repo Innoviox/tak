@@ -36,3 +36,5 @@ class Square {
         return this.pos.equals(sq.pos);
     }
 }
+
+module.exports = Square;

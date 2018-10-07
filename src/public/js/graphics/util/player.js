@@ -32,3 +32,5 @@ class Player {
         return players.filter(i => i.color == color)[0];
     }
 }
+
+module.exports = Player;

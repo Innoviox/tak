@@ -58,3 +58,5 @@ class Move {
         return m_str;
     }
 }
+
+module.exports = Move;

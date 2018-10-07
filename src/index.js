@@ -4,14 +4,18 @@ const http = require('http').Server(app);
 const io = require('socket.io')(http);
 const cookieParser = require('cookie-parser');
 const xss = require('xss');
-const Airtable = require('airtable');
+const airtable = require('airtable');
 
-Airtable.configure({
+const ServerBoard = require('./public/js/server/board.js');
+
+ServerBoard.init(5, "white");
+
+airtable.configure({
     endpointUrl: 'https://api.airtable.com',
     apiKey: 'key0S23VokV1zvdT0'
 });
 
-var base = Airtable.base('appvViVoTQrAVwGwR');
+var base = airtable.base('appvViVoTQrAVwGwR');
 var players = {};
 
 function login(user, res) {
@@ -81,7 +85,9 @@ io.sockets.on('connection', function (socket) {
 
     socket.on("made-move", function(username, move) {
         console.log("made move");
-        io.sockets.emit("make-move", username, move);
+        console.log(ServerBoard);
+        ServerBoard.move(move);
+        io.sockets.emit("make-move", username, move, ServerBoard.board);
     });
 
     socket.on('add-user', function (username) {

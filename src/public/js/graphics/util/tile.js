@@ -62,3 +62,5 @@ class Tile {
         this.animator = new Animator(dir, this.pos, old_idx, first); /* TODO: idx animation */
     }
 }
+
+module.exports = Tile;

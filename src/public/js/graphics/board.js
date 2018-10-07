@@ -1,9 +1,24 @@
+var colors = {
+    white_piece: new THREE.MeshBasicMaterial({color: 0xd4b375}),
+    black_piece: new THREE.MeshBasicMaterial({color: 0x573312}),
+    white_cap: new THREE.MeshBasicMaterial({color: 0xd4b375}),
+    black_cap: new THREE.MeshBasicMaterial({color: 0x573312}),
+    white_sqr: new THREE.MeshBasicMaterial({color: 0xe6d4a7}),
+    black_sqr: new THREE.MeshBasicMaterial({color: 0xba6639}),
+    inner: new THREE.MeshBasicMaterial({color: 0xc48d44}),
+    outer: new THREE.MeshBasicMaterial({color: 0x6f4734}),
+    letter: new THREE.MeshBasicMaterial({color: 0xFFF5B5}),
+    highlighter: new THREE.LineBasicMaterial({color: 0x0000f0})
+};
+
+
 var Board = {
     objects: [],
     tiles: [],
     moving: [],
     animating: [],
     inner: [],
+    force_board: undefined,
     size: 0,
     totcaps: 0,
     tottiles: 0,
@@ -440,8 +455,9 @@ var Board = {
             for (tile of this.tiles) {
                 scene.remove(tile.mesh);
             }
-
-            this.lifted_sq = this.tile_at(this.lifted_sq.pos);
+            if (this.lifted_sq) {
+                this.lifted_sq = this.tile_at(this.lifted_sq.pos);
+            }
             a = true;
         } else if (this.placed) {
             this.selected = undefined;
@@ -454,6 +470,10 @@ var Board = {
             this.old_board = this.board;
             this.board = this.next_board;
             this.next_board = [];
+            if (this.force_board) {
+                this.board = this.force_board;
+                this.force_board = undefined;
+            }
             this.lifted = [];
             this.placed = false;
         }
@@ -613,3 +633,5 @@ var Board = {
         }
     }
 }
+
+module.exports = Board;
