@@ -79,9 +79,9 @@ io.sockets.on('connection', function (socket) {
         io.sockets.emit('update-chat', socket.username, xss(data));
     });
 
-    socket.on("made-move", function(username, move) {
+    socket.on("made-move", function(username, move, board) {
         console.log("made move");
-        io.sockets.emit("make-move", username, move);
+        io.sockets.emit("make-move", username, move, board);
     });
 
     socket.on('add-user', function (username) {

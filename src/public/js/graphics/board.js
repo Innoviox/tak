@@ -172,7 +172,7 @@ var Board = {
 
     draw: function() {
         this.update_tiles();
-        if (this.held_move.started_at != undefined) {
+        if (this.held_move.started_at !== undefined) {
             $("#btn-submit").text("Submit Move: " + this.create_held().str());
         }
     },
@@ -403,7 +403,7 @@ var Board = {
     update_tiles: function() {
         this._draw_tiles(false);
         this.animate_tiles();
-        if (this.moving.length == 0) {
+        if (this.moving.length === 0) {
             this.execute_move();
             this._draw_tiles(false);
             this._draw_tiles(false);
@@ -441,7 +441,8 @@ var Board = {
                 scene.remove(tile.mesh);
             }
 
-            this.lifted_sq = this.tile_at(this.lifted_sq.pos);
+            if (this.lifted_sq)
+                this.lifted_sq = this.tile_at(this.lifted_sq.pos);
             a = true;
         } else if (this.placed) {
             this.selected = undefined;

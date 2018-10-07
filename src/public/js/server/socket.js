@@ -72,10 +72,10 @@ $("#chat-close").click(function(e) {
 
 function do_move() {
     console.log("making move");
-    socket.emit("made-move", user, Board.create_held().str());
+    socket.emit("made-move", user, Board.create_held().str(), Board.board);
 }
 
-socket.on("make-move", function(username, move) {
+socket.on("make-move", function(username, move, board) {
     if (username !== user) {
         Board.move(Move.create(move));
         Toastify({
@@ -85,6 +85,18 @@ socket.on("make-move", function(username, move) {
             duration: 3000,
             close: true
         }).showToast();
+        // while (Board.moving.length > 0) {}
+        console.log(Board.board);
+        Board.board = board;
+        scene.children = [];
+        Board.objects = [];
+        Board.tiles = [];
+        Board.inner = [];
+        Board.moving = [];
+        Board.animating = [];
+        Board.lifted = [];
+        Board.hud_tiles = [];
+        Board.create();
     }
 });
 
