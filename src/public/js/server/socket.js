@@ -33,6 +33,12 @@ function set_current_board(tps) {
         Board.lifted = [];
         Board.hud_tiles = [];
         Board.create();
+        for (idx in Board.objects) {
+            var obj = Board.objects[idx];
+            obj.receiveShadow = true;
+            obj.castShadow = true;
+            scene.add(obj);
+        }
     }
 }
 
@@ -52,6 +58,7 @@ socket.on('update-players', function(data) {
 socket.on('reload-players', get_user);
 
 socket.on("update-board", function(tps) {
+    console.log("recieved tps", tps);
     set_current_board(tps);
 });
 
@@ -96,7 +103,7 @@ function do_move() {
     socket.emit("made-move", user, Board.create_held().str(), board_to_tps());
 }
 
-socket.on("make-move", function(username, move, board) {
+socket.on("make-move", function(username, move, tps) {
     if (username !== user) {
         Board.move(Move.create(move));
         Toastify({
@@ -107,6 +114,14 @@ socket.on("make-move", function(username, move, board) {
             close: true
         }).showToast();
         set_current_board(tps);
+    } else {
+        Toastify({
+            text: "Move " + move + " made successfully!",
+            backgroundColor: "linear-gradient(to right, #a8c0ff, #3f2b96);",
+            className: "front",
+            duration: 3000,
+            close: true
+        }).showToast();
     }
 });
 

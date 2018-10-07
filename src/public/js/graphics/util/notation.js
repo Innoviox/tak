@@ -1,32 +1,35 @@
 function board_from_tps(tps) {
+    console.log("Recieved", tps);
     var board = [];
     var rows = tps.split(" ")[1].split("/");
     for (idx in rows) {
-        board.push([]);
+        var arr = [];
         var sqs = rows[idx].split(",");
+        console.log(sqs);
         for (sqi in sqs) {
             var sq = sqs[sqi];
-            if (sqs.contains("x")) {
+            if (sq.includes("x")) {
                 var x = parseInt(sq.charAt(sq.length - 1));
                 for (var i = 0; i < x; i++) {
-                    board[idx].push(new Square(new Position(idx, sqi + x)));
+                    arr.push(new Square(new Position(parseInt(idx), parseInt(sqi) + i)));
                 }
             } else {
                 var nsq = new Square(new Position(idx, sqi));
                 for (tile of sq) {
                     if (tile === '1') {
-                        nsq.tiles.push(new Tile(WHITE, FLAT));
+                        nsq.add(new Tile(WHITE, FLAT));
                     } else {
-                        nsq.tiles.push(new Tile(BLACK, FLAT));
+                        nsq.add(new Tile(BLACK, FLAT));
                     }
                 }
                 var last = sq.charAt(sq.length - 1);
                 if (last === STAND || last === CAP) {
                     nsq.tiles[nsq.tiles.length - 1].setStone(last);
                 }
-                board[idx].push(nsq);
+                arr.push(nsq);
             }
         }
+        board.push(arr);
     }
     return board;
 }
@@ -54,13 +57,14 @@ function board_to_tps(board=Board.board) {
                     }
                     tps += ",";
                 }
+                x = 0;
             }
         }
         if (x !== 0) {
             tps += "x" + x + ",";
         }
-        tps += "/";
+        tps = tps.substring(0, tps.length - 1) + "/";
     }
-    tps += ' 1 1"]';
+    tps = tps.substring(0, tps.length - 1) + ' 1 1"]';
     return tps;
 }

@@ -105,10 +105,10 @@ io.sockets.on('connection', function (socket) {
         io.sockets.emit('update-players', players);
         socket.broadcast.emit('update-chat', '[AUTO-MSG', data + ' has disconnected]');
     });
-
-    // socket.emit("update-board", current_board);
+    console.log("attaching current board", current_board);
+    io.sockets.emit("update-board", current_board);
 });
 
-http.listen(3001, function () {
-    console.log('listening on 0.0.0.0:3001');
+http.listen(3000, function () {
+    console.log('listening on 0.0.0.0:3000');
 });

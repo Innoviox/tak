@@ -60,11 +60,11 @@ var Board = {
     },
 
     _init_backend: function() {
-        this.board = new Array();
+        this.board = [];
         for (i = 0; i < boardSize; i++) {
-            arr = new Array();
+            arr = [];
             for (j = 0; j < boardSize; j++) {
-                arr.push(new Square(new Position(i, j), new Array()));
+                arr.push(new Square(new Position(i, j), []));
             }
             this.board.push(arr);
         }

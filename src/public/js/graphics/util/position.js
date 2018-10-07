@@ -1,7 +1,7 @@
 class Position {
     constructor(x, y) {
         this.x = ctr(x);
-        if (this.x == -1) {
+        if (this.x === -1) {
             this.x = x;
         }
         if (typeof(y) === 'number') {
