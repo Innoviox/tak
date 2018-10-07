@@ -13,7 +13,7 @@ Airtable.configure({
 
 var base = Airtable.base('appvViVoTQrAVwGwR');
 var players = {};
-
+var current_board = undefined;
 function login(user, res) {
     res.cookie("username", user, {
         maxAge: 900000000
@@ -81,6 +81,7 @@ io.sockets.on('connection', function (socket) {
 
     socket.on("made-move", function(username, move, board) {
         console.log("made move");
+        current_board = board;
         io.sockets.emit("make-move", username, move, board);
     });
 
@@ -104,6 +105,8 @@ io.sockets.on('connection', function (socket) {
         io.sockets.emit('update-players', players);
         socket.broadcast.emit('update-chat', '[AUTO-MSG', data + ' has disconnected]');
     });
+
+    // socket.emit("update-board", current_board);
 });
 
 http.listen(3001, function () {

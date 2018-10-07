@@ -61,6 +61,6 @@ function board_to_tps(board=Board.board) {
         }
         tps += "/";
     }
-    tps += ' 1 1"]'
+    tps += ' 1 1"]';
     return tps;
 }

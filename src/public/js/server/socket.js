@@ -20,8 +20,25 @@ function get_user() {
 
 get_user();
 
+
+function set_current_board(tps) {
+    if (tps) {
+        Board.board = board_from_tps(tps);
+        scene.children = [];
+        Board.objects = [];
+        Board.tiles = [];
+        Board.inner = [];
+        Board.moving = [];
+        Board.animating = [];
+        Board.lifted = [];
+        Board.hud_tiles = [];
+        Board.create();
+    }
+}
+
 socket.on('update-chat', function(username, data) {
     $('#chat').append('<b>' + username + ':</b> ' + data + '<br>');
+    // $("#chat").outerHeight( $("#comments").innerHeight() -  $("#chat").position().top);
 });
 
 socket.on('update-players', function(data) {
@@ -33,6 +50,10 @@ socket.on('update-players', function(data) {
 });
 
 socket.on('reload-players', get_user);
+
+socket.on("update-board", function(tps) {
+    set_current_board(tps);
+});
 
 socket.on('login-toaster', function(username, auth) {
     if (username === user) {
@@ -85,18 +106,7 @@ socket.on("make-move", function(username, move, board) {
             duration: 3000,
             close: true
         }).showToast();
-        // while (Board.moving.length > 0) {}
-        // console.log(Board.board);
-        Board.board = board_from_tps(board);
-        scene.children = [];
-        Board.objects = [];
-        Board.tiles = [];
-        Board.inner = [];
-        Board.moving = [];
-        Board.animating = [];
-        Board.lifted = [];
-        Board.hud_tiles = [];
-        Board.create();
+        set_current_board(tps);
     }
 });
 
