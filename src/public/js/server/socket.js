@@ -72,7 +72,7 @@ $("#chat-close").click(function(e) {
 
 function do_move() {
     console.log("making move");
-    socket.emit("made-move", user, Board.create_held().str(), Board.board);
+    socket.emit("made-move", user, Board.create_held().str(), board_to_tps());
 }
 
 socket.on("make-move", function(username, move, board) {
@@ -86,8 +86,8 @@ socket.on("make-move", function(username, move, board) {
             close: true
         }).showToast();
         // while (Board.moving.length > 0) {}
-        console.log(Board.board);
-        Board.board = board;
+        // console.log(Board.board);
+        Board.board = board_from_tps(board);
         scene.children = [];
         Board.objects = [];
         Board.tiles = [];

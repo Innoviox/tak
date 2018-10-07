@@ -13,9 +13,22 @@ function board_from_tps(tps) {
                 }
             } else {
                 var nsq = new Square(new Position(idx, sqi));
+                for (tile of sq) {
+                    if (tile === '1') {
+                        nsq.tiles.push(new Tile(WHITE, FLAT));
+                    } else {
+                        nsq.tiles.push(new Tile(BLACK, FLAT));
+                    }
+                }
+                var last = sq.charAt(sq.length - 1);
+                if (last === STAND || last === CAP) {
+                    nsq.tiles[nsq.tiles.length - 1].setStone(last);
+                }
+                board[idx].push(nsq);
             }
         }
     }
+    return board;
 }
 
 function board_to_tps(board=Board.board) {
