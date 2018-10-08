@@ -25,8 +25,8 @@ $("#notation-close").click(function(e) {
         $("#notation-close").animate({right: "-=255px"}, CLOSE_ANIM_LENGTH);
     } else {
         $("#notation").animate({right: "+=255px", height: "toggle"}, CLOSE_ANIM_LENGTH, function() {
-            $("#notation-close").html("<");
-            $("#notation-close").val("<");
+            $("#notation-close").html(">");
+            $("#notation-close").val(">");
         });
         $("#notation-close").animate({right: "+=255px"}, CLOSE_ANIM_LENGTH);
     }

@@ -1,4 +1,4 @@
-var Board = {
+let Board = {
     objects: [],
     tiles: [],
     moving: [],
@@ -61,8 +61,8 @@ var Board = {
 
     _init_backend: function() {
         this.board = [];
-        for (i = 0; i < boardSize; i++) {
-            arr = [];
+        for (var i = 0; i < boardSize; i++) {
+            var arr = [];
             for (j = 0; j < boardSize; j++) {
                 arr.push(new Square(new Position(i, j), []));
             }
@@ -84,13 +84,13 @@ var Board = {
     },
 
     copy: function() {
-        a = [];
+        var a = [];
         for (i = 0; i < boardSize; i++) {
-            row = [];
+            var row = [];
             for (j = 0; j < boardSize; j++) {
-                var sq = this.board[i][j];
+                const sq = this.board[i][j];
                 s = new Square(new Position(sq.pos.x, sq.pos.y));
-                for (idx in sq.tiles) {
+                for (var idx in sq.tiles) {
                     var tile = sq.tiles[idx];
                     var nt = new Tile(tile.color, tile.stone);
                     s.add(nt);
@@ -127,6 +127,11 @@ var Board = {
                 //TODO: Throw error?
             }
         }
+        this.held_move = {
+            moves: [],
+            started_at: undefined,
+            dir: undefined
+        };
     },
 
     _move: function(old_pos, new_pos, n, first) {
@@ -465,17 +470,17 @@ var Board = {
     },
 
     click: function(obj) {
-        if (obj.name == "hud tile") {
-            if (this.selected == undefined) {
+        if (obj.name === "hud tile") {
+            var mat = current_color===WHITE ? models.white_sqr : models.black_sqr;
+            if (this.selected === undefined && obj.material.color.equals(mat.color)) {
                 obj.lifted = !obj.lifted;
                 obj.added = false;
                 this.selected = obj;
                 this.selected.position.z += 1;
                 return;
-            } else if (obj == this.selected) {
-                console.log("true");
+            } else if (obj === this.selected) {
                 var tile = this.selected.tile;
-                tile.stone = tile.stone == FLAT
+                tile.stone = tile.stone === FLAT
                     ? STAND
                     : FLAT;
                 var position = this.selected.position
@@ -500,7 +505,7 @@ var Board = {
             this.move(Move.create(move));
         } else {
             var dir;
-            if (this.lifted_sq == undefined) {
+            if (this.lifted_sq === undefined) {
                 this.lifted_sq = sq;
                 sq.upped = sq.tiles.length - 1;
                 for (tile of sq.tiles) {
@@ -533,8 +538,7 @@ var Board = {
                     }
                     this.lifted_sq = sq;
                 } else {
-
-                    if (this.held_move.started_at == undefined) {
+                    if (this.held_move.started_at === undefined) {
                         this.held_move.started_at = this.lifted_sq;
                         this.held_move.moves.push(this.lifted.length);
                         this.held_move.dir = dir;
@@ -548,8 +552,8 @@ var Board = {
                         this.lifted_sq.clicked = this.lifted_sq.tiles.length;
                         this.tile_at(this.lifted_sq.pos).clicked = this.lifted_sq.tiles.length;
                     } else {
-                        if (this.held_move.dir == dir) {
-                            if (this.held_move.moves.length == 1) {
+                        if (this.held_move.dir === dir) {
+                            if (this.held_move.moves.length === 1) {
                                 this.held_move.moves.push(this.lifted.length - this.tile_at(this.lifted_sq.pos).tiles.length);
                             }
                             this.held_move.moves.push(this.lifted_sq.upped + 1);
@@ -613,7 +617,6 @@ var Board = {
             if (this.lifted_sq) {
                 this.lifted_sq.clicked = this.lifted_sq.tiles.length;
             }
-            console.log(this.lifted_sq);
             this.lifted = [];
         }
     }

@@ -45,6 +45,7 @@ app.get('/login', function (req, res) {
             if (record.get("Password") === req.query['password']) {
                 login(record.get("Username"), res);
                 res.redirect("/?login=true&username=" + record.get("Username"));
+                res.end();
             }
         });
         fetchNextPage();
@@ -53,7 +54,10 @@ app.get('/login', function (req, res) {
             console.log(err);
             return;
         }
-        res.redirect("/?login=false&username=" + req.query['curr_sock_user']);
+        if (!res.finished) {
+            res.redirect("/?login=false&username=" + req.query['curr_sock_user']);
+            res.end();
+        }
     });
 });
 
@@ -67,10 +71,12 @@ app.get('/create', function (req, res) {
         if (err) {
             console.error(err);
             res.redirect("/?created=false&username=" + req.query['username']);
+            res.end();
             return;
         }
         login(req.query['username'], res);
         res.redirect("/?created=true&username=" + req.query['username']);
+        res.end();
     });
 })
 

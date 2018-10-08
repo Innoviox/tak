@@ -1,0 +1,17 @@
+# Made using Asset Forge (1.3)
+
+:models
+Castles/wall_straight[(0, 0, 0);(0.0, 0.0, 0.0);(1.0, 1.0, 1.0);wall_straight_1;stone]
+Castles/wall_straight[(1, 0, 0);(0.0, 0.0, 0.0);(1.0, 1.0, 1.0);wall_straight_2;stone]
+Castles/wall_straight[(0, 0, 0);(0.0, 90.0, 0.0);(1.0, 1.0, 1.0);wall_straight_3;stone]
+Castles/wall_straight[(0, 0, -1);(0.0, 90.0, 0.0);(1.0, 1.0, 1.0);wall_straight_4;stone]
+Castles/battlement_corner[(0, 1, 0);(0.0, 0.0, 0.0);(1.0, 1.0, 1.0);battlement_corner_5;stone]
+Castles/battlement_corner[(0, 1, 0);(0.0, 180.0, 0.0);(1.0, 1.0, 1.0);battlement_corner_6;stone]
+
+:materials
+stone[RGBA(0.578, 0.574, 0.635, 1.000);cracked]
+customMaterial1[RGBA(0.684, 0.009, 0.009, 1.000);cobble]
+
+:textures
+
+:extra

@@ -6,12 +6,20 @@ var old_user;
 var current_color = WHITE;
 var turn = 1, move = 1;
 
+function logout() {
+    socket.broadcast("logout", user);
+    var user = "guest-" + (
+        Math.floor(Math.random() * 90000) + 10000);
+}
+
 function get_user() {
     if (user) {
         old_user = user;
     }
     if (Cookies.get("username")) {
         user = Cookies.get("username");
+        $("#btn-login").click(logout);
+        $("#btn-login").html("Logout");
     }
     socket.emit('remove-user', old_user);
     socket.emit('add-user', user);
