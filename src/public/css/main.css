@@ -82,6 +82,18 @@ a {
     border-collapse: collapse;
 }
 
+.fixed-right {
+    background: white;
+    position: absolute;
+    right: 5px;
+    width: 250px;
+    top: 65px;
+    height: 80%;
+    z-index: 10;
+    border: 5px solid;
+    border-collapse: collapse;
+}
+
 #chat {
     overflow: scroll;
     height: 87%;
@@ -97,6 +109,12 @@ a {
 #chat-close {
     position: fixed;
     left: 255px;
+    top: 65px;
+}
+
+#notation-close {
+    position: fixed;
+    right: 255px;
     top: 65px;
 }
 

@@ -13,8 +13,7 @@ var camera,
     controls,
     scene,
     renderer;
-var lights = new Array();
-var vizboard;
+var light;
 var clock = new THREE.Clock();
 var time = 0;
 var frame = 0;
@@ -116,33 +115,9 @@ function initGraphics() {
 
     load_models();
 
-    /*
-    for (i = -10; i < 30; i += 20) {
-        light = new THREE.DirectionalLight(0xffffff, 1);
-        light.position.set(i, i, 5);
-        light.castShadow = true;
-        var dLight = 200;
-        var sLight = dLight * 0.25;
-        light.shadow.camera.left = -sLight;
-        light.shadow.camera.right = sLight;
-        light.shadow.camera.top = sLight;
-        light.shadow.camera.bottom = -sLight;
-
-        light.shadow.camera.near = dLight / 30;
-        light.shadow.camera.far = dLight;
-
-        light.shadow.mapSize.x = 1024 * 2;
-        light.shadow.mapSize.y = 1024 * 2;
-        lights.push(light);
-        scene.add(light);
-    }
-    */
-
-    hemiLight = new THREE.HemisphereLight( 0xffffff, 0xffffff, 0.6 );
-    // hemiLight.color.setHSL( 0.6, 1, 0.6 );
-    // hemiLight.groundColor.setHSL( 0.095, 1, 0.75 );
-    hemiLight.position.set( 0, 50, 0 );
-    scene.add( hemiLight );
+    light = new THREE.HemisphereLight( 0xffffff, 0xffffff, 0.6 );
+    light.position.set( 0, 50, 0 );
+    scene.add( light );
 
     window.addEventListener('resize', onWindowResize, false);
 

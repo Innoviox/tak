@@ -117,7 +117,11 @@ var Board = {
         } else {
             var sq = this.board[old_pos.x][old_pos.y];
             if (sq.tiles.length == 0) {
-                this.add_next_tile(old_pos.x, old_pos.y, new Tile(this.mycolor, move.stone));
+                var color = turn===1?flip_color(current_color):current_color;
+                this.add_next_tile(old_pos.x, old_pos.y, new Tile(color, move.stone));
+                current_color = flip_color(current_color);
+                move = (move % 2) + 1;
+                if (move == 1) turn++;
                 this.placed = true;
             } else {
                 //TODO: Throw error?
@@ -368,7 +372,7 @@ var Board = {
             this._draw_hud_tile(WHITE, FLAT, row, idx);
             this._draw_hud_tile(BLACK, FLAT, boardSize - row, idx);
             idx++;
-            if (idx % 5 == 0) {
+            if (idx % 5 === 0) {
                 idx = 0;
                 row++;
             }
@@ -386,7 +390,7 @@ var Board = {
     _draw_hud_tile: function(color, stone, row, idx) {
         tile = new Tile(color, stone);
         tile.setPosition(
-            color == WHITE
+            color === WHITE
             ? (-(boardSize / 2) - 2.1)
             : (boardSize / 2 + 2.1),
         (-boardSize / 2) + row * 1.1,
