@@ -61,8 +61,8 @@ let Board = {
 
     _init_backend: function() {
         this.board = [];
-        for (var i = 0; i < boardSize; i++) {
-            var arr = [];
+        for (let i = 0; i < boardSize; i++) {
+            let arr = [];
             for (j = 0; j < boardSize; j++) {
                 arr.push(new Square(new Position(i, j), []));
             }
@@ -103,6 +103,7 @@ let Board = {
     },
 
     move: function(move) {
+        console.log("making", move);
         this.last_move = move;
         this.old_board = this.copy();
         this.next_board = this.copy();
@@ -117,7 +118,7 @@ let Board = {
         } else {
             var sq = this.board[old_pos.x][old_pos.y];
             if (sq.tiles.length == 0) {
-                var color = turn===1?flip_color(current_color):current_color;
+                var color = get_current_color();
                 this.add_next_tile(old_pos.x, old_pos.y, new Tile(color, move.stone));
                 current_color = flip_color(current_color);
                 move = (move % 2) + 1;
@@ -353,8 +354,8 @@ let Board = {
                     }
 
                     tile.setPosition(
-                        x, y, idx, z
-                        ? .2
+                        x, y, idx,  z
+                        ? .4
                         : 0);
                 }
             }
@@ -471,8 +472,8 @@ let Board = {
 
     click: function(obj) {
         if (obj.name === "hud tile") {
-            var mat = current_color===WHITE ? models.white_sqr : models.black_sqr;
-            if (this.selected === undefined && obj.material.color.equals(mat.color)) {
+            var mat = get_current_color()===WHITE ? models.white_sqr : models.black_sqr;
+            if (this.selected === undefined && obj.material.name === mat.name) {
                 obj.lifted = !obj.lifted;
                 obj.added = false;
                 this.selected = obj;
@@ -506,11 +507,15 @@ let Board = {
         } else {
             var dir;
             if (this.lifted_sq === undefined) {
+                console.log("the glitch begins!");
+                this.lifted = [];
                 this.lifted_sq = sq;
+                console.log(this.lifted_sq);
                 sq.upped = sq.tiles.length - 1;
                 for (tile of sq.tiles) {
                     this.lifted.push(tile.mesh);
                 }
+                console.log(this.lifted);
             } else {
                 try {
                     this.lifted_sq.next("-").pos;

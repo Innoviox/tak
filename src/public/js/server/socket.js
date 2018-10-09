@@ -6,9 +6,22 @@ var old_user;
 var current_color = WHITE;
 var turn = 1, move = 1;
 
+function get_current_color() {
+    return turn===1?flip_color(current_color):current_color;
+}
+
 function logout() {
-    socket.broadcast("logout", user);
-    var user = "guest-" + (
+    $.ajax({
+        type: "GET",
+        url: "/logout/?username="+user,
+        dataType: "json",
+        success: function() {
+            alert("something!");
+        }, catch  : function() {
+            alert("Looks like that user isn't registered.");
+        }
+    });
+    user = "guest-" + (
         Math.floor(Math.random() * 90000) + 10000);
 }
 
@@ -18,7 +31,7 @@ function get_user() {
     }
     if (Cookies.get("username")) {
         user = Cookies.get("username");
-        $("#btn-login").click(logout);
+        $("#btn-login").attr("onclick", "logout(); return false;");
         $("#btn-login").html("Logout");
     }
     socket.emit('remove-user', old_user);

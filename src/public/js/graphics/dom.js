@@ -31,3 +31,8 @@ $("#notation-close").click(function(e) {
         $("#notation-close").animate({right: "+=255px"}, CLOSE_ANIM_LENGTH);
     }
 });
+
+function toggle() {
+    $("#notation-close").click();
+    $("#chat-close").click();
+}

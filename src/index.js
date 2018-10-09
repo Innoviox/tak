@@ -35,6 +35,14 @@ app.get('/', function (req, res) {
     res.sendFile(__dirname + '/index.html');
 });
 
+app.get('/logout', function(req, res) {
+    console.log("got logout request", req.query);
+    delete players[req.query['username']];
+    res.clearCookie("username");
+    res.redirect("/");
+    res.end();
+});
+
 app.get('/login', function (req, res) {
     console.log("got login request");
     base('Table 1').select({

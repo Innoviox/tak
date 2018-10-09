@@ -49,11 +49,11 @@ function load_models() {
     var loader = new THREE.TextureLoader();
 
     models.white_sqr = new THREE.MeshBasicMaterial({
-        map: loader.load("images/tiles/white_simple_pieces.png", () => {})
+        map: loader.load("images/tiles/white_simple_pieces.png", () => {}), name: "white square"
     });
 
     models.black_sqr = new THREE.MeshBasicMaterial({
-        map: loader.load("images/tiles/black_simple_pieces.png", () => {})
+        map: loader.load("images/tiles/black_simple_pieces.png", () => {}), name: "black square"
     });
 
     models.board_sqr = new THREE.MeshBasicMaterial({
