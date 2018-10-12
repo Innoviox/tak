@@ -103,7 +103,7 @@ let Board = {
     },
 
     move: function(move, force=true, hypo=false) {
-        console.log(hypo);
+        console.log("moving", move.str());
         this.last_move = move;
         this.old_board = this.copy();
         this.next_board = this.copy();
@@ -133,11 +133,13 @@ let Board = {
                 //TODO: Throw error?
             }
         }
+        if (hypo) this.execute_move();
         this.held_move = {
             moves: [],
             started_at: undefined,
             dir: undefined
         };
+
         return true;
     },
 
@@ -180,6 +182,7 @@ let Board = {
             //TODO Throw error?
             return false;
         }
+
         return true;
     },
 
@@ -199,9 +202,11 @@ let Board = {
                         var s = stone + row + col.toString();
                         s = Move.create(s);
                         this.next_board = this.copy();
-                        if (this.move(s, false)) {
-                            moves.push(s);
-                        }
+                        try {
+                            if (this.move(s, false)) {
+                                moves.push(s);
+                            }
+                        } catch (e) {}
                     }
                 } else {
                     var sums = combinationSum(candidates, amount);
@@ -218,9 +223,11 @@ let Board = {
 
                             s = Move.create(s);
                             this.next_board = this.copy();
-                            if (this.move(s, false)) {
-                                moves.push(s);
-                            }
+                            try {
+                                if (this.move(s, false)) {
+                                    moves.push(s);
+                                }
+                            } catch (e) {}
                         }
                     }
                 }
@@ -502,11 +509,9 @@ let Board = {
         var a = false;
         var hypo = false;
         if (this.animating.length > 0) {
-
             for (tile of this.animating) {
                 tile.animator = undefined;
                 hypo = tile.hypo;
-                console.log(tile);
                 scene.remove(tile.mesh);
             }
 
@@ -551,6 +556,7 @@ let Board = {
             this.next_board = [];
             this.lifted = [];
             this.placed = false;
+            // notation_update();
         }
     },
 
