@@ -94,9 +94,9 @@ a {
     border-collapse: collapse;
 }
 
-#chat {
+#chat, #notation {
     overflow: scroll;
-    height: 87%;
+    height: 80%;
 }
 
 .input {
