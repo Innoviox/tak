@@ -1,8 +1,9 @@
 class Tile {
-    constructor(color, stone) {
+    constructor(color, stone, hypo=false) {
         this.color = color;
         this.stone = stone;
         this.pos = new Position(0, 0);
+        this.hypo = hypo;
         this.setMesh();
         this.animator = undefined;
     }
@@ -29,9 +30,9 @@ class Tile {
     }
 
     getMat() {
-        if (this.color == WHITE)
-            return models.white_sqr; // colors.white_piece;
-        return models.black_sqr; // colors.black_piece;
+        if (this.color === WHITE)
+            return this.hypo? models.w_s_transp: models.white_sqr; // colors.white_piece;
+        return this.hypo? models.b_s_transp: models.black_sqr; // colors.black_piece;
     }
 
     setMesh() {
