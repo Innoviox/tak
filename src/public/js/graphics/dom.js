@@ -36,10 +36,3 @@ function toggle() {
     $("#notation-close").click();
     $("#chat-close").click();
 }
-
-function notation_update() {
-    $("#notation").html("");
-    for (m of Board.generate_all_moves()) {
-        $("#notation").append("<span class=\"move\">" + m.str() + "</span><br>")
-    }
-}

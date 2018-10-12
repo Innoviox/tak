@@ -92,8 +92,6 @@ function onModelLoad() {
         scene.add(obj);
     }
 
-    notation_update();
-
     startGame();
 }
 
@@ -144,23 +142,12 @@ function startGame() {
     Player.with_color(WHITE).activate();
 }
 
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-async function pressKey(event) {
+function pressKey(event) {
     if (event.keyCode === 27) {
         Board.lifted = [];
         Board.lifted_sq = undefined;
-        /*
-        for (move of Board.generate_all_moves()) {
-            Board.move(move, true, true);
-            await sleep(100);
-        }
-        */
     }
 }
-
 
 function onDocumentMouseMove(event) {
     event.preventDefault();

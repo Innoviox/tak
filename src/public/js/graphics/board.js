@@ -147,8 +147,8 @@ let Board = {
 
         var tiles = old_sq.tiles.slice(-n);
         var btiles = this.board[old_pos.x][old_pos.y].tiles.slice(-n);
-        for (t of tiles) t.hypo = hypo;
-        for (b of btiles) b.hypo = hypo;
+        for (t of tiles) t.hypo = true;
+        for (b of btiles) b.hypo = true;
         var n_stone;
         if (new_sq.tiles.length) {
             n_stone = new_sq.tiles.slice(-1)[0].stone;
@@ -227,7 +227,7 @@ let Board = {
                 // }
             }
         }
-        // this.move(moves[Math.floor(Math.random()*moves.length)], true, true);
+        this.move(moves[Math.floor(Math.random()*moves.length)], true, true);
         return moves;
     },
 
@@ -475,7 +475,6 @@ let Board = {
             this.execute_move();
             this._draw_tiles(false);
             this._draw_tiles(false);
-            // notation_update();
         }
     },
 
@@ -710,4 +709,4 @@ let Board = {
             this.lifted = [];
         }
     }
-};
+}
