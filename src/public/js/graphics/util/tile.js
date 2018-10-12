@@ -19,9 +19,9 @@ class Tile {
     }
 
     getGeom() {
-        if (this.stone === FLAT) {
+        if (this.stone == FLAT) {
             return new THREE.BoxGeometry(1, 1, .2);
-        } else if (this.stone === STAND) {
+        } else if (this.stone == STAND) {
             return new THREE.BoxGeometry(1, .2, 1);
         }
         if (modelsLoaded) {
@@ -31,8 +31,8 @@ class Tile {
 
     getMat() {
         if (this.color === WHITE)
-            return this.hypo ? models.w_s_transp : models.white_sqr; // colors.white_piece;
-        return this.hypo ? models.b_s_transp : models.black_sqr; // colors.black_piece;
+            return this.hypo? models.w_s_transp: models.white_sqr; // colors.white_piece;
+        return this.hypo? models.b_s_transp: models.black_sqr; // colors.black_piece;
     }
 
     setMesh() {

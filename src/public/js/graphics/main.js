@@ -92,8 +92,9 @@ function onModelLoad() {
         scene.add(obj);
     }
 
+    notation_update();
+
     startGame();
-    // setTimeout(notation_update, 100);
 }
 
 function initGraphics() {
@@ -151,13 +152,12 @@ async function pressKey(event) {
     if (event.keyCode === 27) {
         Board.lifted = [];
         Board.lifted_sq = undefined;
-
+        /*
         for (move of Board.generate_all_moves()) {
-            console.log(move.str());
             Board.move(move, true, true);
             await sleep(100);
         }
-
+        */
     }
 }
 
