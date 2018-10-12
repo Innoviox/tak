@@ -76,7 +76,7 @@ function onModelLoad() {
     Board.init(5, "white");
     Board.create();
 
-    // loadSampleBoard();
+    loadSampleBoard();
     for (idx in Board.objects) {
         var obj = Board.objects[idx];
         obj.receiveShadow = true;

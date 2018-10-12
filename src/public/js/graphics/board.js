@@ -186,7 +186,9 @@ let Board = {
                 for (stone of STONES.split("")) {
                     moves.push(stone + row + col.toString());
                 }
-                for (amount = 1; amount < boardSize; amount++) {
+                // for (amount = 1; amount < boardSize; amount++) {
+                amount = this.tile_at(new Position(row, col - 1)).tiles.length;
+                if (amount != 0) {
                     var sums = combinationSum(candidates, amount);
                     for (sum of sums) {
                         for (dir of DIRS.split("")) {
@@ -200,6 +202,7 @@ let Board = {
                         }
                     }
                 }
+                // }
             }
         }
         return moves;
