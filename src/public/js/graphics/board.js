@@ -102,8 +102,8 @@ let Board = {
         return a;
     },
 
-    move: function(move, force=true, hypo=false) {
-        console.log(hypo);
+    move: function(move) {
+        console.log("making", move);
         this.last_move = move;
         this.old_board = this.copy();
         this.next_board = this.copy();
@@ -112,24 +112,19 @@ let Board = {
         if (move.moves.length > 0) {
             var first = true;
             for (n of move.moves) {
-                if (!this._move(old_pos, new_pos, n, first, force, hypo)) {
-                    return false;
-                }
+                this._move(old_pos, new_pos, n, first);
                 first = false;
             }
         } else {
             var sq = this.board[old_pos.x][old_pos.y];
-            if (sq.tiles.length === 0) {
+            if (sq.tiles.length == 0) {
                 var color = get_current_color();
-                if (force) {
-                    this.add_next_tile(old_pos.x, old_pos.y, new Tile(color, move.stone, hypo));
-                    current_color = flip_color(current_color);
-                    move = (move % 2) + 1;
-                    if (move === 1) turn++;
-                    this.placed = true;
-                }
+                this.add_next_tile(old_pos.x, old_pos.y, new Tile(color, move.stone));
+                current_color = flip_color(current_color);
+                move = (move % 2) + 1;
+                if (move == 1) turn++;
+                this.placed = true;
             } else {
-                return false;
                 //TODO: Throw error?
             }
         }
@@ -138,49 +133,44 @@ let Board = {
             started_at: undefined,
             dir: undefined
         };
-        return true;
     },
 
-    _move: function(old_pos, new_pos, n, first, force, hypo) {
+    _move: function(old_pos, new_pos, n, first) {
         var old_sq = this.next_board[old_pos.x][old_pos.y];
         var new_sq = this.next_board[new_pos.x][new_pos.y];
 
         var tiles = old_sq.tiles.slice(-n);
         var btiles = this.board[old_pos.x][old_pos.y].tiles.slice(-n);
-        for (t of tiles) t.hypo = true;
-        for (b of btiles) b.hypo = true;
         var n_stone;
         if (new_sq.tiles.length) {
             n_stone = new_sq.tiles.slice(-1)[0].stone;
         } else {
             n_stone = undefined;
         }
-        if (new_sq.tiles.length === 0 || (n_stone === FLAT)) {
+        if (new_sq.tiles.length == 0 || (n_stone == FLAT)) {
             old_sq.tiles = old_sq.tiles.slice(0, old_sq.tiles.length - n);
             var first = true;
             for (idx in tiles) {
                 new_sq.add(tiles[idx]);
-                if (force) btiles[idx].animate(new_pos, idx, new_sq.tiles.length, first);
-                if (force) this.moving.push(btiles[idx]);
-                if (force) this.animating.push(btiles[idx]);
+                btiles[idx].animate(new_pos, idx, new_sq.tiles.length, first);
+                this.moving.push(btiles[idx]);
+                this.animating.push(btiles[idx]);
                 first = false;
             }
-        } else if (n === 1 && tiles.slice(-1)[0].stone === CAP && n_stone === STAND) {
+        } else if (n == 1 && tiles.slice(-1)[0].stone == CAP && n_stone == STAND) {
             old_sq.tiles = old_sq.tiles.slice(0, old_sq.tiles.length - n);
             new_sq.tiles.slice(-1)[0].setStone(FLAT);
             var first = true;
             for (idx in tiles) {
                 new_sq.add(tiles[idx]);
-                if (force) btiles[idx].animate(new_pos, idx, new_sq.tiles.length, first);
-                if (force) this.moving.push(btiles[idx]);
-                if (force) this.animating.push(btiles[idx]);
+                btiles[idx].animate(new_pos, idx, new_sq.tiles.length, first);
+                this.moving.push(btiles[idx]);
+                this.animating.push(btiles[idx]);
                 first = false;
             }
         } else {
             //TODO Throw error?
-            return false;
         }
-        return true;
     },
 
     generate_all_moves: function(color) {
@@ -193,41 +183,28 @@ let Board = {
         for (row of "abcdefgh".substring(0, boardSize).split("")) {
             console.log(row);
             for (col = 1; col < boardSize + 1; col++) {
-                var amount = this.tile_at(new Position(row, col - 1)).tiles.length;
-                if (amount === 0) {
-                    for (stone of STONES.split("")) {
-                        var s = stone + row + col.toString();
-                        s = Move.create(s);
-                        this.next_board = this.copy();
-                        if (this.move(s, false)) {
-                            moves.push(s);
-                        }
-                    }
-                } else {
+                for (stone of STONES.split("")) {
+                    moves.push(stone + row + col.toString());
+                }
+                // for (amount = 1; amount < boardSize; amount++) {
+                amount = this.tile_at(new Position(row, col - 1)).tiles.length;
+                if (amount != 0) {
                     var sums = combinationSum(candidates, amount);
                     for (sum of sums) {
                         for (dir of DIRS.split("")) {
                             // s = sum[0].toString();
                             s = amount.toString()
                             s += row + col.toString() + dir;
-                            if (sum.length > 1) {
-                                for (i of sum) {
-                                    s += i.toString();
-                                }
+                            for (i of sum) {
+                                s += i.toString();
                             }
-
-                            s = Move.create(s);
-                            this.next_board = this.copy();
-                            if (this.move(s, false)) {
-                                moves.push(s);
-                            }
+                            moves.push(s);
                         }
                     }
                 }
                 // }
             }
         }
-        this.move(moves[Math.floor(Math.random()*moves.length)], true, true);
         return moves;
     },
 
@@ -498,14 +475,10 @@ let Board = {
     },
 
     execute_move: function() {
-        var a = false;
-        var hypo = false;
+        a = false;
         if (this.animating.length > 0) {
-
             for (tile of this.animating) {
                 tile.animator = undefined;
-                hypo = tile.hypo;
-                console.log(tile);
                 scene.remove(tile.mesh);
             }
 
@@ -520,28 +493,7 @@ let Board = {
             this.selected = undefined;
             a = true;
         }
-        if (hypo) {
-            this.moving = [];
-            this.animating = [];
-            for (r in this.next_board) {
-                for (c = 0; c < boardSize; c++) {
-                    var n = this.next_board[r][c];
-                    var o = this.board[r][c];
-                    if (n.tiles.length > 0 && n.tiles.length !== o.tiles.length) {
-                        console.log("aefwopawpeofij");
-                        this.board[r][c] = n;
-                        for (tile of n.tiles) {
-                            tile.hypo = true;
-                            tile.setMesh();
-                        }
-
-                    }
-                }
-            }
-            this.next_board = [];
-            this.lifted = [];
-            this.placed = false;
-        } else if (a) {
+        if (a) {
             this.tiles = [];
             this.moving = [];
             this.animating = [];
@@ -554,7 +506,6 @@ let Board = {
     },
 
     click: function(obj) {
-        console.log(obj.material.opacity);
         if (obj.name === "hud tile") {
             var mat = get_current_color()===WHITE ? models.white_sqr : models.black_sqr;
             if (this.selected === undefined && obj.material.name === mat.name) {

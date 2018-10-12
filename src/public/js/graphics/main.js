@@ -61,14 +61,6 @@ function load_models() {
         map: loader.load("images/tiles/white_simple.png", () => {})
     });
 
-    models.w_s_transp = new THREE.MeshBasicMaterial({
-        map: loader.load("images/tiles/white_simple_pieces.png", () => {}), name: "white square transparency", transparent: true, opacity: 0.5
-    });
-
-    models.b_s_transp = new THREE.MeshBasicMaterial({
-        map: loader.load("images/tiles/black_simple_pieces.png", () => {}), name: "black square transparency", transparent: true, opacity: 0.5
-    });
-
     // White capstone model
     mtl.load('rook-small-door-matte.mtl', function(materials) {
         materials.preload();

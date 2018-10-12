@@ -1,8 +1,7 @@
 class Square {
     constructor(pos) {
         this.pos = pos;
-        this.tiles = [];
-        this.hypo = [];
+        this.tiles = new Array();
         this.upped = 0;
         this.clicked = 0;
     }
