@@ -173,6 +173,38 @@ let Board = {
         }
     },
 
+    generate_all_moves: function(color) {
+        candidates = [];
+        for (i = 1; i < boardSize + 1; i++) {
+            candidates.push(i);
+        }
+
+        var moves = [];
+        for (row of "abcdefgh".substring(0, boardSize).split("")) {
+            console.log(row);
+            for (col = 1; col < boardSize + 1; col++) {
+                for (stone of STONES.split("")) {
+                    moves.push(stone + row + col.toString());
+                }
+                for (amount = 1; amount < boardSize; amount++) {
+                    var sums = combinationSum(candidates, amount);
+                    for (sum of sums) {
+                        for (dir of DIRS.split("")) {
+                            // s = sum[0].toString();
+                            s = amount.toString()
+                            s += row + col.toString() + dir;
+                            for (i of sum) {
+                                s += i.toString();
+                            }
+                            moves.push(s);
+                        }
+                    }
+                }
+            }
+        }
+        return moves;
+    },
+
     create: function() {
         this.make_board_frame();
         this.create_texts();

@@ -6,6 +6,7 @@ var WHITE = "white";
 var FLAT = "F";
 var STAND = "S";
 var CAP = "C";
+var STONES = "FSC";
 
 // Graphics variables
 var container;
