@@ -12,7 +12,21 @@
 <body>
     <nav class="navbar navbar-inverse" id="sticky-top">
         <span id="username"></span>
+
+        <div class="dropdown">
+            <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Games
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" href="#">Join</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#">Create Online</a>
+                <a class="dropdown-item" href="#">Create Local</a>
+            </div>
+        </div>
+
         <button type="button" class="btn btn-outline-warning navbar-btn navbar-right" id="btn-login" onclick="login();">Login</button>
+
     </nav>
 
     <nav class="navbar navbar-fixed-bottom" id="sticky-bottom">
@@ -46,7 +60,7 @@
         <br />Loading...</div>
 
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
     <script src="js/graphics/lib/three.min.js"></script>
     <script src="js/graphics/lib/stats.min.js"></script>
     <script src="js/graphics/lib/MTLLoader.js"></script>

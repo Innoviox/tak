@@ -8,6 +8,7 @@ function board_from_tps(tps) {
         console.log(sqs);
         for (sqi in sqs) {
             var sq = sqs[sqi];
+            if (sqi == 0 && idx == 0) sq = sq.substring(1, sq.length);
             if (sq.includes("x")) {
                 var x = parseInt(sq.charAt(sq.length - 1));
                 for (var i = 0; i < x; i++) {
@@ -45,18 +46,18 @@ function board_to_tps(board=Board.board) {
             } else {
                 if (x !== 0) {
                     tps += "x" + x + ",";
-                    for (tile of sq.tiles) {
-                        if (tile.color === WHITE) {
-                            tps += "1";
-                        } else {
-                            tps += "2";
-                        }
-                        if (tile.stone !== FLAT) {
-                            tps += tile.stone;
-                        }
-                    }
-                    tps += ",";
                 }
+                for (tile of sq.tiles) {
+                    if (tile.color === WHITE) {
+                        tps += "1";
+                    } else {
+                        tps += "2";
+                    }
+                    if (tile.stone !== FLAT) {
+                        tps += tile.stone;
+                    }
+                }
+                tps += ",";
                 x = 0;
             }
         }

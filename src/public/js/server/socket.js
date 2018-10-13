@@ -23,6 +23,8 @@ function logout() {
     });
     user = "guest-" + (
         Math.floor(Math.random() * 90000) + 10000);
+    $("#btn-login").attr("onclick", "login(); return false;");
+    $("#btn-login").html("Login");
 }
 
 function get_user() {
@@ -108,6 +110,9 @@ function do_move() {
     console.log("making move");
     socket.emit("made-move", user, Board.create_held().str(), board_to_tps());
 }
+
+$("#btn-submit").attr("onclick", "do_move(); return false;");
+$("#btn-submit").click(do_move);
 
 socket.on("make-move", function(username, move, tps) {
     if (username !== user) {

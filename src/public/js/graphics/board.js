@@ -117,22 +117,24 @@ let Board = {
             }
         } else {
             var sq = this.board[old_pos.x][old_pos.y];
-            if (sq.tiles.length == 0) {
+            if (sq.tiles.length === 0) {
                 var color = get_current_color();
                 this.add_next_tile(old_pos.x, old_pos.y, new Tile(color, move.stone));
                 current_color = flip_color(current_color);
                 move = (move % 2) + 1;
-                if (move == 1) turn++;
+                if (move === 1) turn++;
                 this.placed = true;
             } else {
                 //TODO: Throw error?
             }
         }
+        /*
         this.held_move = {
             moves: [],
             started_at: undefined,
             dir: undefined
         };
+        */
     },
 
     _move: function(old_pos, new_pos, n, first) {
