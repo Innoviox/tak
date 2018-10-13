@@ -661,5 +661,13 @@ let Board = {
             }
             this.lifted = [];
         }
+    },
+
+    reset_held: function() {
+        this.held_move = {
+            moves: [],
+            started_at: undefined,
+            dir: undefined
+        }
     }
 }

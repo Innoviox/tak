@@ -5,6 +5,7 @@ Math.floor(Math.random() * 90000) + 10000);
 var old_user;
 var current_color = WHITE;
 var turn = 1, move = 1;
+var in_game = false;
 
 function get_current_color() {
     return turn===1?flip_color(current_color):current_color;
@@ -134,6 +135,7 @@ socket.on("make-move", function(username, move, tps) {
             close: true
         }).showToast();
     }
+    Board.reset_held();
 });
 
 $(function() {

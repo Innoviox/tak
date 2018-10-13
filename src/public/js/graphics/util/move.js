@@ -9,6 +9,7 @@ class Move {
 
     static create(str) {
         var dir = undefined;
+        var c;
         for (i = 0, c = ''; c = DIRS.charAt(i); i++) {
             if (str.includes(c)) {
                 dir = c;

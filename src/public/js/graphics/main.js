@@ -72,6 +72,13 @@ function load_models() {
     });
 }
 
+function autoGame() {
+    var moves = Board.generate_all_moves();
+    var move = moves[Math.floor(Math.random()*moves.length)];
+    Board.move(Move.create(move));
+    setTimeout(autoGame, 1000);
+}
+
 function onModelLoad() {
     Board.init(5, "white");
     Board.create();
@@ -84,7 +91,8 @@ function onModelLoad() {
         scene.add(obj);
     }
 
-    startGame();
+    if (in_game) { startGame(); }
+    else {autoGame();}
 }
 
 function initGraphics() {
@@ -121,7 +129,6 @@ function initGraphics() {
     scene.add( light );
 
     window.addEventListener('resize', onWindowResize, false);
-
     document.addEventListener('mousemove', onDocumentMouseMove, false);
     document.addEventListener('click', onDocumentMouseClick, false);
     document.addEventListener('keyup', pressKey, false);
@@ -135,6 +142,7 @@ function startGame() {
 }
 
 function pressKey(event) {
+    if (!in_game) return;
     if (event.keyCode === 27) {
         Board.lifted = [];
         Board.lifted_sq = undefined;
@@ -142,6 +150,7 @@ function pressKey(event) {
 }
 
 function onDocumentMouseMove(event) {
+    if (!in_game) return;
     event.preventDefault();
     event.stopPropagation();
     //if (event.srcElement.localName == "canvas") {
@@ -155,6 +164,7 @@ function toString(v) {
 }
 
 function onDocumentMouseClick(event) {
+    if (!in_game) return;
     mouse.x = ((event.clientX - renderer.domElement.offsetLeft) / renderer.domElement.clientWidth) * 2 - 1;
     mouse.y = -((event.clientY - renderer.domElement.offsetTop) / renderer.domElement.clientHeight) * 2 + 1;
 
