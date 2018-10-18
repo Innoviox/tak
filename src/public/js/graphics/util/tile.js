@@ -46,9 +46,9 @@ class Tile {
     }
 
     setPosition(x, y, idx, z_force) {
-        if (this.stone == FLAT) {
+        if (this.stone === FLAT) {
             this.mesh.position.set(x, y, .2 * idx + .3 + z_force);
-        } else if (this.stone == STAND) {
+        } else if (this.stone === STAND) {
             this.mesh.position.set(x, y, .2 * idx + .7 + z_force);
             this.mesh.rotation.z = 12;
         } else {
@@ -58,7 +58,11 @@ class Tile {
     }
 
     animate(new_pos, old_idx, new_idx, first) {
+        /* TODO: idx animation */
         var dir = new_pos.dir_from(this.pos);
-        this.animator = new Animator(dir, this.pos, old_idx, first); /* TODO: idx animation */
+        this.animator = new Animator(dir, this.pos, old_idx, first);
+        var dt = this.animator.dt;
+        var x = this.mesh.position.x, y = this.mesh.position.y, z = this.mesh.position.z;
+        TweenMax.to(this.mesh.position, .4, {ease: Linear.easeNone, "x": dt.x + x, "y": dt.y + y, "z": dt.z + z});
     }
 }
