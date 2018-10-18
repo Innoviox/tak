@@ -384,16 +384,17 @@ let Board = {
                     } else if (push || !scene.children.includes(tile_mesh)) {
                         this.tiles.push(tile_mesh);
                         scene.add(tile_mesh);
-                    } else if (this.lifted_sq != undefined && sq.equals(this.lifted_sq) && idx > this.lifted_sq.clicked) {
+                    } else if (this.lifted_sq !== undefined && sq.equals(this.lifted_sq) && idx > this.lifted_sq.clicked) {
                         console.log("ADDING!", idx, sq.clicked);
                         this.lifted.push(tile_mesh);
                         z = true;
                     }
-
-                    tile.setPosition(
-                        x, y, idx,  z
-                        ? .4
-                        : 0);
+                    if (!this.animating.includes(tile)) {
+                        tile.setPosition(
+                            x, y, idx, z
+                                ? .4
+                                : 0);
+                    }
                 }
             }
         }
@@ -458,14 +459,17 @@ let Board = {
     },
 
     animate_tiles: function() {
+        /*
         remove = [];
         for (tile of this.animating) {
             var helper = tile.animator;
             if (!helper.done())
                 helper.step();
+
             tile.mesh.position.x += helper.ct.x;
             tile.mesh.position.y += helper.ct.y;
             tile.mesh.position.z += helper.ct.z;
+
             if (!this.lifted.includes(tile.mesh)) {
                 tile.mesh.position.z += .2;
             }
@@ -474,6 +478,12 @@ let Board = {
             }
         }
         this.moving = this.moving.filter((el) => !remove.includes(el));
+        */
+        for (tile of this.animating) {
+            if (!TweenMax.isTweening(tile.mesh.position)) {
+                this.moving.splice(this.moving.indexOf(tile));
+            }
+        }
     },
 
     execute_move: function() {

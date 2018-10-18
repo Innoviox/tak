@@ -83,7 +83,7 @@ function onModelLoad() {
     Board.init(5, "white");
     Board.create();
 
-    // loadSampleBoard();
+    loadSampleBoard();
     for (idx in Board.objects) {
         var obj = Board.objects[idx];
         obj.receiveShadow = true;
@@ -91,8 +91,7 @@ function onModelLoad() {
         scene.add(obj);
     }
 
-    if (in_game) { startGame(); }
-    else {autoGame();}
+    startGame();
 }
 
 function initGraphics() {
