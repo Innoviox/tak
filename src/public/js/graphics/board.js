@@ -11,6 +11,7 @@ let Board = {
     blackpiecesleft: 0,
     mycolor: "white",
     placed: false,
+    just_moved: false,
     lifted: [],
     lifted_sq: undefined,
     hud_tiles: [],
@@ -135,6 +136,7 @@ let Board = {
             dir: undefined
         };
         */
+        this.just_moved = true;
     },
 
     _move: function(old_pos, new_pos, n, first) {
@@ -451,34 +453,14 @@ let Board = {
     update_tiles: function() {
         this._draw_tiles(false);
         this.animate_tiles();
-        if (this.moving.length === 0) {
+        if (this.just_moved && this.moving.length === 0) {
             this.execute_move();
             this._draw_tiles(false);
-            this._draw_tiles(false);
+            // this._draw_tiles(false);
         }
     },
 
     animate_tiles: function() {
-        /*
-        remove = [];
-        for (tile of this.animating) {
-            var helper = tile.animator;
-            if (!helper.done())
-                helper.step();
-
-            tile.mesh.position.x += helper.ct.x;
-            tile.mesh.position.y += helper.ct.y;
-            tile.mesh.position.z += helper.ct.z;
-
-            if (!this.lifted.includes(tile.mesh)) {
-                tile.mesh.position.z += .2;
-            }
-            if (helper.done()) {
-                remove.push(tile);
-            }
-        }
-        this.moving = this.moving.filter((el) => !remove.includes(el));
-        */
         for (tile of this.animating) {
             if (!TweenMax.isTweening(tile.mesh.position)) {
                 this.moving.splice(this.moving.indexOf(tile));
@@ -487,6 +469,7 @@ let Board = {
     },
 
     execute_move: function() {
+        console.log("executing!");
         a = false;
         if (this.animating.length > 0) {
             for (tile of this.animating) {
@@ -514,6 +497,7 @@ let Board = {
             this.next_board = [];
             this.lifted = [];
             this.placed = false;
+            this.just_moved = false;
         }
     },
 
@@ -579,16 +563,23 @@ let Board = {
                     this.lifted_sq = sq;
                     this.lifted = this.lifted_sq.tiles.slice((this.lifted_sq.click())).map((i) => i.mesh);
                 } else if (dir === undefined) {
-                    // TODO: Misclick
-                    this.lifted = [];
-                    var a = -sq.tiles.length + sq.up();
-                    var uptiles = sq.tiles.slice(a);
-                    for (tile_up of uptiles) {
-                        if (tile_up !== undefined && tile_up.mesh !== undefined) {
-                            this.lifted.push(tile_up.mesh);
+                    console.log("misclick?");
+                    if (this.held_move.started_at === undefined) {
+                        console.log("i gues not!");
+                        // TODO: Misclick
+                        this.lifted = [];
+                        var a = -sq.tiles.length + sq.up();
+                        var uptiles = sq.tiles.slice(a);
+                        for (tile_up of uptiles) {
+                            if (tile_up !== undefined && tile_up.mesh !== undefined) {
+                                this.lifted.push(tile_up.mesh);
+                            }
                         }
+                        this.lifted_sq = sq;
+                    } else {
+                        console.log("yuppp");
+                        Toastify({text: "Did you forget to submit?", backgroundColor: "linear-gradient(to right, #fd4b1d, #f47d41)", className: "front", duration: 3000, close: true}).showToast();
                     }
-                    this.lifted_sq = sq;
                 } else {
                     if (this.held_move.started_at === undefined) {
                         this.held_move.started_at = this.lifted_sq;
