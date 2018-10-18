@@ -669,5 +669,33 @@ let Board = {
             started_at: undefined,
             dir: undefined
         }
+    },
+
+    clear: function() {
+        this.objects = [];
+        this.tiles = [];
+        this.moving = [];
+        this.animating = [];
+        this.inner = [];
+        this.size = 0;
+        this.totcaps = 0;
+        this.tottiles = 0;
+        this.whitepiecesleft = 0;
+        this.blackpiecesleft = 0;
+        this.mycolor = "white";
+        this.placed = false;
+        this.lifted = [];
+        this.lifted_sq = undefined;
+        this.hud_tiles = [];
+        this.turn_number = 0;
+        this.hud_selected = undefined;
+
+        // backend objects representing squares
+        this.board = [];
+        this.old_board = [];
+        this.next_board = [];
+
+        this.last_move = {};
+        this.reset_held()
     }
 }

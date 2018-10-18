@@ -91,8 +91,7 @@ function onModelLoad() {
         scene.add(obj);
     }
 
-    if (in_game) { startGame(); }
-    else {autoGame();}
+    startGame();
 }
 
 function initGraphics() {

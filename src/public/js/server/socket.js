@@ -5,7 +5,7 @@ Math.floor(Math.random() * 90000) + 10000);
 var old_user;
 var current_color = WHITE;
 var turn = 1, move = 1;
-var in_game = false;
+var in_game = true;
 
 function get_current_color() {
     return turn===1?flip_color(current_color):current_color;
@@ -48,15 +48,9 @@ get_user();
 
 function set_current_board(tps) {
     if (tps) {
-        Board.board = board_from_tps(tps);
         scene.children = [];
-        Board.objects = [];
-        Board.tiles = [];
-        Board.inner = [];
-        Board.moving = [];
-        Board.animating = [];
-        Board.lifted = [];
-        Board.hud_tiles = [];
+        Board.clear();
+        Board.board = board_from_tps(tps);
         Board.create();
         for (idx in Board.objects) {
             var obj = Board.objects[idx];
